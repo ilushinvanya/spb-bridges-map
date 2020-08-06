@@ -326,7 +326,7 @@
             ch: "这座桥是开放的"
         },
         mostotrest: {
-            ru: "Мост на сайте Мостотреста",
+            ru: "Сайт Мостотреста",
             en: "The Mostotrest website",
             ch: "Mostotrest"
         },
@@ -402,7 +402,7 @@
             // https://en.mostotrest-spb.ru//
             var lang_prefix = app_language !== "ru" ? app_language + "." : "";
             var link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
-            var a_wrap_link = "<a href='" + link + "' target='_blank'>" + i18.mostotrest[app_language] + "</a>";
+            var a_wrap_link = "<a href='" + link + "' target='_blank'>мост на сайте Мостотреста</a>";
 
             bridge_description += a_wrap_link;
 
