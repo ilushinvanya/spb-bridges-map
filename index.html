@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Карта разводных мостов 🌉</title>
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet'/>
+    <link rel="icon" href="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/241/bridge-at-night_1f309.png">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js'></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        article {
+            display: flex;
+        }
+        #map {
+            width: 100%;
+            height: calc( 100vh - 77px);
+        }
+        header {
+            background: #fff;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px #00000021 solid;
+        }
+        @media only screen and (max-width: 600px) {
+            header {
+                flex-wrap: wrap;
+                align-content: center;
+                justify-content: center;
+                text-align: center;
+            }
+        }
+        header h1, header h2 {
+            font-family: Arial;
+            margin: 0;
+            color: #353535;
+            padding: 0;
+        }
+
+
+        header .buttons {
+
+        }
+        header .buttons button {
+            background: white;
+            border-radius: 50px;
+            border: 2px #707070 solid;
+            min-width: 38px;
+            height: 38px;
+            outline: none;
+        }
+        #aside {
+            width:320px;
+            height: calc( 100vh - 77px);
+            background: #fff;
+            z-index: 99999;
+        }
+        @media only screen and (max-width: 600px) {
+            #aside {
+                width: 0;
+                height: 0;
+            }
+        }
+        #marker-list {
+            height: 100%;
+            overflow-x: auto;
+            margin:0;
+            padding:0;
+        }
+        #marker-list li {
+            font-family: Arial;
+            padding:10px;
+            margin:0;
+            list-style-type:none;
+        }
+        #marker-list li .title{
+            margin: 0;
+
+        }
+        #marker-list li .comment{
+            margin: 0;
+            font-size: 14px;
+            color:#a8a8a8;
+        }
+        #marker-list li:hover {
+            background:#eee;
+        }
+
+        .marker-title {
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+        .marker-description {
+            font-size: 16px;
+        }
+        .marker-description b {
+            color: #792ec0;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="buttons">
+        <button onclick="setLanguage('ru')">RU</button>
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('ch')">CH</button>
+        <button onclick="animating()">animating</button>
+    </div>
+
+
+    <h1 onclick="animate()">Карта разводных мостов</h1>
+
+    <h2 id="current_time"></h2>
+
+</header>
+
+<article>
+    <div id="map"></div>
+    <aside id="aside">
+        <ul id="marker-list"></ul>
+    </aside>
+</article>
+
+
+<script>
+    var bridges = [
+        {
+            title: {
+                ru: "Дворцовый",
+                en: "Palace Bridge",
+                ch: "宫廷桥"
+            },
+
+            time: [
+                {
+                    start: "1:10",
+                    end: "2:50"
+                },
+                {
+                    start: "3:10",
+                    end: "4:55"
+                }
+            ],
+            link: "dvorczovyj",
+            coordinates: [30.308306, 59.941057]
+        },
+        {
+            title: {
+                ru: "Тучков",
+                en: "Tuchkov Bridge",
+                ch: "杜奇科夫桥"
+            },
+            time: [
+                {
+                    start: "2:00",
+                    end: "2:55"
+                },
+                {
+                    start: "3:35",
+                    end: "4:55"
+                }
+            ],
+            link: "tuchkov",
+            coordinates: [30.285653, 59.949049]
+        },
+        {
+            title: {
+                ru: "Благовещенский",
+                en: "Blagoveschensky Bridge",
+                ch: "圣母领报桥"
+            },
+            time: [
+                {
+                    start: "1:25",
+                    end: "2:45"
+                },
+                {
+                    start: "3:10",
+                    end: "5:00"
+                }
+            ],
+            link: "tuchkov",
+            coordinates: [30.289662, 59.934740]
+        },
+        {
+            title: {
+                ru: "Троицкий",
+                en: "Troitsky Bridge",
+                ch: "圣三一桥"
+            },
+            time: [
+                {
+                    start: "1:20",
+                    end: "4:50"
+                }
+            ],
+            link: "troiczkij",
+            coordinates: [30.327694, 59.948492]
+        },
+        {
+            title: {
+                ru: "Володарский",
+                en: "Volodarsky Bridge",
+                ch: "沃洛达尔斯基桥"
+            },
+            time: [
+                {
+                    start: "2:00",
+                    end: "3:45"
+                },
+                {
+                    start: "4:15",
+                    end: "5:45"
+                }
+            ],
+            link: "volodarskij",
+            coordinates: [30.453343, 59.877725]
+        },
+        {
+            title: {
+                ru: "Александра Невского",
+                en: "Alexander Nevsky Bridge",
+                ch: "亚历山大涅夫斯基桥"
+            },
+            time: [
+                {
+                    start: "2:20",
+                    end: "5:10"
+                }
+            ],
+            link: "aleksandra-nevskogo",
+            coordinates: [30.395668, 59.925834]
+        },
+        {
+            title: {
+                ru: "Большеохтинский",
+                en: "Bolsheokhtinsky Bridge",
+                ch: "大奥何塔桥"
+            },
+            time: [
+                {
+                    start: "2:00",
+                    end: "5:00"
+                }
+            ],
+            link: "bolsheohtinskij-most",
+            coordinates: [30.401778, 59.942669]
+        },
+        {
+            title: {
+                ru: "Литейный",
+                en: "Liteyny Bridge",
+                ch: "利捷伊内桥"
+            },
+            time: [
+                {
+                    start: "1:40",
+                    end: "4:45"
+                }
+            ],
+            link: "litejnyj",
+            coordinates: [30.349359, 59.951938]
+        },
+        {
+            title: {
+                ru: "Биржевой",
+                en: "Birzhevoy Bridge",
+                ch: "交易所桥"
+            },
+            time: [
+                {
+                    start: "2:00",
+                    end: "4:55"
+                }
+            ],
+            link: "birzhevoj",
+            coordinates: [30.303376, 59.946187]
+        },
+        {
+            title: {
+                ru: "Сампсониевский",
+                en: "Sampsonievsky Bridge",
+                ch: "萨恩普索尼耶夫桥"
+            },
+            time: [],
+            link: "sampsonievskij",
+            coordinates: [30.337335, 59.957995]
+        },
+        {
+            title: {
+                ru: "Гренадерский",
+                en: "Grenadersky Bridge",
+                ch: "戈列纳碟尔斯基桥"
+            },
+            time: [],
+            link: "grenaderskij",
+            coordinates: [30.334711, 59.968028]
+        },
+        {
+            title: {
+                ru: "Кантемировский",
+                en: "Kantemirovsky Bridge",
+                ch: "坎捷米罗夫桥"
+            },
+            time: [],
+            link: "kantemirovskij",
+            coordinates: [30.321657, 59.978426]
+        }
+    ];
+
+    var i18 = {
+        close: {
+            ru: "Разведён",
+            en: "The bridge is close",
+            ch: "这座桥是开放的"
+        },
+        mostotrest: {
+            ru: "Мост на сайте Мостотреста",
+            en: "The Mostotrest website",
+            ch: "Mostotrest"
+        },
+        will_open(minutes){
+            return {
+                ru: "Сведётся через " + Math.abs(minutes) + " мин",
+                en: "The bridge will open in " + Math.abs(minutes) + " min",
+                ch: "桥将在" + Math.abs(minutes) + " 分钟后开放"
+            }
+        },
+        will_close(minutes){
+            return {
+                ru: "Разводится через " + Math.abs(minutes) + " мин",
+                en: "The bridge will close in " + Math.abs(minutes) + " min",
+                ch: "桥将在" + Math.abs(minutes) + " 分钟后关闭"
+            }
+        }
+
+    }
+
+    var Time = moment();
+    var myLayer, map;
+    function initMap(){
+        L.mapbox.accessToken = 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg';
+
+        map = L.mapbox.map('map')
+            .setView([59.935446, 30.328063], 12)
+            .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+
+        myLayer = L.mapbox
+            .featureLayer(generateFeatures())
+            .addTo(map);
+
+        generateUlist()
+    }
+    initMap()
+
+    function generateUlist(){
+        var markerList = document.getElementById('marker-list');
+        markerList.innerHTML = "";
+
+        myLayer.eachLayer(function(layer) {
+            var item = markerList.appendChild(document.createElement('li'));
+            var item_html = "";
+                item_html += "<p class='title'>" + layer.toGeoJSON().properties.title + "</p>";
+                item_html += "<p class='comment'>" + layer.toGeoJSON().properties.comment + "</p>";
+
+            item.innerHTML = item_html;
+
+            item.onclick = function() {
+                layer.openPopup();
+                map.panTo(layer.getLatLng());
+            };
+
+        });
+    }
+    function generateFeatures(){
+        var features = bridges.map(function(bridge){
+            var checkTime_obj = checkTime(bridge.time);
+
+            var bridge_description = bridge.time.map(function(time_obj){
+
+                var string_time = time_obj.start + " - " + time_obj.end;
+
+                if( JSON.stringify(time_obj) === JSON.stringify(checkTime_obj.time_obj) ){
+                    string_time = "<b>" + string_time + "</b>";
+                }
+                return string_time;
+            }).join("<br>")
+
+            bridge_description += "<br>";
+            bridge_description += "<br>";
+            // https://en.mostotrest-spb.ru//
+            var lang_prefix = app_language !== "ru" ? app_language + "." : "";
+            var link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
+            var a_wrap_link = "<a href='" + link + "' target='_blank'>" + i18.mostotrest[app_language] + "</a>";
+
+            bridge_description += a_wrap_link;
+
+            // console.log(checkStatus)
+
+            var feature_bridge = {
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: bridge.coordinates
+                },
+                properties: {
+                    title: bridge.title[app_language],
+                    description: bridge_description,
+                    comment: checkTime_obj.comment,
+                    'marker-size': 'large',
+
+                    'marker-color': checkTime_color(checkTime_obj.status),
+                    'marker-symbol': [2,3].includes(checkTime_obj.status) ? 'roadblock' : ''
+
+                }
+            };
+
+            return feature_bridge;
+        });
+
+        var geoJson = {
+            type: 'Bridges_Collection',
+            features: features
+        };
+
+        return geoJson;
+    }
+
+    function setGeoJSON(){
+        var geoJson = generateFeatures();
+        myLayer.setGeoJSON(geoJson);
+        generateUlist()
+    }
+    setInterval(setGeoJSON, 30000)
+
+
+
+    function getYandexTime(){
+        fetch("current_time.php")
+            .then(response => response.json())
+            .then(function(data ){
+                // console.log( "2" )
+                Time = moment(data.time).utc().utcOffset(3);
+                setInterval(function(){
+                    var current_sec = Time.seconds();
+                    Time = Time.seconds(++current_sec);
+                }, 1000)
+            })
+            .catch(function(e){
+
+            })
+            .finally(function(){
+                setInterval(()=>{
+                    var current_sec = getMomentNowTime().seconds();
+                    var format_string =  "";
+                    if(current_sec % 2){
+                        format_string =  "HH  mm";
+                    }else{
+                        format_string =  "HH:mm";
+                    }
+                    var current_time = getMomentNowTime().utc().utcOffset(3).format(format_string);
+                    // console.log(current_time)
+                    document.getElementById("current_time").innerHTML = current_time;
+                },1000)
+            })
+    };
+    getYandexTime()
+
+    function checkTime(time_array) {
+
+        // 0 сведён
+        // 1 скоро разведётся
+        // 2 разведён
+        // 3 скоро сведётся
+
+        // time_array: [
+        //     {
+        //         start: "1:25",
+        //         end: "2:45"
+        //     },
+        //     {
+        //         start: "3:10",
+        //         end: "5:00"
+        //     }
+        // ]
+        var result = {
+            status: 0, // по умолчанию сведён
+            time_obj: {},
+            comment: ""
+        };
+
+        time_array.every(function(time_obj){
+            var obj = {
+                start: "",
+                end: ""
+            };
+
+            for( let [key, value] of Object.entries(time_obj) ){
+                // start: "1:45"
+
+                let regex = /([0-9]*):([0-9]*)/g;
+                let match = regex.exec(value);
+                let hour = match[1];
+                let minute = match[2];
+
+                obj[key] = getMomentNowTime().hour(parseInt(hour)).minute(parseInt(minute));
+
+            }
+
+            var start = obj.start;
+            var end = obj.end;
+
+            if (getMomentNowTime().isBetween(start, end, undefined, '[)')){
+                // Разведён
+                result.status = 2;
+                result.time_obj = time_obj;
+                result.comment = i18.close[app_language];
+
+                var to_end = getMomentNowTime().diff(end, 'minutes');
+                if( to_end >= -15 && to_end <= 0){
+                    // Но скоро, а именно через 15 минут, сводится
+                    result.status = 3;
+                    result.time_obj = time_obj;
+                    result.comment = i18.will_open(to_end)[app_language];
+                    return false;
+                }
+                return false;
+            }else{
+                // здесь проверка на  или скоро сведется 1 или 3
+
+                var to_start = getMomentNowTime().diff(start, 'minutes');
+                if( Math.abs(to_start) < 10 ){
+                    // если до старта осталось 10 минут то скоро разводится
+                    result.status = 1;
+                    result.time_obj = time_obj;
+                    result.comment = i18.will_close(to_start)[app_language];
+                    return false;
+                }else{
+                    // result = 0
+                    return true;
+                }
+            }
+
+        });
+
+        return result;
+
+    }
+
+    function checkTime_color(number){
+        // 0 сведён
+        // 1 скоро разведётся
+        // 2 разведён
+        // 3 скоро сведётся
+        switch (number) {
+            case 0:
+                return "#01bb2a";
+            case 1:
+                return "#e7e406";
+            case 2:
+                return "#bb0000";
+            case 3:
+                return "#fe9f00";
+        }
+    }
+
+
+    var navigator_language = window.navigator.language;
+    var app_language = "ru";
+    if( navigator_language ){
+        if( navigator_language.includes("ru") ){
+            setLanguage("ru")
+        }else if(navigator_language.includes("en")){
+            setLanguage("en")
+        }else if( navigator_language.includes("zh") ){
+            setLanguage("ch")
+        }
+    }
+
+    function setLanguage(lang_string){
+        app_language = lang_string;
+        setGeoJSON()
+        generateUlist()
+    }
+
+
+    var animate_is_active = 0;
+    var animate_timer = 0;
+    function getMomentNowTime() {
+        if( animate_is_active ){
+            return moment().hour(1).minute( animate_is_active )
+        }
+
+        return moment(Time);
+    }
+
+
+    function animating() {
+
+        if ( animate_is_active > 0 ){
+            clearInterval(animate_timer)
+            animate_is_active = 0;
+            setGeoJSON()
+        }else{
+            animate_is_active = 1;
+            animate_timer = setInterval(function(){
+                ++animate_is_active;
+                setGeoJSON()
+            }, 500)
+        }
+
+
+    }
+
+</script>
+</body>
+</html>
