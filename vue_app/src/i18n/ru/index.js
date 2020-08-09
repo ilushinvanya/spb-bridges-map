@@ -11,5 +11,9 @@ export default {
 
   language_string: 'Язык',
   other: 'Другое',
-  write: 'Написать нам сообщение'
+  write: 'Написать нам сообщение',
+
+  timing: 'Тайминг',
+  timing_description: ''
+
 }

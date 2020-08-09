@@ -7,6 +7,7 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     state:{
       Time: moment(), // moment object,
+      timing_mode: null,
       bridges_with_params: []
     },
     mutations: {
@@ -15,6 +16,9 @@ export default function (/* { ssrContext } */) {
       },
       setTime(state, payload){
         state.Time = payload;
+      },
+      setTiming_mode(state, payload){
+        state.timing_mode = payload;
       }
     },
     strict: process.env.DEV

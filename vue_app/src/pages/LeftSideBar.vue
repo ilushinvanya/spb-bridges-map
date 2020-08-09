@@ -36,29 +36,41 @@
       <q-item tag="label" v-ripple>
         <q-item-section>
           <q-item-label>{{ $t('dark_mode') }}</q-item-label>
-<!--          <q-item-label caption>Allow notification</q-item-label>-->
+          <!--          <q-item-label caption>Allow notification</q-item-label>-->
         </q-item-section>
         <q-item-section side>
-          <q-toggle color="blue-grey" v-model="dark_mode" val="friend" />
+          <q-toggle color="blue-grey" v-model="dark_mode" val="friend"/>
         </q-item-section>
       </q-item>
-
 
 
       <q-item tag="label"
               @click="prompt = true"
               v-ripple>
-
-
         <q-item-section>
-            <span class="text">{{ $t('write') }}</span>
+          <span class="text">{{ $t('write') }}</span>
         </q-item-section>
 
         <q-item-section side>
-          <q-icon name="send" color="blue-grey-7" />
+          <q-icon name="send" color="blue-grey-7"/>
         </q-item-section>
 
       </q-item>
+
+
+      <q-item tag="label"
+              @click="timing_mode_toggle()"
+              v-ripple>
+        <q-item-section>
+          <span class="text">{{ $t('timing') }}</span>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-icon name="update" color="blue-grey-7"/>
+        </q-item-section>
+      </q-item>
+
+
     </q-list>
 
 
@@ -72,16 +84,15 @@
           <q-input outlined
                    v-model="contact"
                    placeholder="Ваш контакт"
-                   autofocus />
+                   autofocus/>
         </q-card-section>
 
         <q-card-section>
           <q-input outlined
                    type="textarea"
                    placeholder="Письмо"
-                   v-model="text" />
+                   v-model="text"/>
         </q-card-section>
-
 
 
         <q-card-actions align="right" class="text-primary">
@@ -89,12 +100,12 @@
             flat
             no-caps
             label="Отмена"
-            v-close-popup />
+            v-close-popup/>
           <q-btn
             no-caps
             color="primary"
             label="Отправить"
-            @click="sendMessage()" />
+            @click="sendMessage()"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -158,29 +169,59 @@
                 contact: ''
             }
         },
+        mounted(){
+            const dark_local = localStorage.getItem("dark");
+            this.dark_mode = dark_local ? !!dark_local : false;
+        },
         methods: {
-          sendMessage(){
-              if( this.contact.length === 0 ){
-                  this.$q.notify({
-                      type: 'warning',
-                      message: 'Заполните поле с контактом'
-                  })
-                  return false;
-              }
+            sendMessage() {
+                if (this.contact.length === 0) {
+                    this.$q.notify({
+                        type: 'warning',
+                        message: 'Заполните поле с контактом'
+                    })
+                    return false;
+                }
 
-              if( this.text.length === 0 ){
-                  this.$q.notify({
-                      type: 'warning',
-                      message: 'Заполните поле текстом'
-                  })
-                  return false;
-              }
+                if (this.text.length === 0) {
+                    this.$q.notify({
+                        type: 'warning',
+                        message: 'Заполните поле текстом'
+                    })
+                    return false;
+                }
 
-              this.$axios.post("http://localhost/", { contact: this.contact, text: this.text })
-                  .then((response)=>{
-                      console.log(response)
-                  })
-          }
+                var bodyFormData = new FormData();
+                bodyFormData.set('contact', this.contact);
+                bodyFormData.set('text', this.text);
+
+                this.$axios.post("http://bonusuber.ru/spb-bridges-map/index.php", bodyFormData)
+                    .then((response) => {
+                        let type = "";
+                        if (response.data.includes("успешно")) {
+                            type = 'positive';
+                            this.text = "";
+                            this.contact = "";
+                            this.prompt = false;
+
+                        } else if (response.data.includes("ошибки")) {
+                            type = 'negative'
+                        }
+
+                        this.$q.notify({
+                            type: type,
+                            message: response.data
+                        })
+                    })
+            },
+            timing_mode_toggle() {
+                if (this.$store.state.timing_mode === null) {
+                    this.$store.commit("setTiming_mode", +moment())
+                } else {
+                    this.$store.commit("setTiming_mode", null)
+
+                }
+            }
         },
         computed: {
             app_language: {
@@ -193,15 +234,17 @@
                 }
             }
         },
-        watch:{
-            dark_mode(newVal){
+        watch: {
+            dark_mode(newVal) {
                 let mapbox_styles = ""
-                if(newVal){
+                if (newVal) {
                     this.$q.dark.set(true)
                     mapbox_styles = 'mapbox://styles/mapbox/dark-v10';
-                }else{
+                    localStorage.setItem("dark", true)
+                } else {
                     this.$q.dark.set(false)
                     mapbox_styles = 'mapbox://styles/mapbox/streets-v11';
+                    localStorage.removeItem("dark")
                 }
                 L.mapbox.styleLayer(mapbox_styles).addTo(window.l_map);
             }

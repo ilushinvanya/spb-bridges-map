@@ -1,29 +1,36 @@
 <template>
   <q-page class="flex flex-center">
 
+
     <div id="map"></div>
+
+
+    <SliderCard v-if="timing_mode"/>
+
   </q-page>
 </template>
 
 <script>
+  import SliderCard from "../components/SliderCard";
     export default {
         name: 'Map',
+        components: {SliderCard},
         data() {
             return {
-                bridges_map_layer: "",
-
-                animate_is_active: 0,
-                animate_timer: 0
+                bridges_map_layer: ""
             }
         },
         computed: {
+            timing_mode() {
+                return this.$store.state.timing_mode
+            },
             app_language() {
                 return this.$i18n.locale;
             },
-            Time(){
+            Time() {
                 return this.$store.state.Time
             },
-            bridges_with_params(){
+            bridges_with_params() {
                 return this.$store.state.bridges_with_params
             },
             generateFeatures() {
@@ -68,55 +75,25 @@
                     .featureLayer(this.generateFeatures)
                     .addTo(window.l_map);
             },
-
-
             setGeoJSON() {
                 var geoJson = this.generateFeatures;
                 this.bridges_map_layer.setGeoJSON(geoJson);
-
-
-                // this.myLayer.eachLayer(function (layer) {
-                //
-                //     item.onclick = function () {
                 //         layer.openPopup();
-                //         map.panTo(layer.getLatLng());
-                //     };
-                //
-                // });
-            },
-
-
-
-            animating() {
-
-                if (animate_is_active > 0) {
-                    clearInterval(animate_timer)
-                    animate_is_active = 0;
-                    setGeoJSON()
-                } else {
-                    animate_is_active = 1;
-                    animate_timer = setInterval(function () {
-                        ++animate_is_active;
-                        setGeoJSON()
-                    }, 500)
-                }
-
-
             }
         },
         mounted() {
             this.initMap()
-
-
         },
         watch: {
-            generateFeatures:{
-                handler(newVal, oldVal){
+            generateFeatures: {
+                handler(newVal, oldVal) {
                     this.setGeoJSON()
                 },
-                deep:true
+                deep: true
+            },
+            slider_value(newVal) {
+                this.$store.commit("setTiming_mode", newVal)
             }
-
         }
     }
 </script>
@@ -124,21 +101,31 @@
 <style lang="scss">
   #map {
     width: 100%;
-    height: calc( 100vh - 100px );
+    height: calc(100vh - 100px);
   }
+
   body.body--dark .leaflet-popup-content {
     background: var(--q-color-dark);
     color: #fff;
   }
+
   .marker-title {
     font-size: 20px;
     margin-bottom: 7px;
   }
+
   .marker-description {
     font-size: 16px;
 
     b {
       color: #792ec0;
     }
+  }
+
+  .slider_card {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: 1001;
   }
 </style>

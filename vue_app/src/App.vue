@@ -86,9 +86,9 @@
         },
         methods: {
             getMomentNowTime() {
-                // if (this.animate_is_active) {
-                //     return moment().hour(1).minute(this.animate_is_active)
-                // }
+                if (this.$store.state.timing_mode !== null) {
+                    return moment(this.$store.state.timing_mode);
+                }
 
                 return moment(this.Time);
             },
