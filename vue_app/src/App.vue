@@ -4,17 +4,22 @@
   </div>
 </template>
 <script>
-    import bridges_data from "./assets/bridges.json"
+    // import bridges_data from "bridges.json"
     export default {
         name: 'App',
         data(){
             return {
-                bridges: bridges_data.bridges,
+                bridges: [],
             }
         },
         created() {
             setInterval(this.getNow, 1000);
-            this.$store.commit("setBridges", this.bridges_with_params)
+
+            this.$axios("/bridges.json").then((response) => {
+                this.bridges = response.data.bridges;
+                this.$store.commit("setBridges", this.bridges_with_params)
+            })
+
         },
         computed:{
             app_language() {
@@ -31,10 +36,17 @@
 
                     let bridge_description = bridge.time.map((time_obj) => {
 
-                        if ( !time_obj.hasOwnProperty("start") ) return false;
-                        if ( !time_obj.hasOwnProperty("end") ) return false;
+                        let string_time = "";
 
-                        let string_time = time_obj.start + " - " + time_obj.end;
+                        if ( time_obj.hasOwnProperty("start") ){
+                            string_time += time_obj.start;
+                        }else{
+                            return false;
+                        }
+                        if ( time_obj.hasOwnProperty("end") ) {
+                            string_time += " - " + time_obj.end;
+                        }
+
 
                         if (JSON.stringify(time_obj) === JSON.stringify(checkTime_obj.time_obj)) {
                             string_time = "<b>" + string_time + "</b>";
@@ -123,6 +135,12 @@
 
                     for (let [key, value] of Object.entries(time_obj)) {
                         // start: "1:45"
+
+                        if( value.length > 10 ){
+                            obj['start'] = value;
+                            obj['end'] = value;
+                            return false;
+                        }
 
                         let regex = /([0-9]*):([0-9]*)/g;
                         let match = regex.exec(value);

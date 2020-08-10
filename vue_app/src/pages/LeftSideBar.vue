@@ -1,5 +1,5 @@
 <template>
-  <div class="aside_list fit flex column justify-between">
+  <div class="aside_list fit flex column justify-between no-wrap">
 
     <q-list>
       <q-item-label header>{{ $t('language_string') }}</q-item-label>

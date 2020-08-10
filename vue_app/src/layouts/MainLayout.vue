@@ -5,7 +5,7 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="left = !left"/>
 
-        <q-toolbar-title class="flex items-center">
+        <q-toolbar-title class="flex items-center no-wrap">
           <q-avatar>🌉</q-avatar>
           <div>{{ $t('header_title') }}</div>
         </q-toolbar-title>
