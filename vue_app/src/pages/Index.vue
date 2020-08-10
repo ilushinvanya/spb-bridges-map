@@ -17,7 +17,6 @@
         components: {SliderCard},
         data() {
             return {
-                bridges_map_layer: ""
             }
         },
         computed: {
@@ -71,14 +70,13 @@
                     .setView([59.935446, 30.328063], 12)
                     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
 
-                this.bridges_map_layer = L.mapbox
+                window.bridges_map_layer = L.mapbox
                     .featureLayer(this.generateFeatures)
                     .addTo(window.l_map);
             },
             setGeoJSON() {
-                var geoJson = this.generateFeatures;
-                this.bridges_map_layer.setGeoJSON(geoJson);
-                //         layer.openPopup();
+                const geoJson = this.generateFeatures;
+                window.bridges_map_layer.setGeoJSON(geoJson);
             }
         },
         mounted() {

@@ -8,7 +8,8 @@ export default function (/* { ssrContext } */) {
     state:{
       Time: moment(), // moment object,
       timing_mode: null,
-      bridges_with_params: []
+      bridges_with_params: [],
+      map_layer: 0
     },
     mutations: {
       setBridges(state, array){
@@ -19,6 +20,9 @@ export default function (/* { ssrContext } */) {
       },
       setTiming_mode(state, payload){
         state.timing_mode = payload;
+      },
+      setLayer(state, payload){
+        state.map_layer = payload;
       }
     },
     strict: process.env.DEV

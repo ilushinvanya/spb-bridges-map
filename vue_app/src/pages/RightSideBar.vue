@@ -37,6 +37,12 @@
         },
         methods: {
             handleClickBridge(bridge) {
+                window.bridges_map_layer.eachLayer((layer) => {
+                    if ( bridge.title[this.app_language] === layer.feature.properties.title ){
+                        layer.openPopup();
+                    }
+                });
+
                 const coords = bridge.coordinates;
                 window.l_map.panTo(L.latLng(coords[1], coords[0]));
             }

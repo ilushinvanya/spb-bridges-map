@@ -15,7 +15,7 @@
         created() {
             setInterval(this.getNow, 1000);
 
-            this.$axios("/bridges.json").then((response) => {
+            this.$axios("bridges.json").then((response) => {
                 this.bridges = response.data.bridges;
                 this.$store.commit("setBridges", this.bridges_with_params)
             })
