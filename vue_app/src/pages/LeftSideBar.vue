@@ -1,5 +1,6 @@
 <template>
-  <div class="aside_list">
+  <div class="aside_list fit flex column justify-between">
+
     <q-list>
       <q-item-label header>{{ $t('language_string') }}</q-item-label>
 
@@ -27,23 +28,35 @@
 
       <q-item-label header>{{ $t('other') }}</q-item-label>
 
-      <!--      <q-item tag="label"-->
-      <!--              v-ripple>-->
-      <!--        <q-item-section>Тайминг</q-item-section>-->
-      <!--      </q-item>-->
-
-
+      <!-- dark_mode -->
       <q-item tag="label" v-ripple>
         <q-item-section>
           <q-item-label>{{ $t('dark_mode') }}</q-item-label>
-          <!--          <q-item-label caption>Allow notification</q-item-label>-->
         </q-item-section>
         <q-item-section side>
-          <q-toggle color="blue-grey" v-model="dark_mode" val="friend"/>
+          <q-toggle color="blue-grey" v-model="dark_mode"/>
         </q-item-section>
       </q-item>
 
 
+
+
+      <!-- timing -->
+      <q-item tag="label"
+              @click="timing_mode_toggle()"
+              v-ripple>
+        <q-item-section>
+          <q-item-label>{{ $t('timing') }}</q-item-label>
+          <q-item-label caption>{{ $t('timing_description') }}</q-item-label>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-icon name="update" color="blue-grey-7"/>
+        </q-item-section>
+      </q-item>
+
+
+      <!-- write -->
       <q-item tag="label"
               @click="prompt = true"
               v-ripple>
@@ -58,39 +71,37 @@
       </q-item>
 
 
-      <q-item tag="label"
-              @click="timing_mode_toggle()"
-              v-ripple>
-        <q-item-section>
-          <span class="text">{{ $t('timing') }}</span>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon name="update" color="blue-grey-7"/>
-        </q-item-section>
-      </q-item>
-
 
     </q-list>
 
 
-    <q-dialog v-model="prompt" persistent>
+    <q-list>
+      <q-item tag="label">
+        <q-item-section>
+          <q-item-label>author</q-item-label>
+          <q-item-label caption>man@bonusuber.ru</q-item-label>
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+
+    <q-dialog v-model="prompt">
       <q-card style="min-width: 350px">
         <q-card-section>
-          <div class="text-h6">Мы открыты к диалогу</div>
+          <div class="text-h6">{{$t('write_header')}}</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
           <q-input outlined
                    v-model="contact"
-                   placeholder="Ваш контакт"
+                   :placeholder="$t('write_contact')"
                    autofocus/>
         </q-card-section>
 
         <q-card-section>
           <q-input outlined
                    type="textarea"
-                   placeholder="Письмо"
+                   :placeholder="$t('write_letter')"
                    v-model="text"/>
         </q-card-section>
 
@@ -99,12 +110,12 @@
           <q-btn
             flat
             no-caps
-            label="Отмена"
+            :label="$t('cancel')"
             v-close-popup/>
           <q-btn
             no-caps
             color="primary"
-            label="Отправить"
+            :label="$t('send')"
             @click="sendMessage()"/>
         </q-card-actions>
       </q-card>
@@ -169,7 +180,7 @@
                 contact: ''
             }
         },
-        mounted(){
+        mounted() {
             const dark_local = localStorage.getItem("dark");
             this.dark_mode = dark_local ? !!dark_local : false;
         },

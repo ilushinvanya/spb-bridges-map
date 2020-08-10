@@ -143,7 +143,7 @@
                         result.comment = this.$t('close');
 
                         var to_end = this.getMomentNowTime().diff(end, 'minutes');
-                        if (to_end >= -15 && to_end <= 0) {
+                        if (to_end >= -20 && to_end <= 0) {
                             // Но скоро, а именно через 15 минут, сводится
                             result.status = 3;
                             result.time_obj = time_obj;
@@ -155,7 +155,7 @@
                         // здесь проверка на  или скоро сведется 1 или 3
 
                         var to_start = this.getMomentNowTime().diff(start, 'minutes');
-                        if (Math.abs(to_start) < 10) {
+                        if (Math.abs(to_start) <= 20) {
                             // если до старта осталось 10 минут то скоро разводится
                             result.status = 1;
                             result.time_obj = time_obj;
@@ -185,7 +185,7 @@
                     case 0:
                         return "#57ff53";
                     case 1:
-                        return "#e7e406";
+                        return "#cee705";
                     case 2:
                         return "#ff5b57";
                     case 3:

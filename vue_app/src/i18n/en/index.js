@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   header_title: 'Map of bridges in St. Petersburg',
 
@@ -10,9 +7,19 @@ export default {
   will_close: "The bridge will close in {minutes} min",
 
   time_footer: "Time in St. Petersburg",
+  language_string: 'Language',
+
+  other: 'Other',
   dark_mode: "Dark theme",
 
-  language_string: 'Language',
-  other: 'Other',
   write: 'Write us',
+  write_header: 'We are ready for a dialogue',
+  write_contact: 'Your contact',
+  write_letter: 'Letter',
+  cancel: 'Cancel',
+  send: 'Send',
+
+  timing: 'Timing',
+  timing_description: 'By moving the slider, you will see the situation on the bridges at the set time'
+
 }
