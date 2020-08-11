@@ -36,11 +36,11 @@
         },
         computed:{
             slider_min() {
-                const unix = this.$moment().hour(1).minute(1);
+                const unix = this.$moment().hour(1).minute(0);
                 return +unix;
             },
             slider_max() {
-                const unix = this.$moment().hour(6).minute(1);
+                const unix = this.$moment().hour(6).minute(0);
                 return +unix;
             },
             slider_label_value() {
@@ -83,7 +83,7 @@
         },
         mounted(){
 
-            if (moment(this.$store.state.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
+            if ( this.$moment(this.$store.state.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
                 this.slider_value = this.$store.state.timing_mode;
             }
 

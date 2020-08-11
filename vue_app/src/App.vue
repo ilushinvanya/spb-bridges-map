@@ -6,15 +6,15 @@
 <script>
     export default {
         name: 'App',
-        data(){
+        data() {
             return {
                 bridges: [],
                 serverOffset: 0,
             }
         },
-        created(){
+        created() {
             const now = this.$moment();
-            if(  now.utcOffset() !== 180 ){
+            if (now.utcOffset() !== 180) {
                 now.utcOffset(180)
             }
             this.$store.commit("setTime", now);
@@ -25,14 +25,14 @@
             this.getBridges()
         },
 
-        computed:{
+        computed: {
             app_language() {
                 return this.$i18n.locale;
             },
-            Time(){
+            Time() {
                 return this.$store.state.Time
             },
-            bridges_with_params(){
+            bridges_with_params() {
                 let new_bridges_features = this.bridges.map((bridge) => {
                     const checkTime_obj = this.checkTime(bridge.time);
 
@@ -42,12 +42,12 @@
 
                         let string_time = "";
 
-                        if ( time_obj.hasOwnProperty("start") ){
+                        if (time_obj.hasOwnProperty("start")) {
                             string_time += time_obj.start;
-                        }else{
+                        } else {
                             return false;
                         }
-                        if ( time_obj.hasOwnProperty("end") ) {
+                        if (time_obj.hasOwnProperty("end")) {
                             string_time += " - " + time_obj.end;
                         }
 
@@ -58,7 +58,7 @@
                         return string_time;
                     }).join("<br>")
 
-                    if( bridge_description.length > 0){
+                    if (bridge_description.length > 0) {
                         bridge_description += "<br>";
                         bridge_description += "<br>";
                     }
@@ -142,7 +142,7 @@
                     for (let [key, value] of Object.entries(time_obj)) {
                         // start: "1:45"
 
-                        if( value.length > 10 ){
+                        if (value.length > 10) {
                             obj['start'] = value;
                             obj['end'] = value;
                             return false;
@@ -196,31 +196,103 @@
                 return result;
 
             },
+
             checkTime_color(checkTime_obj) {
+                let R = 75;
+                let G = 255;
+                const B = 80;
+                const green_start_color = "rgb(75, 255, 80)";
+
                 // checkTime_obj {
                 //     status, comment, time_obj
                 //
                 // statuses
                 // 0 сведён
+                // 180 разница у красного и зеленого
                 // 1 скоро разведётся
                 // 2 разведён
                 // 3 скоро сведётся
+
+
+                let result_color_string = "";
+                let minutes = 0;
+                if ( checkTime_obj.comment.length > 0 ){
+                    const array_of_number = checkTime_obj.comment.match(/[0-99*]/g);
+                    if( array_of_number !== null){
+                      const string_minutes = array_of_number.join("");
+                      minutes = parseInt(string_minutes);
+
+                    }
+                }
+
                 switch (checkTime_obj.status) {
                     case 0:
-                        return "#57ff53";
+                        const green_HEX_color = this.rgbToHex(R, G, B);
+                        return green_HEX_color;
                     case 1:
-                        return "#cee705";
+
+                        // от 20 до 11 минут, самое начало
+                        if ( minutes > 10 ){
+
+                            // увеличиваем Красный до максимума
+                            let new_R = R + 19 * (20 - minutes);
+                            if(new_R > 255) new_R = 255;
+
+                            // Красный стремится к макс, зеленый на максимуме
+                            result_color_string = this.rgbToHex(new_R, G, B);
+                        }else{
+                            // от 10 до 0 минут
+
+                            // уменьшаем Зеленый до 91
+                            let new_G = G - 15 * (10 - minutes);
+                            if ( new_G < 91 ) new_G = 91;
+
+                            // в итоге макс Красный, минимальный Зеленый 91
+                            result_color_string = this.rgbToHex(255, new_G, B);
+                        }
+
+                        return result_color_string;
+
                     case 2:
-                        return "#ff5b57";
+                        return "#ff5b50";
                     case 3:
-                        return "#feb01b";
+
+                        // от 20 до 11 минут
+                        if ( minutes > 10 ){
+
+                            // Выкручиваем Зеленый на максимум
+                            let new_G = 91 + 15 * (20 - minutes);
+                            if(new_G > 255) new_G = 255;
+
+                            // 255 Красного, 255 Зеленого
+                            result_color_string = this.rgbToHex(255, new_G, B);
+                        }else{
+
+                            // Уменьшаем Красный до 75
+                            let new_R = 255 - 19 * (10 - minutes);
+                            if ( new_R > 255 ) new_R = 255;
+
+                            result_color_string = this.rgbToHex(new_R, G, B);
+                        }
+
+                        return result_color_string;
+
+
+                        // return "#feb01b";
                 }
             },
+            rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    const hex = x.toString(16);
+                    return hex.length === 1 ? '0' + hex : hex
+                }).join('')
+            },
+
 
             getYandexTime() {
 
                 var domain = "";
-                if( process.env.DEV ) {
+                if (process.env.DEV) {
                     domain = "http://localhost/"
                 }
 
@@ -230,7 +302,7 @@
                         const moment_obj_response_time = this.$moment(response_time);
                         this.serverOffset = moment_obj_response_time.diff(this.$moment());
 
-                        if (response.data.hasOwnProperty("clocks")){
+                        if (response.data.hasOwnProperty("clocks")) {
                             if (response.data.clocks.hasOwnProperty("2")) {
                                 this.$store.commit("setYandexClock", response.data.clocks["2"])
                             }
@@ -244,19 +316,33 @@
                         setInterval(this.getNow, 1000);
                     })
             },
-            getBridges(){
+            getBridges() {
+                const local_bridges = localStorage.getItem("bridges");
+
                 this.$axios("bridges.json")
                     .then((response) => {
-                        if (typeof response.data === 'object'){
-                            if ( response.data.hasOwnProperty("bridges") ){
+                        if (typeof response.data === 'object') {
+                            if (response.data.hasOwnProperty("bridges")) {
                                 this.bridges = response.data.bridges;
-                                localStorage.setItem("bridges", response.data.bridges)
+
+                                const stringify_bridges_response = JSON.stringify(response.data.bridges);
+
+                                if (local_bridges) {
+                                    if ( stringify_bridges_response === local_bridges){
+                                        // изменений нет
+                                    }else{
+                                        // Есть изменения после последнего получения bridges
+                                    }
+                                }
+
+
+                                localStorage.setItem("bridges", stringify_bridges_response);
                             }
                         }
                     })
-                    .catch(e=>{
-                        const local_bridges = localStorage.getItem("bridges");
-                        if ( local_bridges ){
+                    .catch(e => {
+
+                        if (local_bridges) {
                             this.bridges = JSON.parse(local_bridges);
                         }
                     })
@@ -270,7 +356,7 @@
                 const now_with_offset = now
                     .add(this.serverOffset, 'milliseconds');
 
-                if(  now_with_offset.utcOffset() !== 180 ){
+                if (now_with_offset.utcOffset() !== 180) {
                     now_with_offset.utcOffset(180)
                 }
 
@@ -278,14 +364,14 @@
             }
         },
         watch: {
-            bridges_with_params:{
-                handler(newVal, oldVal){
-                    if( JSON.stringify(newVal) !== JSON.stringify(oldVal) ){
+            bridges_with_params: {
+                handler(newVal, oldVal) {
+                    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
                         this.$store.commit("setBridges", newVal)
                         // console.warn("COMMIT TO VUEX")
                     }
                 },
-                deep:true
+                deep: true
             }
         }
     }

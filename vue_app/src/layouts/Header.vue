@@ -9,9 +9,12 @@
           color="white"
           class="q-mr-md"
           text-color="black">
-          <div class="temp text-weight-bold ">{{ weather.temp }}</div>
-          <img class="absolute"
-               :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"/>
+          <div class="temp text-weight-bold ">{{ weather.temp }}°</div>
+          <img v-if="!hide_weather_icon"
+               class="absolute"
+               :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"
+               @error="hide_weather_icon = true"
+          />
         </q-avatar> <div> {{ $t('header_title') }} 🌉</div>
       </q-toolbar-title>
 
@@ -26,6 +29,7 @@
         name: 'HeaderComponent',
         data() {
             return {
+                hide_weather_icon: false
             }
         },
         props:["left", "right"],

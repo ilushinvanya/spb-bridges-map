@@ -32,17 +32,17 @@ register(process.env.SERVICE_WORKER_FILE, {
     Notify.create({
       color: 'primary',
       icon: 'cloud_download',
-      message: 'Есть обновления<br/> Нажмите "Обновить", чтобы скачать новую версию',
+      message: i18n.t('update_available'),
       timeout: 0,
       html: true,
       multiLine: true,
       position: 'center',
       actions: [
         {
-          label: 'Обновить',
+          label: 'Ok',
           color: 'yellow',
           handler: () => {
-            window.location.reload()
+            window.location.reload(true)
           }
         }
       ]
