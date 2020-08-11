@@ -1,5 +1,5 @@
 export default {
-  header_title: 'Map of bridges in St. Petersburg',
+  header_title: 'Map of drawbridges in St. Petersburg',
 
   close: "The bridge is close",
   mostotrest: "The Mostotrest website",

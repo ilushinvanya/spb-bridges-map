@@ -12,34 +12,19 @@
                 serverOffset: 0,
             }
         },
-        mounted(){
+        created(){
+            const now = this.$moment();
+            if(  now.utcOffset() !== 180 ){
+                now.utcOffset(180)
+            }
+            this.$store.commit("setTime", now);
+
 
             this.getYandexTime()
 
-
-
-            this.$axios("bridges.json")
-                .then((response) => {
-                    if (typeof response.data === 'object'){
-                        if ( response.data.hasOwnProperty("bridges") ){
-                            this.bridges = response.data.bridges;
-                            localStorage.setItem("bridges", response.data.bridges)
-                        }
-                    }
-                })
-                .catch(e=>{
-                    const local_bridges = localStorage.getItem("bridges");
-                    if ( local_bridges ){
-                        this.bridges = JSON.parse(local_bridges);
-                    }
-                })
-                .finally(() => {
-                    this.$store.commit("setBridges", this.bridges_with_params)
-                })
-
-
-
+            this.getBridges()
         },
+
         computed:{
             app_language() {
                 return this.$i18n.locale;
@@ -120,10 +105,10 @@
 
                 // Эта проверка для тайминг режима
                 if (this.$store.state.timing_mode !== null) {
-                    return moment(this.$store.state.timing_mode);
+                    return this.$moment(this.$store.state.timing_mode);
                 }
 
-                return moment(this.Time);
+                return this.$moment(this.Time);
             },
             checkTime(time_array) {
 
@@ -242,8 +227,8 @@
                 this.$axios(domain + "current_time.php")
                     .then(response => {
                         const response_time = response.data.time;
-                        const moment_obj_response_time = moment(response_time);
-                        this.serverOffset = moment_obj_response_time.diff(moment());
+                        const moment_obj_response_time = this.$moment(response_time);
+                        this.serverOffset = moment_obj_response_time.diff(this.$moment());
 
                         if (response.data.hasOwnProperty("clocks")){
                             if (response.data.clocks.hasOwnProperty("2")) {
@@ -259,9 +244,29 @@
                         setInterval(this.getNow, 1000);
                     })
             },
+            getBridges(){
+                this.$axios("bridges.json")
+                    .then((response) => {
+                        if (typeof response.data === 'object'){
+                            if ( response.data.hasOwnProperty("bridges") ){
+                                this.bridges = response.data.bridges;
+                                localStorage.setItem("bridges", response.data.bridges)
+                            }
+                        }
+                    })
+                    .catch(e=>{
+                        const local_bridges = localStorage.getItem("bridges");
+                        if ( local_bridges ){
+                            this.bridges = JSON.parse(local_bridges);
+                        }
+                    })
+                    .finally(() => {
+                        this.$store.commit("setBridges", this.bridges_with_params)
+                    })
+            },
 
             getNow() {
-                const now = moment();
+                const now = this.$moment();
                 const now_with_offset = now
                     .add(this.serverOffset, 'milliseconds');
 

@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     state:{
-      Time: moment(), // moment object,
+      Time: 0, // moment object,
       timing_mode: null,
       bridges_with_params: [],
       yandex_clock: {},

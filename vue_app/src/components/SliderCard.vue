@@ -36,11 +36,11 @@
         },
         computed:{
             slider_min() {
-                const unix = moment().hour(1).minute(1);
+                const unix = this.$moment().hour(1).minute(1);
                 return +unix;
             },
             slider_max() {
-                const unix = moment().hour(6).minute(1);
+                const unix = this.$moment().hour(6).minute(1);
                 return +unix;
             },
             slider_label_value() {
@@ -49,7 +49,7 @@
                 }
 
                 let return_string = "";
-                const moment_slider_value_format = moment(this.slider_value).format("HH:mm");
+                const moment_slider_value_format = this.$moment(this.slider_value).format("HH:mm");
                 return_string += moment_slider_value_format;
 
                 if (moment_slider_value_format === this.showSunriseSunset.sunset){

@@ -347,7 +347,7 @@
 
     }
 
-    var Time = moment();
+    var Time = this.$moment();
     var myLayer, map;
     function initMap(){
         L.mapbox.accessToken = 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg';
@@ -451,7 +451,7 @@
             .then(response => response.json())
             .then(function(data ){
                 // console.log( "2" )
-                Time = moment(data.time).utc().utcOffset(3);
+                Time = this.$moment(data.time).utc().utcOffset(3);
                 setInterval(function(){
                     var current_sec = Time.seconds();
                     Time = Time.seconds(++current_sec);

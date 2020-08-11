@@ -19,6 +19,8 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
 
+      'moment',
+      // 'mapbox',
       'i18n',
       'axios',
     ],
@@ -110,13 +112,13 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Spb bridges map`,
-        short_name: `Spb bridges map`,
+        name: `Разводные мосты Петербурга`,
+        short_name: `Мосты Питера`,
         description: `Map of bridges in St. Petersburg`,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
-        theme_color: '#027be3',
+        theme_color: '#78909c',
         icons: [
           {
             src: 'icons/icon-128x128.png',

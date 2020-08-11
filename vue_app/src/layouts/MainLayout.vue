@@ -27,8 +27,8 @@
 
 
 <script>
-    import RightSideBar from '../pages/RightSideBar.vue'
-    import LeftSideBar from '../pages/LeftSideBar.vue'
+    import RightSideBar from './RightSideBar.vue'
+    import LeftSideBar from './LeftSideBar.vue'
     import HeaderComponent from './Header.vue'
     import FooterComponent from './Footer.vue'
 

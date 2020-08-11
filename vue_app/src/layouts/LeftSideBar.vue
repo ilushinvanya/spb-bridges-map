@@ -227,7 +227,7 @@
             },
             timing_mode_toggle() {
                 if (this.$store.state.timing_mode === null) {
-                    this.$store.commit("setTiming_mode", +moment())
+                    this.$store.commit("setTiming_mode", +this.$moment())
                 } else {
                     this.$store.commit("setTiming_mode", null)
 
