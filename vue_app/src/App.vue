@@ -4,22 +4,41 @@
   </div>
 </template>
 <script>
-    // import bridges_data from "bridges.json"
     export default {
         name: 'App',
         data(){
             return {
                 bridges: [],
-                serverOffset: 0
+                serverOffset: 0,
             }
         },
         mounted(){
-            this.$axios("bridges.json").then((response) => {
-                this.bridges = response.data.bridges;
-                this.$store.commit("setBridges", this.bridges_with_params)
-            })
 
             this.getYandexTime()
+
+
+
+            this.$axios("bridges.json")
+                .then((response) => {
+                    if (typeof response.data === 'object'){
+                        if ( response.data.hasOwnProperty("bridges") ){
+                            this.bridges = response.data.bridges;
+                            localStorage.setItem("bridges", response.data.bridges)
+                        }
+                    }
+                })
+                .catch(e=>{
+                    const local_bridges = localStorage.getItem("bridges");
+                    if ( local_bridges ){
+                        this.bridges = JSON.parse(local_bridges);
+                    }
+                })
+                .finally(() => {
+                    this.$store.commit("setBridges", this.bridges_with_params)
+                })
+
+
+
         },
         computed:{
             app_language() {
@@ -98,6 +117,8 @@
         },
         methods: {
             getMomentNowTime() {
+
+                // Эта проверка для тайминг режима
                 if (this.$store.state.timing_mode !== null) {
                     return moment(this.$store.state.timing_mode);
                 }
@@ -212,9 +233,24 @@
             },
 
             getYandexTime() {
-                this.$axios("http://localhost/current_time.php")
+
+                var domain = "";
+                if( process.env.DEV ) {
+                    domain = "http://localhost/"
+                }
+
+                this.$axios(domain + "current_time.php")
                     .then(response => {
-                        this.serverOffset = moment(response.data.time).diff(moment());
+                        const response_time = response.data.time;
+                        const moment_obj_response_time = moment(response_time);
+                        this.serverOffset = moment_obj_response_time.diff(moment());
+
+                        if (response.data.hasOwnProperty("clocks")){
+                            if (response.data.clocks.hasOwnProperty("2")) {
+                                this.$store.commit("setYandexClock", response.data.clocks["2"])
+                            }
+                        }
+
                     })
                     .catch(e => {
                         console.log(e)
@@ -225,18 +261,23 @@
             },
 
             getNow() {
-                const now = moment().add(this.serverOffset, 'milliseconds');
-                this.$store.commit("setTime", now);
+                const now = moment();
+                const now_with_offset = now
+                    .add(this.serverOffset, 'milliseconds');
+
+                if(  now_with_offset.utcOffset() !== 180 ){
+                    now_with_offset.utcOffset(180)
+                }
+
+                this.$store.commit("setTime", now_with_offset);
             }
         },
         watch: {
             bridges_with_params:{
                 handler(newVal, oldVal){
-
-
                     if( JSON.stringify(newVal) !== JSON.stringify(oldVal) ){
                         this.$store.commit("setBridges", newVal)
-                        console.warn("COMMIT TO VUEX")
+                        // console.warn("COMMIT TO VUEX")
                     }
                 },
                 deep:true

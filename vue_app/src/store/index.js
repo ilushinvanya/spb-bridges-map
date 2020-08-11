@@ -9,7 +9,7 @@ export default function (/* { ssrContext } */) {
       Time: moment(), // moment object,
       timing_mode: null,
       bridges_with_params: [],
-      map_layer: 0
+      yandex_clock: {},
     },
     mutations: {
       setBridges(state, array){
@@ -21,8 +21,8 @@ export default function (/* { ssrContext } */) {
       setTiming_mode(state, payload){
         state.timing_mode = payload;
       },
-      setLayer(state, payload){
-        state.map_layer = payload;
+      setYandexClock(state, payload){
+        state.yandex_clock = payload;
       }
     },
     strict: process.env.DEV

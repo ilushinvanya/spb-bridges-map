@@ -17,7 +17,7 @@
         label
         label-always
         :label-value="slider_label_value"
-        color="light-green"
+        color="green"
       />
 
 
@@ -47,17 +47,45 @@
                 if( this.slider_value === null ){
                     return 0;
                 }
-                return moment(this.slider_value).format("HH:mm")
+
+                let return_string = "";
+                const moment_slider_value_format = moment(this.slider_value).format("HH:mm");
+                return_string += moment_slider_value_format;
+
+                if (moment_slider_value_format === this.showSunriseSunset.sunset){
+                    return_string += " 🌇";
+                }
+                if (moment_slider_value_format === this.showSunriseSunset.sunrise){
+                    return_string += " 🌅";
+
+                }
+
+                return return_string
+            },
+
+            yandex_clock() {
+                return this.$store.state.yandex_clock;
+            },
+            showSunriseSunset(){
+                if (this.yandex_clock.hasOwnProperty("showSunriseSunset")){
+                    if(this.yandex_clock.showSunriseSunset){
+                        if (!this.yandex_clock.hasOwnProperty("sunset")) return false;
+                        if (!this.yandex_clock.hasOwnProperty("sunrise")) return false;
+
+                        return {
+                            sunset: this.yandex_clock.sunset,
+                            sunrise: this.yandex_clock.sunrise
+                        }
+                    }
+                }
+                return false;
             },
         },
         mounted(){
 
-
-
             if (moment(this.$store.state.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
                 this.slider_value = this.$store.state.timing_mode;
             }
-
 
         },
         methods:{
