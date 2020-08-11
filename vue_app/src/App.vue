@@ -10,16 +10,16 @@
         data(){
             return {
                 bridges: [],
+                serverOffset: 0
             }
         },
-        created() {
-            setInterval(this.getNow, 1000);
-
+        mounted(){
             this.$axios("bridges.json").then((response) => {
                 this.bridges = response.data.bridges;
                 this.$store.commit("setBridges", this.bridges_with_params)
             })
 
+            this.getYandexTime()
         },
         computed:{
             app_language() {
@@ -212,41 +212,28 @@
             },
 
             getYandexTime() {
-                fetch("current_time.php")
-                    .then(response => response.json())
-                    .then(function (data) {
-                        // console.log( "2" )
-                        // Time = moment(data.time).utc().utcOffset(3);
-                        setInterval(function () {
-                            // var current_sec = Time.seconds();
-                            // Time = Time.seconds(++current_sec);
-                        }, 1000)
+                this.$axios("http://localhost/current_time.php")
+                    .then(response => {
+                        this.serverOffset = moment(response.data.time).diff(moment());
                     })
-                    .catch(function (e) {
-
+                    .catch(e => {
+                        console.log(e)
                     })
-                    .finally(function () {
-                        setInterval(() => {
-                            var current_sec = getMomentNowTime().seconds();
-                            var format_string = "";
-                            if (current_sec % 2) {
-                                format_string = "HH  mm";
-                            } else {
-                                format_string = "HH:mm";
-                            }
-                            var current_time = getMomentNowTime().utc().utcOffset(3).format(format_string);
-                        }, 1000)
+                    .finally(() => {
+                        setInterval(this.getNow, 1000);
                     })
             },
 
             getNow() {
-                const now = moment();
+                const now = moment().add(this.serverOffset, 'milliseconds');
                 this.$store.commit("setTime", now);
             }
         },
         watch: {
             bridges_with_params:{
                 handler(newVal, oldVal){
+
+
                     if( JSON.stringify(newVal) !== JSON.stringify(oldVal) ){
                         this.$store.commit("setBridges", newVal)
                         console.warn("COMMIT TO VUEX")

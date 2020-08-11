@@ -30,7 +30,7 @@
       <q-toolbar>
         <q-toolbar-title>
           <q-avatar :size="'50px'">
-            <canvas id="canvas" width="40" height="40"/>
+            <canvas id="canvas" width="42" height="42"/>
           </q-avatar>
           {{ $t('time_footer') }} -
           {{ Time.format("HH:mm:ss") }}
