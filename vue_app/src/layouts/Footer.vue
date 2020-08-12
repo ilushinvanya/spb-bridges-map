@@ -6,9 +6,21 @@
       <q-avatar :size="'50px'">
         <div class="hero-circle">
           <div class="hero-face">
-            <div id="hour" class="hero-hour" :style="updateClock.hour_css"></div>
-            <div id="minute" class="hero-minute" :style="updateClock.minute_css"></div>
-            <div id="second" class="hero-second" :style="updateClock.second_css"></div>
+            <div id="hour"
+                 class="hero-hour"
+                 :style="updateClock.hour_css"
+            ></div>
+
+            <div id="minute"
+                 class="hero-minute"
+                 :style="updateClock.minute_css"
+            ></div>
+
+            <div id="second"
+                 class="hero-second"
+                 :style="updateClock.second_css"
+            ></div>
+
           </div>
         </div>
       </q-avatar>
@@ -114,7 +126,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        margin: -40% -1px 0 0;
+        margin: -40% -1px 0 -1px;
         padding: 40% 1px 0;
         background: #fff;
         -ms-transform-origin: 50% 100%;

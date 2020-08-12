@@ -112,8 +112,8 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: { skipWaiting: true }, // only for GenerateSW
       manifest: {
-        name: `Разводные мосты Петербурга`,
-        short_name: `Мосты Питера`,
+        name: `Карта разводных мостов Петербурга`,
+        short_name: `Мосты Петербурга`,
         description: `Map of bridges in St. Petersburg`,
         display: 'standalone',
         orientation: 'portrait',
