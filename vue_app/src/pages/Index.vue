@@ -1,6 +1,53 @@
 <template>
   <q-page class="flex flex-center">
 
+    <div id="legenda">
+
+      <q-card>
+        <q-card-section>
+
+          <q-list>
+
+            <q-item>
+              <q-item-section avatar>
+                <img src="../assets/pin_roadblock.png"/>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>{{ $t('close') }}</q-item-label>
+                <q-item-label caption>{{ $t('will_close') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+
+
+            <q-item>
+              <q-item-section avatar>
+                <img src="../assets/pin_circle.png"/>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>{{ $t('not_closed') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+
+
+            <q-item>
+              <q-item-section avatar>
+                <img src="../assets/pin_circle_stroked.png"/>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label>{{ $t('open') }}</q-item-label>
+                <q-item-label caption>{{ $t('will_open') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+
+
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </div>
+
 
     <div id="map"></div>
 
@@ -11,13 +58,13 @@
 </template>
 
 <script>
-  import SliderCard from "../components/SliderCard";
+    import SliderCard from "../components/SliderCard";
+
     export default {
         name: 'Map',
         components: {SliderCard},
         data() {
-            return {
-            }
+            return {}
         },
         computed: {
             timing_mode() {
@@ -97,6 +144,13 @@
 </script>
 
 <style lang="scss">
+  #legenda {
+    width: 300px;
+    position: absolute;
+    top:20px;
+    right: 20px;
+    z-index: 999;
+  }
   #map {
     width: 100%;
     height: calc(100vh - 100px);

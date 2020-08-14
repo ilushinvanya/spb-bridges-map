@@ -1,10 +1,15 @@
 export default {
   header_title: 'Карта разводных мостов',
 
+  open: "Сведён",
   close: "Разведён",
   mostotrest: "Мост на сайте Мостотреста",
-  will_open: "Сведётся через {minutes} мин",
-  will_close: "Разводится через {minutes} мин",
+  will_open_min: "Сведётся через {minutes} мин",
+  will_open: "Скоро сведётся",
+  will_close_min: "Разводится через {minutes} мин",
+  will_close: "Скоро разводится",
+
+  not_closed: "Мосты сегодня не закрываются",
 
   time_footer: "Точное время в Петербурге",
   language_string: 'Язык',

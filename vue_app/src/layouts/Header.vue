@@ -7,9 +7,9 @@
         <q-avatar
           v-if="weather"
           color="white"
-          class="q-mr-md"
+          class="q-mr-sm"
           text-color="black">
-          <div class="temp text-weight-bold ">{{ weather.temp }}°</div>
+          <div class="temp text-weight-bold">{{ weather.temp }}°</div>
           <img v-if="!hide_weather_icon"
                class="absolute"
                :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"

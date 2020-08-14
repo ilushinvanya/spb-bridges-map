@@ -1,10 +1,15 @@
 export default {
   header_title: 'Map of drawbridges in St. Petersburg',
 
+  open: "The bridge is open",
   close: "The bridge is close",
   mostotrest: "The Mostotrest website",
-  will_open: "The bridge will open in {minutes} min",
-  will_close: "The bridge will close in {minutes} min",
+  will_open_min: "The bridge will open in {minutes} min",
+  will_open: "The bridge will open",
+  will_close_min: "The bridge will close in {minutes} min",
+  will_close: "The bridge will close",
+
+  not_closed: "Bridges are not closed today",
 
   time_footer: "Time in St. Petersburg",
   language_string: 'Language',

@@ -65,20 +65,30 @@
 
 
                     // https://en.mostotrest-spb.ru//
-                    var lang_prefix = this.app_language !== "ru" ? this.app_language + "." : "";
-                    var link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
-                    var a_wrap_link = "<a href='" + link + "' target='_blank'>" + this.$t('mostotrest') + "</a>";
+                    let lang_prefix = this.app_language !== "ru" ? this.app_language + "." : "";
+                    let link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
+                    let a_wrap_link = "<a href='" + link + "' target='_blank'>" + this.$t('mostotrest') + "</a>";
                     bridge_description += a_wrap_link;
                     result_obj.description = bridge_description
 
 
                     result_obj.comment = checkTime_obj.comment
 
-                    var marker_color = this.checkTime_color(checkTime_obj)
+                    const marker_color = this.checkTime_color(checkTime_obj)
                     result_obj.marker_color = marker_color
 
-                    result_obj.status = checkTime_obj.status
-                    result_obj.marker_symbol = [2, 3].includes(checkTime_obj.status) ? 'roadblock' : ''
+                    result_obj.status = checkTime_obj.status;
+
+                    let marker_symbol = "";
+                    if ([2, 3].includes(checkTime_obj.status)){
+                        marker_symbol = 'roadblock';
+                    }else if(bridge.time[0].start.length > 7){
+                        marker_symbol = 'circle';
+                    }else{
+                        marker_symbol = 'circle-stroked';
+
+                    }
+                    result_obj.marker_symbol =  marker_symbol;
 
                     return result_obj;
                 })
@@ -127,14 +137,14 @@
                 //         end: "5:00"
                 //     }
                 // ]
-                var result = {
+                let result = {
                     status: 0, // по умолчанию сведён
                     time_obj: {},
                     comment: ""
                 };
 
                 time_array.every((time_obj) => {
-                    var obj = {
+                    let obj = {
                         start: "",
                         end: ""
                     };
@@ -157,8 +167,8 @@
 
                     }
 
-                    var start = obj.start;
-                    var end = obj.end;
+                    let start = obj.start;
+                    let end = obj.end;
 
                     if (this.getMomentNowTime().isBetween(start, end, undefined, '[)')) {
                         // Разведён
@@ -166,24 +176,24 @@
                         result.time_obj = time_obj;
                         result.comment = this.$t('close');
 
-                        var to_end = this.getMomentNowTime().diff(end, 'minutes');
+                        let to_end = this.getMomentNowTime().diff(end, 'minutes');
                         if (to_end >= -20 && to_end <= 0) {
                             // Но скоро, а именно через 15 минут, сводится
                             result.status = 3;
                             result.time_obj = time_obj;
-                            result.comment = this.$t('will_open', {minutes: Math.abs(to_end)});
+                            result.comment = this.$t('will_open_min', {minutes: Math.abs(to_end)});
                             return false;
                         }
                         return false;
                     } else {
                         // здесь проверка на  или скоро сведется 1 или 3
 
-                        var to_start = this.getMomentNowTime().diff(start, 'minutes');
+                        let to_start = this.getMomentNowTime().diff(start, 'minutes');
                         if (Math.abs(to_start) <= 20) {
                             // если до старта осталось 10 минут то скоро разводится
                             result.status = 1;
                             result.time_obj = time_obj;
-                            result.comment = this.$t('will_close', {minutes: Math.abs(to_start)});
+                            result.comment = this.$t('will_close_min', {minutes: Math.abs(to_start)});
                             return false;
                         } else {
                             // result = 0
@@ -291,7 +301,7 @@
 
             getYandexTime() {
 
-                var domain = "";
+                let domain = "";
                 if (process.env.DEV) {
                     domain = "http://localhost/"
                 }

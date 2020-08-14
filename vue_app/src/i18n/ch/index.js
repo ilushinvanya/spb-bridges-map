@@ -1,10 +1,15 @@
 export default {
   header_title: '圣彼得堡的桥梁地图',
 
-  close: "这座桥是开放的",
+  open:  "这座桥是开放的",
+  close: "桥就在附近",
   mostotrest: "Mostotrest",
-  will_open: "桥将在{minutes} 分钟后开放",
-  will_close: "桥将在{minutes} 分钟后关闭",
+  will_open_min: "桥将在{minutes} 分钟后开放",
+  will_open: "桥将打开",
+  will_close_min: "桥将在{minutes} 分钟后关闭",
+  will_close: "桥将关闭",
+
+  not_closed: "今天桥梁不关闭",
 
   time_footer: "圣彼得堡时间",
   language_string: '语言',
