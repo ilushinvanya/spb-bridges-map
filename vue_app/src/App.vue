@@ -303,10 +303,10 @@
 
                 let domain = "";
                 if (process.env.DEV) {
-                    domain = "http://localhost/"
+                    domain = "http://localhost"
                 }
 
-                this.$axios(domain + "current_time.php")
+                this.$axios(domain + "/server_bridges/current_time.php")
                     .then(response => {
                         const response_time = response.data.time;
                         const moment_obj_response_time = this.$moment(response_time);
@@ -329,7 +329,7 @@
             getBridges() {
                 const local_bridges = localStorage.getItem("bridges");
 
-                this.$axios("bridges.json")
+                this.$axios("/bridges.json")
                     .then((response) => {
                         if (typeof response.data === 'object') {
                             if (response.data.hasOwnProperty("bridges")) {

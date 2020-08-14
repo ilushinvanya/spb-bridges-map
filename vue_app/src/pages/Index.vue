@@ -1,7 +1,9 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="flex flex-center overflow-hidden">
 
-    <div id="legenda">
+    <div id="legenda"
+         :class="transition_class"
+         v-touch-swipe.mouse="handleSwipe">
 
       <q-card>
         <q-card-section>
@@ -15,7 +17,7 @@
 
               <q-item-section>
                 <q-item-label>{{ $t('close') }}</q-item-label>
-                <q-item-label caption>{{ $t('will_close') }}</q-item-label>
+                <q-item-label caption>{{ $t('will_open') }}</q-item-label>
               </q-item-section>
             </q-item>
 
@@ -38,7 +40,7 @@
 
               <q-item-section>
                 <q-item-label>{{ $t('open') }}</q-item-label>
-                <q-item-label caption>{{ $t('will_open') }}</q-item-label>
+                <q-item-label caption>{{ $t('will_close') }}</q-item-label>
               </q-item-section>
             </q-item>
 
@@ -64,7 +66,9 @@
         name: 'Map',
         components: {SliderCard},
         data() {
-            return {}
+            return {
+                transition_class:""
+            }
         },
         computed: {
             timing_mode() {
@@ -124,6 +128,9 @@
             setGeoJSON() {
                 const geoJson = this.generateFeatures;
                 window.bridges_map_layer.setGeoJSON(geoJson);
+            },
+            handleSwipe(e){
+                this.transition_class = e.direction;
             }
         },
         mounted() {
@@ -147,9 +154,18 @@
   #legenda {
     width: 300px;
     position: absolute;
-    top:20px;
+    top: 20px;
     right: 20px;
     z-index: 999;
+    transition: all .4s ease;
+
+    &.left { right: 100% }
+    &.right { right: -300px }
+    &.up { top: -1000px }
+    &.down { top: 100% }
+    & * {
+      user-select: none;
+    }
   }
   #map {
     width: 100%;
