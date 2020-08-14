@@ -18,6 +18,7 @@
         </q-item-section>
 
 
+
       </q-item>
 
     </q-list>
@@ -36,6 +37,21 @@
             }
         },
         methods: {
+            parseTimeObj(bridge_time_array){
+                // {"start":"2:00","end":"3:45"},{"start":"4:15","end":"5:45"}]
+                return bridge_time_array.map(time_obj=>{
+                    let result_string = "";
+                    const start = time_obj.start;
+                    const end = time_obj.hasOwnProperty("end") ? time_obj.end : false;
+
+                    result_string += start;
+                    if ( end ){
+                      result_string += ' - ' + end;
+                    }
+                    return result_string;
+                }).join("<br/>")
+
+            },
             handleClickBridge(bridge) {
                 window.bridges_map_layer.eachLayer((layer) => {
                     if ( bridge.title[this.app_language] === layer.feature.properties.title ){
