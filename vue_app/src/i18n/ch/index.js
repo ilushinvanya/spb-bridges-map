@@ -9,7 +9,7 @@ export default {
   will_close_min: "桥将在{minutes} 分钟后关闭",
   will_close: "桥将关闭",
 
-  not_closed: "今天桥梁不关闭",
+  not_closed: "这座桥今天没有关闭",
 
   time_footer: "圣彼得堡时间",
   language_string: '语言',

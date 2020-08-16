@@ -2,7 +2,7 @@
   "name": "spbbridgesmap",
   "version": "0.0.1",
   "description": "Map of bridges in St. Petersburg",
-  "productName": "Map bridges Spb",
+  "productName": "Карта разводных мостов",
   "author": "man@bonusuber.ru",
   "private": true,
   "scripts": {

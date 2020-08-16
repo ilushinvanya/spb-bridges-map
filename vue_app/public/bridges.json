@@ -30,7 +30,7 @@
       },
       "time": [
         {
-          "start": "Сегодня не разводится"
+          "start": 0
         }
       ],
       "link": "tuchkov",
@@ -163,7 +163,7 @@
       },
       "time": [
         {
-          "start": "Сегодня не разводится"
+          "start": 0
         }
       ],
       "link": "birzhevoj",
@@ -180,7 +180,7 @@
       },
       "time": [
         {
-          "start": "Сегодня не разводится"
+          "start": 0
         }
       ],
       "link": "sampsonievskij",
@@ -197,7 +197,7 @@
       },
       "time": [
         {
-          "start": "Сегодня не разводится"
+          "start": 0
         }
       ],
       "link": "grenaderskij",
@@ -214,7 +214,7 @@
       },
       "time": [
         {
-          "start": "Сегодня не разводится"
+          "start": 0
         }
       ],
       "link": "kantemirovskij",

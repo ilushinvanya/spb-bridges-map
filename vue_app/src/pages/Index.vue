@@ -131,6 +131,7 @@
             },
             handleSwipe(e){
                 this.transition_class = e.direction;
+                ym(66456622,'reachGoal','hide_legend')
             }
         },
         mounted() {

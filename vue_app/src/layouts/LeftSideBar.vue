@@ -58,7 +58,7 @@
 
       <!-- write -->
       <q-item tag="label"
-              @click="prompt = true"
+              @click="show_send_dialog()"
               v-ripple>
         <q-item-section>
           <span class="text">{{ $t('write') }}</span>
@@ -185,7 +185,13 @@
             this.dark_mode = dark_local ? !!dark_local : false;
         },
         methods: {
+            show_send_dialog(){
+                this.prompt = true;
+                ym(66456622,'reachGoal','show_send_dialog')
+            },
             sendMessage() {
+                ym(66456622,'reachGoal','send_msg');
+
                 if (this.contact.length === 0) {
                     this.$q.notify({
                         type: 'warning',
@@ -226,6 +232,7 @@
                     })
             },
             timing_mode_toggle() {
+                ym(66456622,'reachGoal','timing_mode_toggle')
                 if (this.$store.state.timing_mode === null) {
                     this.$store.commit("setTiming_mode", +this.$moment())
                 } else {
@@ -247,6 +254,7 @@
         },
         watch: {
             dark_mode(newVal) {
+                ym(66456622,'reachGoal','dark_mode')
                 let mapbox_styles = ""
                 if (newVal) {
                     this.$q.dark.set(true)

@@ -43,7 +43,11 @@
                         let string_time = "";
 
                         if (time_obj.hasOwnProperty("start")) {
-                            string_time += time_obj.start;
+                            if ( time_obj.start == 0 ){
+                                string_time = this.$t("not_closed")
+                            }else{
+                                string_time += time_obj.start;
+                            }
                         } else {
                             return false;
                         }
@@ -82,7 +86,7 @@
                     let marker_symbol = "";
                     if ([2, 3].includes(checkTime_obj.status)){
                         marker_symbol = 'roadblock';
-                    }else if(bridge.time[0].start.length > 7){
+                    }else if(bridge.time[0].start == 0){
                         marker_symbol = 'circle';
                     }else{
                         marker_symbol = 'circle-stroked';
@@ -152,9 +156,8 @@
                     for (let [key, value] of Object.entries(time_obj)) {
                         // start: "1:45"
 
-                        if (value.length > 10) {
-                            obj['start'] = value;
-                            obj['end'] = value;
+                        if (value == 0) {
+                            obj['start'] = 0;
                             return false;
                         }
 
@@ -321,6 +324,7 @@
                     })
                     .catch(e => {
                         console.log(e)
+                        ym(66456622,'reachGoal','error_time')
                     })
                     .finally(() => {
                         setInterval(this.getNow, 1000);

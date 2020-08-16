@@ -59,6 +59,8 @@
                     }
                 });
 
+                ym(66456622,'reachGoal','list_' + bridge.link)
+
                 const coords = bridge.coordinates;
                 window.l_map.panTo(L.latLng(coords[1], coords[0]));
             }

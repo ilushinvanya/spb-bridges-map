@@ -9,7 +9,7 @@ export default {
   will_close_min: "The bridge will close in {minutes} min",
   will_close: "The bridge will close",
 
-  not_closed: "Bridges are not closed today",
+  not_closed: "Bridge are not closed today",
 
   time_footer: "Time in St. Petersburg",
   language_string: 'Language',
