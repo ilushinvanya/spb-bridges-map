@@ -5,9 +5,16 @@
          :class="transition_class"
          v-touch-swipe.mouse="handleSwipe">
 
+      <q-btn
+        push
+        color="blue-grey-5"
+        icon="close"
+        class="absolute-top-right z-max"
+        @click="handleSwipe({direction:'up'})"
+      />
+
       <q-card>
         <q-card-section>
-
           <q-list>
 
             <q-item>
@@ -153,6 +160,7 @@
 
 <style lang="scss">
   #legenda {
+
     width: 300px;
     position: absolute;
     top: 20px;

@@ -23,6 +23,10 @@
             this.getYandexTime()
 
             this.getBridges()
+
+            window.addEventListener('appinstalled', (evt) => {
+                ym(66456622,'reachGoal','appinstalled');
+            });
         },
 
         computed: {

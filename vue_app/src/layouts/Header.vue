@@ -18,7 +18,12 @@
         </q-avatar> <div> {{ $t('header_title') }} 🌉</div>
       </q-toolbar-title>
 
-      <q-btn icon="menu" no-caps :label="$t('header_button')" @click="right_handle()"/>
+      <q-btn
+        icon="menu"
+        no-caps
+        color="teal-5"
+        :label="$t('header_button')"
+        @click="right_handle()"/>
     </q-toolbar>
   </q-header>
 </template>

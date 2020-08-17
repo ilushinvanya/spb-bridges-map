@@ -109,13 +109,18 @@ module.exports = function (/* ctx */) {
 
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
-      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: { skipWaiting: true }, // only for GenerateSW
+      // workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxOptions: {
+        skipWaiting: true,
+        clientsClaim: true
+      },
       manifest: {
         name: `Карта разводных мостов Петербурга`,
         short_name: `Мосты Петербурга`,
         description: `Map of bridges in St. Petersburg`,
         display: 'standalone',
+        version: "1.0",
+        start_url: "/",
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#78909c',
