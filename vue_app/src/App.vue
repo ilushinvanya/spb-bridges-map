@@ -62,6 +62,8 @@
                         return string_time;
                     }).join("<br>")
 
+                    result_obj.list_description = bridge_description;
+
                     if (bridge_description.length > 0) {
                         bridge_description += "<br>";
                         bridge_description += "<br>";
@@ -73,7 +75,9 @@
                     let link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
                     let a_wrap_link = "<a href='" + link + "' target='_blank'>" + this.$t('mostotrest') + "</a>";
                     bridge_description += a_wrap_link;
-                    result_obj.description = bridge_description
+                    result_obj.description = bridge_description;
+
+
 
 
                     result_obj.comment = checkTime_obj.comment
@@ -144,7 +148,7 @@
                 let result = {
                     status: 0, // по умолчанию сведён
                     time_obj: {},
-                    comment: ""
+                    comment: this.$t('open')
                 };
 
                 time_array.every((time_obj) => {
@@ -189,7 +193,7 @@
                         }
                         return false;
                     } else {
-                        // здесь проверка на  или скоро сведется 1 или 3
+                        // здесь проверка на или скоро сведется 1 или 3
 
                         let to_start = this.getMomentNowTime().diff(start, 'minutes');
                         if (Math.abs(to_start) <= 20) {

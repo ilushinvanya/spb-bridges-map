@@ -13,10 +13,18 @@
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{bridge.title[app_language]}}</q-item-label>
+          <q-item-label><div>{{bridge.title[app_language]}}</div></q-item-label>
           <q-item-label caption>{{bridge.comment}}</q-item-label>
         </q-item-section>
 
+        <q-item-section side>
+          <q-item-label caption>
+
+            <div class="text-right"
+                 style="width:92px"
+                 v-html="bridge.list_description"></div>
+          </q-item-label>
+        </q-item-section>
 
 
       </q-item>

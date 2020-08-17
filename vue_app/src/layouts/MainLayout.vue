@@ -12,7 +12,7 @@
       <LeftSideBar/>
     </q-drawer>
 
-    <q-drawer show-if-above v-model="right" side="right" bordered>
+    <q-drawer show-if-above v-model="right" side="right" bordered :width="360">
       <RightSideBar/>
     </q-drawer>
 

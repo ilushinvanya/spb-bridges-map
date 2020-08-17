@@ -1,5 +1,6 @@
 export default {
   header_title: '圣彼得堡的桥梁地图',
+  header_button: '桥',
 
   open:  "这座桥是开放的",
   close: "桥就在附近",

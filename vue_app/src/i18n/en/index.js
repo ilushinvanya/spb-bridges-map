@@ -1,5 +1,6 @@
 export default {
   header_title: 'Map of drawbridges in St. Petersburg',
+  header_button: 'Bridges',
 
   open: "The bridge is open",
   close: "The bridge is close",

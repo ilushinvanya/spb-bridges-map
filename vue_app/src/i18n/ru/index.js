@@ -1,5 +1,6 @@
 export default {
   header_title: 'Карта разводных мостов',
+  header_button: 'Мосты',
 
   open: "Сведён",
   close: "Разведён",
