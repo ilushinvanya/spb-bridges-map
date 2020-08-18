@@ -1,7 +1,7 @@
 export default {
   header_title: 'Map of drawbridges in St. Petersburg',
   header_button: 'Bridges',
-
+  temperature: 'Temperature',
   open: "The bridge is open",
   close: "The bridge is close",
   mostotrest: "The Mostotrest website",

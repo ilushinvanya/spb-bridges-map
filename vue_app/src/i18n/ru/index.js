@@ -1,7 +1,7 @@
 export default {
   header_title: 'Карта разводных мостов',
   header_button: 'Мосты',
-
+  temperature: 'Температура',
   open: "Сведён",
   close: "Разведён",
   mostotrest: "Мост на сайте Мостотреста",

@@ -4,18 +4,7 @@
       <q-btn dense flat round icon="menu" @click="left_handle()"/>
 
       <q-toolbar-title class="flex items-center no-wrap">
-        <q-avatar
-          v-if="weather"
-          color="white"
-          class="q-mr-sm"
-          text-color="black">
-          <div class="temp text-weight-bold">{{ weather.temp }}°</div>
-          <img v-if="!hide_weather_icon"
-               class="absolute"
-               :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"
-               @error="hide_weather_icon = true"
-          />
-        </q-avatar> <div> {{ $t('header_title') }} 🌉</div>
+        <h1> 🌉 <span>{{ $t('header_title') }}</span> </h1>
       </q-toolbar-title>
 
       <q-btn
@@ -34,7 +23,7 @@
         name: 'HeaderComponent',
         data() {
             return {
-                hide_weather_icon: false
+
             }
         },
         props:["left", "right"],
@@ -42,13 +31,7 @@
             yandex_clock() {
                 return this.$store.state.yandex_clock;
             },
-            weather(){
-                if (this.yandex_clock.hasOwnProperty("weather")){
-                    return this.yandex_clock.weather;
-                }else{
-                    return false
-                }
-            }
+
 
         },
         mounted(){
@@ -68,6 +51,15 @@
 </script>
 
 <style lang="scss">
+  h1 {
+    font-size: 30px;
+    line-height: 30px;
+    margin: 0;
+    padding: 0;
+    span {
+      font-size: 21px;
+    }
+  }
   .temp {
     font-size: 15px;
     letter-spacing: -2px;

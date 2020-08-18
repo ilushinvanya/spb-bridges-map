@@ -26,9 +26,22 @@
       </q-avatar>
 
       <span>
-        <span v-if="time_check">{{ $t('time_footer') }} - </span>
-        <span>{{ Time.format("HH:mm:ss") }}</span>
+        <div>
+            <span v-if="time_check">{{ $t('time_footer') }} - </span>
+            <span>{{ Time.format("HH:mm:ss") }}</span>
+        </div>
+        <div>
+          <div v-if="time_check">
+            <span>{{ $t('temperature') }} {{ weather.temp }}°</span>
+            <img v-if="!hide_weather_icon"
+                 :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"
+                 @error="hide_weather_icon = true"
+          /></div>
+        </div>
       </span>
+
+
+
     </q-toolbar>
   </q-footer>
 </template>
@@ -36,12 +49,21 @@
 <script>
     export default {
         name: 'FooterComponent',
-        date() {
-            return {}
+        data() {
+            return {
+                hide_weather_icon: false
+            }
         },
         computed: {
             yandex_clock(){
                 return this.$store.state.yandex_clock
+            },
+            weather(){
+                if (this.yandex_clock.hasOwnProperty("weather")){
+                    return this.yandex_clock.weather;
+                }else{
+                    return false
+                }
             },
             time_check(){
                 return this.yandex_clock.hasOwnProperty("offsetString")
