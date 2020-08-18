@@ -10,7 +10,7 @@ export default {
   will_close_min: "Разводится через {minutes} мин",
   will_close: "Скоро разводится",
 
-  not_closed: "Мост сегодня не закрывается",
+  not_closed: "Мост сегодня не разводится",
 
   time_footer: "Точное время в Петербурге",
   language_string: 'Язык',

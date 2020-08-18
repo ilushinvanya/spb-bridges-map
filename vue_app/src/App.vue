@@ -93,11 +93,11 @@
 
                     let marker_symbol = "";
                     if ([2, 3].includes(checkTime_obj.status)){
-                        marker_symbol = 'roadblock';
+                        marker_symbol = 'ferry';
                     }else if(bridge.time[0].start == 0){
-                        marker_symbol = 'circle';
+                        marker_symbol = 'car';
                     }else{
-                        marker_symbol = 'circle-stroked';
+                        marker_symbol = 'car';
 
                     }
                     result_obj.marker_symbol =  marker_symbol;

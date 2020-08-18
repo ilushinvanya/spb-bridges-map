@@ -112,6 +112,22 @@
                     return feature_bridge;
                 });
 
+                features.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [30.307113, 59.938543]
+                    },
+                    properties: {
+                        title: 'Камера',
+                        description: '23',
+                        'marker-color': '#ccff99',
+                        'marker-symbol': 'cinema',
+                        'marker-size': 'large'
+                    }
+                })
+
+
                 var geoJson = {
                     type: 'Bridges_Collection',
                     features: features
@@ -129,12 +145,21 @@
                     .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
 
                 window.bridges_map_layer = L.mapbox
-                    .featureLayer(this.generateFeatures)
+                    .featureLayer()
                     .addTo(window.l_map);
+                this.setGeoJSON()
             },
             setGeoJSON() {
                 const geoJson = this.generateFeatures;
                 window.bridges_map_layer.setGeoJSON(geoJson);
+
+                window.bridges_map_layer.eachLayer(function(layer) {
+
+                    if(layer.feature.properties.description == '23'){
+                        var content = '<iframe width="280" height="215" src="https://www.youtube.com/embed/L_2LL0kHZ8E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                        layer.bindPopup(content);
+                    }
+                });
             },
             handleSwipe(e){
                 this.transition_class = e.direction;
