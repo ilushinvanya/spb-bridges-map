@@ -344,7 +344,13 @@
                 if (local_bridges) {
                     this.bridges = JSON.parse(local_bridges);
                 }
-                this.$axios("http://localhost/server_bridges/get_bridges.php")
+
+                let domain = "";
+                if (process.env.DEV) {
+                    domain = "http://localhost"
+                }
+
+                this.$axios(domain + "/server_bridges/get_bridges.php")
                     .then((response) => {
                         if (typeof response.data === 'object') {
                             if (response.data.hasOwnProperty("bridges")) {

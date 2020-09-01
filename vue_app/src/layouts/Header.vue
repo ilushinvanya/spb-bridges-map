@@ -53,9 +53,11 @@
 <style lang="scss">
   h1 {
     font-size: 30px;
-    line-height: 30px;
     margin: 0;
     padding: 0;
+    display: flex;
+    align-items: center;
+    line-height: 50px;
     span {
       font-size: 21px;
     }
