@@ -43,7 +43,7 @@
         },
         data() {
             return {
-                left: false,
+                left: true,
                 right: false
             }
         },

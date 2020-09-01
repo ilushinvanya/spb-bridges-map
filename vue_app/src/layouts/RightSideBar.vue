@@ -42,6 +42,9 @@
             },
             bridges_with_params() {
                 return this.$store.state.bridges_with_params
+            },
+            gl_support() {
+                return this.$store.state.gl_support;
             }
         },
         methods: {
@@ -61,16 +64,35 @@
 
             },
             handleClickBridge(bridge) {
-                window.bridges_map_layer.eachLayer((layer) => {
-                    if ( bridge.title[this.app_language] === layer.feature.properties.title ){
-                        layer.openPopup();
-                    }
-                });
+
+                if ( this.gl_support ){
+
+                    window.bridges_map_layer.forEach((marker) => {
+                        if ( marker.getPopup().isOpen() ){
+                            marker.togglePopup();
+                        }
+
+                        if ( marker.getPopup()["_content"].innerText.includes(bridge.title[this.app_language]) ){
+                            marker.togglePopup();
+                        }
+                    });
+
+
+                }else{
+
+                    window.bridges_map_layer.eachLayer((layer) => {
+                        if ( bridge.title[this.app_language] === layer.feature.properties.title ){
+                            layer.openPopup();
+                        }
+                    });
+
+                }
+
 
                 ym(66456622,'reachGoal','list_' + bridge.link)
 
                 const coords = bridge.coordinates;
-                window.l_map.panTo(L.latLng(coords[1], coords[0]));
+                window.map.panTo(L.latLng(coords[1], coords[0]));
             }
         }
     }

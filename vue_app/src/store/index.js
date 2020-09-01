@@ -5,13 +5,17 @@ Vue.use(Vuex)
 
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
-    state:{
+    state: {
+      gl_support: null,
       Time: 0, // moment object,
       timing_mode: null,
       bridges_with_params: [],
       yandex_clock: {},
     },
     mutations: {
+      setGLSupport(state, bool){
+        state.gl_support = bool;
+      },
       setBridges(state, array){
         state.bridges_with_params = array;
       },

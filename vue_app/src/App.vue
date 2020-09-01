@@ -338,10 +338,13 @@
                         setInterval(this.getNow, 1000);
                     })
             },
+
             getBridges() {
                 const local_bridges = localStorage.getItem("bridges");
-
-                this.$axios("/bridges.json")
+                if (local_bridges) {
+                    this.bridges = JSON.parse(local_bridges);
+                }
+                this.$axios("http://localhost/server_bridges/get_bridges.php")
                     .then((response) => {
                         if (typeof response.data === 'object') {
                             if (response.data.hasOwnProperty("bridges")) {
@@ -364,9 +367,7 @@
                     })
                     .catch(e => {
 
-                        if (local_bridges) {
-                            this.bridges = JSON.parse(local_bridges);
-                        }
+
                     })
                     .finally(() => {
                         this.$store.commit("setBridges", this.bridges_with_params)

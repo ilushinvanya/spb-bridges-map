@@ -1,7 +1,7 @@
 {
   "name": "spbbridgesmap",
-  "version": "1.0.1",
-  "description": "Map of bridges in St. Petersburg",
+  "version": "1.2.0",
+  "description": "Карта, расписание и график разводных мостов в Санкт-Петербурге",
   "productName": "Карта разводных мостов",
   "author": "man@bonusuber.ru",
   "private": true,
@@ -14,6 +14,7 @@
     "axios": "^0.18.1",
     "core-js": "^3.6.5",
     "mapbox": "^1.0.0-beta10",
+    "mapbox-gl": "^1.12.0",
     "moment": "^2.27.0",
     "quasar": "^1.0.0",
     "vue-i18n": "^8.0.0"

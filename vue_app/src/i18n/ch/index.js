@@ -27,6 +27,6 @@ export default {
   send: '发送',
 
   timing: '时间安排',
-  timing_description: '通过移动滑块，您将在设定的时间看到桥梁上的情况'
-
+  timing_description: '通过移动滑块，您将在设定的时间看到桥梁上的情况',
+  camera: '实时摄像头'
 }

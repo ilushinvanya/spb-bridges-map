@@ -31,7 +31,8 @@
             <span>{{ Time.format("HH:mm:ss") }}</span>
         </div>
         <div>
-          <div v-if="time_check">
+          <div class="weather"
+               v-if="time_check">
             <span>{{ $t('temperature') }} {{ weather.temp }}°</span>
             <img v-if="!hide_weather_icon"
                  :src="'https://yastatic.net/weather/i/icons/blueye/color/svg/' + weather.icon + '.svg'"
@@ -89,6 +90,13 @@
 </script>
 
 <style lang="scss">
+  .weather {
+    display: flex;
+    align-items: center;
+    img {
+      width: 20px;
+    }
+  }
   .hero-circle {
     width: 40px;
     height: 40px;

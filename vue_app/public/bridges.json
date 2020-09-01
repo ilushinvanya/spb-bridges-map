@@ -2,45 +2,6 @@
   "bridges": [
     {
       "title": {
-        "ru": "Дворцовый",
-        "en": "Palace Bridge",
-        "ch": "宫廷桥"
-      },
-      "time": [
-        {
-          "start": "1:10",
-          "end": "2:50"
-        },
-        {
-          "start": "3:10",
-          "end": "4:55"
-        }
-      ],
-      "link": "dvorczovyj",
-      "coordinates": [
-        30.308306,
-        59.941057
-      ]
-    },
-    {
-      "title": {
-        "ru": "Тучков",
-        "en": "Tuchkov Bridge",
-        "ch": "杜奇科夫桥"
-      },
-      "time": [
-        {
-          "start": 0
-        }
-      ],
-      "link": "tuchkov",
-      "coordinates": [
-        30.285653,
-        59.949049
-      ]
-    },
-    {
-      "title": {
         "ru": "Благовещенский",
         "en": "Blagoveschensky Bridge",
         "ch": "圣母领报桥"
@@ -63,6 +24,28 @@
     },
     {
       "title": {
+        "ru": "Дворцовый",
+        "en": "Palace Bridge",
+        "ch": "宫廷桥"
+      },
+      "time": [
+        {
+          "start": "1:10",
+          "end": "2:50"
+        },
+        {
+          "start": "3:10",
+          "end": "4:55"
+        }
+      ],
+      "link": "dvorczovyj",
+      "coordinates": [
+        30.308306,
+        59.941057
+      ]
+    },
+    {
+      "title": {
         "ru": "Троицкий",
         "en": "Troitsky Bridge",
         "ch": "圣三一桥"
@@ -77,6 +60,60 @@
       "coordinates": [
         30.327694,
         59.948492
+      ]
+    },
+    {
+      "title": {
+        "ru": "Литейный",
+        "en": "Liteyny Bridge",
+        "ch": "利捷伊内桥"
+      },
+      "time": [
+        {
+          "start": "1:40",
+          "end": "4:45"
+        }
+      ],
+      "link": "litejnyj",
+      "coordinates": [
+        30.349359,
+        59.951938
+      ]
+    },
+    {
+      "title": {
+        "ru": "Большеохтинский",
+        "en": "Bolsheokhtinsky Bridge",
+        "ch": "大奥何塔桥"
+      },
+      "time": [
+        {
+          "start": "2:00",
+          "end": "5:00"
+        }
+      ],
+      "link": "bolsheohtinskij-most",
+      "coordinates": [
+        30.401778,
+        59.942669
+      ]
+    },
+    {
+      "title": {
+        "ru": "Александра Невского",
+        "en": "Alexander Nevsky Bridge",
+        "ch": "亚历山大涅夫斯基桥"
+      },
+      "time": [
+        {
+          "start": "2:20",
+          "end": "5:10"
+        }
+      ],
+      "link": "aleksandra-nevskogo",
+      "coordinates": [
+        30.395668,
+        59.925834
       ]
     },
     {
@@ -103,73 +140,38 @@
     },
     {
       "title": {
-        "ru": "Александра Невского",
-        "en": "Alexander Nevsky Bridge",
-        "ch": "亚历山大涅夫斯基桥"
-      },
-      "time": [
-        {
-          "start": "2:20",
-          "end": "5:10"
-        }
-      ],
-      "link": "aleksandra-nevskogo",
-      "coordinates": [
-        30.395668,
-        59.925834
-      ]
-    },
-    {
-      "title": {
-        "ru": "Большеохтинский",
-        "en": "Bolsheokhtinsky Bridge",
-        "ch": "大奥何塔桥"
-      },
-      "time": [
-        {
-          "start": "2:00",
-          "end": "5:00"
-        }
-      ],
-      "link": "bolsheohtinskij-most",
-      "coordinates": [
-        30.401778,
-        59.942669
-      ]
-    },
-    {
-      "title": {
-        "ru": "Литейный",
-        "en": "Liteyny Bridge",
-        "ch": "利捷伊内桥"
-      },
-      "time": [
-        {
-          "start": "1:40",
-          "end": "4:45"
-        }
-      ],
-      "link": "litejnyj",
-      "coordinates": [
-        30.349359,
-        59.951938
-      ]
-    },
-    {
-      "title": {
         "ru": "Биржевой",
         "en": "Birzhevoy Bridge",
         "ch": "交易所桥"
       },
       "time": [
         {
-          "start": 0
+          "start": "2:00",
+          "end": "4:55"
         }
       ],
       "link": "birzhevoj",
       "coordinates": [
         30.303376,
         59.946187
+      ]
+    },
+    {
+      "title": {
+        "ru": "Тучков",
+        "en": "Tuchkov Bridge",
+        "ch": "杜奇科夫桥"
+      },
+      "time": [
+        {
+          "start": "3:35",
+          "end": "4:55"
+        }
+      ],
+      "link": "tuchkov",
+      "coordinates": [
+        30.285653,
+        59.949049
       ]
     },
     {

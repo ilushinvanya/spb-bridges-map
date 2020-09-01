@@ -26,6 +26,6 @@ export default {
   send: 'Send',
 
   timing: 'Timing',
-  timing_description: 'By moving the slider, you will see the situation on the bridges at the set time'
-
+  timing_description: 'By moving the slider, you will see the situation on the bridges at the set time',
+  camera: 'Realtime camera'
 }
