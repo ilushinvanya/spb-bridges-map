@@ -265,7 +265,7 @@
                     mapbox_styles = 'mapbox://styles/mapbox/streets-v11';
                     localStorage.removeItem("dark")
                 }
-                L.mapbox.styleLayer(mapbox_styles).addTo(window.l_map);
+                L.mapbox.styleLayer(mapbox_styles).addTo(window.map);
             }
         }
     }
