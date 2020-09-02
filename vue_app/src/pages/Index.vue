@@ -100,7 +100,7 @@
                         },
                         properties: {
                             title: bridge.title[this.app_language],
-                            description: bridge.description,
+                            description: "<div class='bridge_comment'>" + bridge.comment + "</div><div>" + bridge.description + "</div>",
 
                             'marker-color': bridge.marker_color,
                             'marker-symbol': bridge.marker_symbol,
@@ -205,7 +205,6 @@
                 window.bridges_map_layer.setGeoJSON(geoJson);
 
                 window.bridges_map_layer.eachLayer(function (layer) {
-
                     if (layer.feature.properties.title === camera_string ) {
                         var content = '<iframe width="280" height="200" src="' + url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
                         layer.bindPopup(content);
@@ -324,12 +323,17 @@
 
   .marker-title {
     font-size: 20px;
-    margin-bottom: 7px;
   }
 
   .marker-description {
+
     font-size: 16px;
 
+    .bridge_comment {
+      color: #a7a7a7;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
     b {
       color: #792ec0;
     }
