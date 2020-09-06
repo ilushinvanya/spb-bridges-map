@@ -1,6 +1,8 @@
 export default {
   header_title: 'Map of drawbridges in St. Petersburg',
-  header_button: 'Bridges',
+  header_toolbar_tab_list: 'List of bridges',
+  header_toolbar_tab_menu: 'Menu',
+
   temperature: 'Temperature',
   open: "The bridge is open",
   close: "The bridge is close",

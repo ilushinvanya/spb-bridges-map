@@ -1,6 +1,8 @@
 export default {
   header_title: 'Карта разводных мостов',
-  header_button: 'Мосты',
+  header_toolbar_tab_list: 'Список мостов',
+  header_toolbar_tab_menu: 'Меню',
+
   temperature: 'Температура',
   open: "Сведён",
   close: "Разведён",

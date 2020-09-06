@@ -1,6 +1,7 @@
 export default {
   header_title: '圣彼得堡的桥梁地图',
-  header_button: '桥',
+  header_toolbar_tab_list: '桥梁列表',
+  header_toolbar_tab_menu: '菜单',
   temperature:'温度',
 
   open:  "这座桥是开放的",
