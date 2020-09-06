@@ -3,8 +3,8 @@
     <q-toolbar class="custom_toolbar_class">
 
 
-      <q-toolbar-title class="flex items-center no-wrap">
-        <h1>{{ $t('header_title') }} 🌉</h1>
+      <q-toolbar-title class="flex no-wrap">
+        <h1>{{ $t('header_title') }}</h1>
       </q-toolbar-title>
 
       <q-tabs
@@ -52,12 +52,22 @@
 </script>
 
 <style lang="scss">
+  .q-toolbar__title:first-child {
+    padding: 0;
+  }
   body.mobile {
     .custom_toolbar_class {
       flex-direction: column;
       h1 {
         text-align: center;
       }
+    }
+  }
+
+  .custom_toolbar_class {
+    overflow: visible;
+    .q-tab {
+      min-height: auto;
     }
   }
   h1 {
@@ -67,5 +77,11 @@
     align-items: center;
     line-height: 50px;
     font-size: 21px;
+    position: relative;
+    &:after {
+      content: "🌉";
+      position: absolute;
+      right: -35px;
+    }
   }
 </style>
