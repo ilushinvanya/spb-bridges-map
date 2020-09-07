@@ -56,6 +56,12 @@
 </template>
 
 <script>
+    import {
+        QCard
+    } from 'quasar'
+
+
+
     import mapboxgl from 'mapbox-gl';
     import SliderCard from "../components/SliderCard";
 
@@ -100,10 +106,10 @@
                         text: ""
                     };
                     if (bridge.status === 0) {
-                        custom_status.color = "bg-green";
+                        custom_status.color = "bg-light-green";
                         custom_status.text = "&nbsp;";
                     } else if (bridge.status === 1) {
-                        custom_status.color = "bg-green";
+                        custom_status.color = "bg-light-green";
                         custom_status.text = this.$t("open");
                     } else if (bridge.status === 2) {
                         custom_status.color = "bg-red";
@@ -240,6 +246,17 @@
                 });
             },
             setMarkerData() {
+
+                // const ren = new QCard({ tag: "div" }).$options.render(createElement){ return createElement }
+
+
+                // console.log(ren)
+
+
+
+                // console.log(  )
+                // console.log(this.render("<q-card/>"))
+
                 const geoJson = this.generateFeatures;
                 window.bridges_map_layer.forEach((marker) => {
 
@@ -260,8 +277,14 @@
                             // Для камеры
                             if (new_feature_marker.properties.custom_comment === "camera") {
 
+
+
+
                                 popup = new mapboxgl.Popup({offset: 0})
                                     .setHTML(
+                                        // new QCard({
+                                        //     tag: "div"
+                                        // })
                                         `<div class="q-card">
                                             <div class="q-video">${new_feature_marker.properties.description}</div>
                                              <div class="q-card__section q-card__section--vert">
