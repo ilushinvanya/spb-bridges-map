@@ -242,6 +242,9 @@
             }
         },
         computed: {
+            gl_support(){
+                return this.$store.state.gl_support;
+            },
             app_language: {
                 get() {
                     return this.$i18n.locale;
@@ -265,7 +268,11 @@
                     mapbox_styles = 'mapbox://styles/mapbox/streets-v11';
                     localStorage.removeItem("dark")
                 }
-                L.mapbox.styleLayer(mapbox_styles).addTo(window.map);
+                if ( this.gl_support ){
+                    window.map.setStyle(mapbox_styles);
+                }else{
+                    L.mapbox.styleLayer(mapbox_styles).addTo(window.map);
+                }
             }
         }
     }

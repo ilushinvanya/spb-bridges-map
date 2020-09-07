@@ -6,7 +6,7 @@ export default {
   temperature: 'Температура',
   open: "Сведён",
   close: "Разведён",
-  mostotrest: "Мост на сайте Мостотреста",
+  mostotrest: "Ссылка на Мостотрест",
   will_open_min: "Сведётся через {minutes} мин",
   will_open: "Скоро сведётся",
   will_close_min: "Разводится через {minutes} мин",

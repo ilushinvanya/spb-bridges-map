@@ -22,7 +22,7 @@
 
             <div class="text-right"
                  style="width:92px"
-                 v-html="bridge.list_description"></div>
+                 v-html="bridge.time_html"></div>
           </q-item-label>
         </q-item-section>
 

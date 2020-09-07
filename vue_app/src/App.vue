@@ -66,7 +66,7 @@
                         return string_time;
                     }).join("<br>")
 
-                    result_obj.list_description = bridge_description;
+                    result_obj.time_html = bridge_description;
 
                     if (bridge_description.length > 0) {
                         bridge_description += "<br>";
@@ -79,12 +79,15 @@
                     let link = "https://" + lang_prefix + "mostotrest-spb.ru/bridges/" + bridge.link;
                     let a_wrap_link = "<a href='" + link + "' target='_blank'>" + this.$t('mostotrest') + "</a>";
                     bridge_description += a_wrap_link;
+                    result_obj.url = link;
+
                     result_obj.description = bridge_description;
 
 
 
 
-                    result_obj.comment = checkTime_obj.comment
+
+                    result_obj.comment = checkTime_obj.comment;
 
                     const marker_color = this.checkTime_color(checkTime_obj)
                     result_obj.marker_color = marker_color
@@ -115,7 +118,9 @@
                 //     "link": "dvorczovyj",
                 //     "coordinates": [30.308306,59.941057]
 
-                //    bridge_description
+                //    url
+                //    time_html
+                //    description
                 //    comment
                 //    marker-color
                 //    marker-symbol

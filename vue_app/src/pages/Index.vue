@@ -65,7 +65,7 @@
         data() {
             return {
                 mapbox_access_token: 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg',
-                transition_class: "",
+                transition_class: "up",
                 url_webcam: "https://www.youtube.com/embed/ATyR49Y4IEk"
             }
         },
@@ -91,14 +91,44 @@
                 return this.$store.state.bridges_with_params
             },
             generateFeatures() {
-                var features = this.bridges_with_params.map((bridge) => {
-                    var feature_bridge = {
+                const features = this.bridges_with_params.map((bridge) => {
+
+                    const poster_image = (bridge.status === 0 || bridge.status === 1) ? bridge.images.open : bridge.images.close;
+
+                    let custom_status = {
+                        color: "",
+                        text: ""
+                    };
+                    if (bridge.status === 0){
+                        custom_status.color = "bg-green";
+                        custom_status.text = "&nbsp;";
+                    }else if(bridge.status === 1){
+                        custom_status.color = "bg-green";
+                        custom_status.text = this.$t("open");
+                    }else if(bridge.status === 2){
+                        custom_status.color = "bg-red";
+                        custom_status.text = "&nbsp;";
+                    }else if(bridge.status === 3){
+                        custom_status.color = "bg-red";
+                        custom_status.text = this.$t("close");
+                    }
+
+
+
+                    const feature_bridge = {
                         type: 'Feature',
                         geometry: {
                             type: 'Point',
                             coordinates: bridge.coordinates
                         },
                         properties: {
+                            custom_status: custom_status,
+
+                            poster_image: poster_image,
+                            custom_comment: bridge.comment,
+                            custom_time_html: bridge.time_html,
+                            custom_url: bridge.url,
+
                             title: bridge.title[this.app_language],
                             description: "<div class='bridge_comment'>" + bridge.comment + "</div><div>" + bridge.description + "</div>",
 
@@ -116,11 +146,15 @@
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
-                        coordinates: [30.307113, 59.938543]
+                        coordinates: [30.304522, 59.937630],
                     },
                     properties: {
+                        custom_comment: "camera",
+                        custom_time_html: "",
+                        custom_url: "",
+
                         title: this.$t('camera'),
-                        description: '<iframe width="380" height="215" src="'+ this.url_webcam +'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
+                        description: '<iframe width="380" height="215" src="' + this.url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
                         'marker-color': '#444eff',
                         'marker-symbol': 'cinema',
                         'marker-size': 'small'
@@ -138,16 +172,16 @@
         },
         methods: {
             checkSupportGLBrowser() {
-                // mapboxgl.accessToken = this.mapbox_access_token;
-                // if (!mapboxgl.supported()) {
+                mapboxgl.accessToken = this.mapbox_access_token;
+                if (!mapboxgl.supported()) {
                     this.initMapboxJSMap();
                     this.gl_support = false;
-                    // console.log('Your browser does not support Mapbox GL');
-                    // ym(66456622, 'reachGoal', 'gl_not_supported')
-                // } else {
-                //     this.gl_support = true;
-                //     this.initMapboxGLMap();
-                // }
+                    console.log('Your browser does not support Mapbox GL');
+                    ym(66456622, 'reachGoal', 'gl_not_supported')
+                } else {
+                    this.gl_support = true;
+                    this.initMapboxGLMap();
+                }
             },
             initMapboxJSMap() {
                 L.mapbox.accessToken = this.mapbox_access_token;
@@ -176,12 +210,8 @@
                 const geoJson = this.generateFeatures;
                 window.bridges_map_layer = geoJson.features.map((feature_marker) => {
 
-                    const popup = new mapboxgl.Popup({offset: 25}).setHTML(
-                        `<h6>${feature_marker.properties.title}</h6>
-                        <span>${feature_marker.properties.description}</span>`
-                    );
+                    const popup = new mapboxgl.Popup({offset: 0});
 
-                    // add marker to map
                     const marker = new mapboxgl.Marker({
                         color: feature_marker.properties['marker-color']
                     })
@@ -191,7 +221,6 @@
 
                     return marker;
                 });
-
 
 
                 this.setMarkerData()
@@ -205,7 +234,7 @@
                 window.bridges_map_layer.setGeoJSON(geoJson);
 
                 window.bridges_map_layer.eachLayer(function (layer) {
-                    if (layer.feature.properties.title === camera_string ) {
+                    if (layer.feature.properties.title === camera_string) {
                         var content = '<iframe width="280" height="200" src="' + url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
                         layer.bindPopup(content);
                     }
@@ -214,17 +243,13 @@
             setMarkerData() {
                 const geoJson = this.generateFeatures;
                 window.bridges_map_layer.forEach((marker) => {
-                    geoJson.features.forEach((new_feature_marker)=>{
 
+                    geoJson.features.forEach((new_feature_marker) => {
 
-                        const popup_content = marker.getPopup()["_content"].innerText;
-                        const new_feature_title = new_feature_marker.properties.title;
+                        const marker_lng = marker.getLngLat().lng;
+                        const new_feature_lng = new_feature_marker.geometry.coordinates[0];
 
-                            console.log( "popup_content", popup_content );
-                            console.log( "new_feature_title", new_feature_title );
-
-                        if ( popup_content.includes(new_feature_title) ){
-
+                        if (marker_lng === new_feature_lng) {
 
                             const $elem = marker.getElement();
                             const color = new_feature_marker.properties['marker-color'];
@@ -232,11 +257,73 @@
                             g.setAttribute('fill', color);
                             marker._color = color;
 
+                            let popup;
+                            // Для камеры
+                            if ( new_feature_marker.properties.custom_comment === "camera" ){
 
-                            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
-                                `<h6>${new_feature_marker.properties.title}</h6>
-                                 <span>${new_feature_marker.properties.description}</span>`
-                                );
+                                popup = new mapboxgl.Popup({offset: 0})
+                                    .setHTML(
+                                        `<div class="q-card">
+                                            <div class="q-video">${new_feature_marker.properties.description}</div>
+                                             <div class="q-card__section q-card__section--vert">
+                                                <div class="text-h6">${new_feature_marker.properties.title}</div>
+                                            </div>
+                                        </div>`
+                                    );
+
+                            }else{
+                                const times_html = new_feature_marker.properties.custom_time_html.split("<br>").map(time_string => {
+
+                                    const icon_had = time_string.includes("<b>") ? "text-red" : "";
+
+                                    return `<div class="q-chip row inline no-wrap items-center ${icon_had} q-chip--colored q-chip--outline q-chip--square">
+                                        <i aria-hidden="true" role="presentation" class="q-chip__icon q-chip__icon--left material-icons q-icon notranslate">schedule</i>
+                                        <div class="q-chip__content col row no-wrap items-center q-anchor--skip">
+                                            <div class="ellipsis">${time_string}</div>
+                                        </div>
+                                     </div>`
+
+                                }).join("");
+
+                                popup = new mapboxgl.Popup({offset: 0})
+                                    .setHTML(
+                                        `<div class="q-card">
+                                         <img src="${new_feature_marker.properties.poster_image}">
+
+                                         <div class="q-card__section q-card__section--vert">
+                                             <div class="text-h6">${new_feature_marker.properties.title}
+                                                <div role="alert" class="q-badge flex inline items-center no-wrap q-badge--single-line ${new_feature_marker.properties.custom_status.color}" style="vertical-align: top;">${new_feature_marker.properties.custom_status.text}</div>
+                                             </div>
+                                             <div class="text-subtitle2">${new_feature_marker.properties.custom_comment}</div>
+                                         </div>
+
+                                         <hr role="separator" class="q-separator q-separator q-separator--horizontal"/>
+
+                                         <div class="q-card__section q-card__section--vert">
+                                             <div style="margin-left: -4px;">${times_html}</div>
+                                        </div>
+
+
+                                         <hr role="separator" class="q-separator q-separator q-separator--horizontal"/>
+
+                                         <div class="q-card__section q-card__section--vert">
+
+                                             <a tabindex="0" type="button" target="_blank" href="${new_feature_marker.properties.custom_url}" role="link" class="q-btn q-btn-item non-selectable no-outline q-btn--rectangle text-purple q-btn--actionable q-focusable q-hoverable q-btn--no-uppercase q-btn--wrap">
+                                                <span class="q-focus-helper"></span>
+                                                <span class="q-btn__wrapper col row q-anchor--skip">
+                                                    <span class="q-btn__content text-center col items-center q-anchor--skip justify-center row">
+                                                        <i aria-hidden="true" role="img" class="material-icons q-icon notranslate">link</i>
+                                                        ${this.$t("mostotrest")}
+                                                    </span>
+                                                </span>
+                                             </a>
+
+                                          </div>
+                                       </div>`
+                                    );
+                            }
+
+
 
                             marker.setPopup(popup)
                         }
@@ -255,7 +342,7 @@
         watch: {
             generateFeatures: {
                 handler(newVal, oldVal) {
-                    if ( this.gl_support ) {
+                    if (this.gl_support) {
                         this.setMarkerData()
                     } else {
                         this.setGeoJSON()
@@ -311,6 +398,7 @@
     top: 0;
     bottom: 0;
     width: 100%;
+
     h6 {
       margin: 0;
     }
@@ -334,6 +422,7 @@
       font-size: 14px;
       margin-bottom: 10px;
     }
+
     b {
       color: #792ec0;
     }
@@ -348,7 +437,25 @@
 
   .mapboxgl-popup {
     position: absolute;
-    min-width: 400px;
+    min-width: 300px;
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+    .mapboxgl-popup-content {
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .mapboxgl-popup-close-button {
+      right: 6px;
+      top: 13px;
+      z-index: 99;
+      font-size: 40px;
+    }
+
+    iframe {
+      width: 100%;
+    }
   }
 </style>
