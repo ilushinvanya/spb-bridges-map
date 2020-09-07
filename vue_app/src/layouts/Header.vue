@@ -65,7 +65,9 @@
   }
 
   .custom_toolbar_class {
-    overflow: visible;
+    .ellipsis{
+      overflow: visible;
+    }
     .q-tab {
       min-height: auto;
     }

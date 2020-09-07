@@ -99,20 +99,19 @@
                         color: "",
                         text: ""
                     };
-                    if (bridge.status === 0){
+                    if (bridge.status === 0) {
                         custom_status.color = "bg-green";
                         custom_status.text = "&nbsp;";
-                    }else if(bridge.status === 1){
+                    } else if (bridge.status === 1) {
                         custom_status.color = "bg-green";
                         custom_status.text = this.$t("open");
-                    }else if(bridge.status === 2){
+                    } else if (bridge.status === 2) {
                         custom_status.color = "bg-red";
                         custom_status.text = "&nbsp;";
-                    }else if(bridge.status === 3){
+                    } else if (bridge.status === 3) {
                         custom_status.color = "bg-red";
                         custom_status.text = this.$t("close");
                     }
-
 
 
                     const feature_bridge = {
@@ -199,8 +198,8 @@
                 window.map = new mapboxgl.Map({
                     container: 'map',
                     style: 'mapbox://styles/mapbox/streets-v11',
-                    center: [30.328063, 59.935446],
-                    zoom: 12,
+                    center: [30.374144114706155, 59.90882829669761],
+                    zoom: 11,
                     pitch: 45,
                     bearing: -17.6,
                     antialias: true
@@ -259,7 +258,7 @@
 
                             let popup;
                             // Для камеры
-                            if ( new_feature_marker.properties.custom_comment === "camera" ){
+                            if (new_feature_marker.properties.custom_comment === "camera") {
 
                                 popup = new mapboxgl.Popup({offset: 0})
                                     .setHTML(
@@ -271,7 +270,7 @@
                                         </div>`
                                     );
 
-                            }else{
+                            } else {
                                 const times_html = new_feature_marker.properties.custom_time_html.split("<br>").map(time_string => {
 
                                     const icon_had = time_string.includes("<b>") ? "text-red" : "";
@@ -322,7 +321,6 @@
                                        </div>`
                                     );
                             }
-
 
 
                             marker.setPopup(popup)
@@ -404,9 +402,18 @@
     }
   }
 
-  body.body--dark .leaflet-popup-content {
-    background: var(--q-color-dark);
-    color: #fff;
+  body.body--dark {
+    .leaflet-popup-content {
+      background: var(--q-color-dark);
+      color: #fff;
+    }
+
+    .mapboxgl-popup {
+      .q-card {
+        background: #78909c;
+        color: white;
+      }
+    }
   }
 
   .marker-title {
