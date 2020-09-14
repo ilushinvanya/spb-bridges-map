@@ -100,3 +100,11 @@
         }
     }
 </script>
+
+<style lang="scss">
+  .slider_card {
+    width: 100%;
+    margin: 0 auto 10px;
+    z-index: 1001;
+  }
+</style>

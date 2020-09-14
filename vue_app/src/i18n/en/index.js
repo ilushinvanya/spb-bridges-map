@@ -6,7 +6,7 @@ export default {
   temperature: 'Temperature',
   open: "The bridge is open",
   close: "The bridge is close",
-  mostotrest: "The Mostotrest website",
+  mostotrest: "More",
   will_open_min: "The bridge will open in {minutes} min",
   will_open: "The bridge will open",
   will_close_min: "The bridge will close in {minutes} min",

@@ -6,6 +6,8 @@
       <q-item v-for="bridge in bridges_with_params"
               @click="handleClickBridge(bridge)"
               :key="bridge.link"
+              :active="bridge.id === open_bridge_id"
+              active-class="bg-teal-3 text-grey-8"
               clickable
               v-ripple>
         <q-item-section avatar>
@@ -37,47 +39,25 @@
     export default {
         name: 'Bridges_list',
         computed: {
+            open_bridge_id(){
+                return this.$store.state.open_bridge_id
+            },
             app_language() {
-                return this.$i18n.locale;
+                return this.$i18n.locale
             },
             bridges_with_params() {
                 return this.$store.state.bridges_with_params
             },
             gl_support() {
-                return this.$store.state.gl_support;
+                return this.$store.state.gl_support
             }
         },
         methods: {
-            parseTimeObj(bridge_time_array){
-                // {"start":"2:00","end":"3:45"},{"start":"4:15","end":"5:45"}]
-                return bridge_time_array.map(time_obj=>{
-                    let result_string = "";
-                    const start = time_obj.start;
-                    const end = time_obj.hasOwnProperty("end") ? time_obj.end : false;
 
-                    result_string += start;
-                    if ( end ){
-                      result_string += ' - ' + end;
-                    }
-                    return result_string;
-                }).join("<br/>")
-
-            },
             handleClickBridge(bridge) {
 
                 if ( this.gl_support ){
-
-                    window.bridges_map_layer.forEach((marker) => {
-                        if ( marker.getPopup().isOpen() ){
-                            marker.togglePopup();
-                        }
-
-                        if ( marker.getPopup()["_content"].innerText.includes(bridge.title[this.app_language]) ){
-                            marker.togglePopup();
-                        }
-                    });
-
-
+                    this.$store.commit("setOpen_bridge", bridge.id)
                 }else{
 
                     window.bridges_map_layer.eachLayer((layer) => {
@@ -85,9 +65,7 @@
                             layer.openPopup();
                         }
                     });
-
                 }
-
 
                 ym(66456622,'reachGoal','list_' + bridge.link)
 

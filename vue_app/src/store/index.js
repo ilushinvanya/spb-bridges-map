@@ -9,10 +9,18 @@ export default function (/* { ssrContext } */) {
       gl_support: null,
       Time: 0, // moment object,
       timing_mode: null,
-      bridges_with_params: [],
       yandex_clock: {},
+      open_bridge_id: 0,
+      bridges_with_params: [],
+      geoJson_features: {}
     },
     mutations: {
+      setFeatures(state, obj){
+        state.geoJson_features = obj;
+      },
+      setOpen_bridge(state, id){
+        state.open_bridge_id = id;
+      },
       setGLSupport(state, bool){
         state.gl_support = bool;
       },
