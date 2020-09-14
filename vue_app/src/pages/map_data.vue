@@ -5,10 +5,13 @@
         data() {
             return {
                 source_bridges: [],
-                url_webcam: "https://www.youtube.com/embed/ATyR49Y4IEk"
+                url_webcam: "https://www.youtube.com/embed/4cKa735A9H4"
             }
         },
         computed: {
+            open_bridge_id(){
+                return this.$store.state.open_bridge_id;
+            },
             timing_mode() {
                 return this.$store.state.timing_mode
             },
@@ -140,6 +143,8 @@
                             coordinates: bridge.coordinates
                         },
                         properties: {
+                            custom_active_color: bridge.id === this.open_bridge_id ? 'yellow' : 'white',
+                            custom_active_stroke_size: bridge.id === this.open_bridge_id ? 3 : 1,
                             custom_status_color: custom_status.color,
                             custom_status_text: custom_status.text,
 
@@ -172,6 +177,7 @@
                         custom_comment: "camera",
                         custom_time_html: "",
                         custom_url: "",
+                        custom_youtube_url: this.url_webcam,
 
                         title: this.$t('camera'),
                         description: '<iframe width="380" height="215" src="' + this.url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',

@@ -70,7 +70,7 @@
                 ym(66456622,'reachGoal','list_' + bridge.link)
 
                 const coords = bridge.coordinates;
-                window.map.panTo(L.latLng(coords[1], coords[0]));
+                window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003));
             }
         }
     }

@@ -1,12 +1,22 @@
 <template>
-  <q-card class="slider_card">
+  <q-card
+    class="slider_card"
+    v-touch-pan.vertical.prevent.mouse="handleSwipe"
+    :class="{ hide_to_bottom }"
+    :style="{ 'bottom': offset + 'px' }">
     <q-card-section>
 
-      <div class="flex no-wrap justify-between items-start">
-        <div></div>
+        <q-btn
+          dense
+          unelevated
+          round
+          color="blue-grey-5"
+          icon="clear"
+          style="top:-10px; right:-10px"
+          class="absolute-top-right z-max"
+          @click="close()"
+        />
 
-        <q-btn flat round icon="close" @click="close()"/>
-      </div>
 
 
       <q-slider
@@ -22,7 +32,6 @@
 
 
     </q-card-section>
-
   </q-card>
 </template>
 
@@ -32,6 +41,8 @@
         data() {
             return {
                 slider_value: null,
+                offset: 0,
+                hide_to_bottom: true
             }
         },
         computed:{
@@ -82,7 +93,7 @@
             },
         },
         mounted(){
-
+            this.hide_to_bottom = false;
             if ( this.$moment(this.$store.state.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
                 this.slider_value = this.$store.state.timing_mode;
             }
@@ -92,6 +103,27 @@
             close(){
                 this.$store.commit("setTiming_mode", null)
             },
+            handleSwipe({evt, ...info}) {
+                if (info.direction === "up") {
+                    this.collapse = false;
+                } else if (info.direction === "down") {
+                    if (this.collapse === false) {
+                        this.collapse = true;
+                    } else {
+                        this.offset -= info.delta.y;
+                        if (info.isFinal) {
+                            if (this.offset < -80) {
+                                this.hide_to_bottom = true;
+                                setTimeout(() => {
+                                    this.close()
+                                }, 400);
+                            } else {
+                                this.offset = 0
+                            }
+                        }
+                    }
+                }
+            }
         },
         watch: {
             slider_value(newVal) {
@@ -104,6 +136,7 @@
 <style lang="scss">
   .slider_card {
     width: 100%;
+    position: relative;
     margin: 0 auto 10px;
     z-index: 1001;
   }

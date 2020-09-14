@@ -257,8 +257,8 @@
         },
         watch: {
             dark_mode(newVal) {
-                ym(66456622,'reachGoal','dark_mode')
-                let mapbox_styles = ""
+                ym(66456622,'reachGoal', 'dark_mode');
+                let mapbox_styles = "";
                 if (newVal) {
                     this.$q.dark.set(true)
                     mapbox_styles = 'mapbox://styles/mapbox/dark-v10';

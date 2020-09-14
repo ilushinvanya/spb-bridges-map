@@ -107,8 +107,8 @@
                         'type': 'circle',
                         'source': 'points',
                         'paint': {
-                            'circle-stroke-color': 'white',
-                            'circle-stroke-width': 1,
+                            'circle-stroke-color': ['get', 'custom_active_color'],
+                            'circle-stroke-width': ['get', 'custom_active_stroke_size'],
                             'circle-color': ['get', 'marker-color'],
                             'circle-radius': 16
                         }
@@ -130,7 +130,7 @@
                                 { 'font-scale': 0.6 }
                             ],
                             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-                            'text-offset': [0, 0.6],
+                            'text-offset': [0, 0.8],
                             'text-anchor': 'top'
                         }
                     });
