@@ -111,13 +111,13 @@ module.exports = function (/* ctx */) {
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        skipWaiting: true,
-        clientsClaim: true
+        skipWaiting: false,
+        clientsClaim: false
       },
       manifest: {
-        name: `Мосты Петербурга`,
-        short_name: `Мосты Петербурга`,
-        description: `Карта, расписание и график разводных мостов в Сантк-Петербурге`,
+        name: `Разводные мосты Петербурга`,
+        short_name: `Разводные мосты Петербурга`,
+        description: `Карта, расписание и график разводных мостов в Санкт-Петербурге`,
         display: 'standalone',
         version: "1.2",
         start_url: "/",

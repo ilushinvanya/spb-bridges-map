@@ -29,14 +29,14 @@
       <q-item-label header>{{ $t('other') }}</q-item-label>
 
       <!-- dark_mode -->
-      <q-item tag="label" v-ripple>
-        <q-item-section>
-          <q-item-label>{{ $t('dark_mode') }}</q-item-label>
-        </q-item-section>
-        <q-item-section side>
-          <q-toggle color="blue-grey" v-model="dark_mode"/>
-        </q-item-section>
-      </q-item>
+<!--      <q-item tag="label" v-ripple>-->
+<!--        <q-item-section>-->
+<!--          <q-item-label>{{ $t('dark_mode') }}</q-item-label>-->
+<!--        </q-item-section>-->
+<!--        <q-item-section side>-->
+<!--          <q-toggle color="blue-grey" v-model="dark_mode"/>-->
+<!--        </q-item-section>-->
+<!--      </q-item>-->
 
 
 

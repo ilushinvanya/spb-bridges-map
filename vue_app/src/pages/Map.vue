@@ -10,7 +10,6 @@
         data() {
             return {
                 source_bridges: [],
-
                 mapbox_access_token: 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg',
                 url_webcam: "https://www.youtube.com/embed/ATyR49Y4IEk"
             }

@@ -20,18 +20,20 @@
     <q-slide-transition>
 
       <q-video v-if="camera"
-               style="height: 300px"
+               class="height_300"
                :src="open_bridge_obj.custom_youtube_url" />
 
 
-      <q-img v-else
-             class="q-pa-none"
-             v-show="!collapse"
+      <div v-else
+             v-show="!collapse">
+      <q-img
+             class="responsive"
              :src="open_bridge_obj.poster_image"/>
+      </div>
     </q-slide-transition>
 
-    <q-card-section>
-      <div class="text-h6 ellipsis" @click="collapse = !collapse">
+    <q-card-section @click="collapse = !collapse">
+      <div class="text-h6 ellipsis" >
         {{ open_bridge_obj.title }}
         <q-badge
           v-if="!camera"
@@ -94,7 +96,8 @@
             return {
                 offset: 0,
                 collapse: true,
-                hide_to_bottom: true
+                hide_to_bottom: true,
+                is_final_after_collapse: true
             }
         },
         computed: {
@@ -136,21 +139,33 @@
             handleSwipe({evt, ...info}) {
                 if (info.direction === "up") {
                     this.collapse = false;
+                    this.is_final_after_collapse = false;
                 } else if (info.direction === "down") {
-                    if (this.collapse === false) {
+
+                    if ( info.isFinal ){
+                        this.is_final_after_collapse = true;
+                    }
+
+                    if ( this.collapse === false ) {
                         this.collapse = true;
-                    } else {
-                        this.offset -= info.delta.y;
-                        if (info.isFinal) {
-                            if (this.offset < -100) {
-                                this.hide_to_bottom = true;
-                                setTimeout(() => {
-                                    this.open_bridge_id = 0;
-                                }, 400);
-                            } else {
-                                this.offset = 0
+                    }
+
+                    if ( this.collapse === true ) {
+
+                        if ( this.is_final_after_collapse ){
+                            this.offset -= info.delta.y;
+                            if (info.isFinal) {
+                                if (this.offset < -100) {
+                                    this.hide_to_bottom = true;
+                                    setTimeout(() => {
+                                        this.open_bridge_id = 0;
+                                    }, 400);
+                                } else {
+                                    this.offset = 0
+                                }
                             }
                         }
+
                     }
                 }
             }
@@ -159,6 +174,9 @@
 </script>
 
 <style lang="scss">
+  .height_300 {
+    height: 300px;
+  }
   .bridge-card {
     width: 100%;
     margin: 0 auto 10px;

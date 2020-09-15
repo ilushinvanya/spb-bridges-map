@@ -112,8 +112,7 @@
 
   .bottom_block_w_cards {
     position: absolute;
-    min-width: 420px;
-    max-width: 420px;
+    width: 420px;
     bottom: 0;
   }
   #legenda {
@@ -146,6 +145,11 @@
   }
 
   body.mobile {
+    .bottom_block_w_cards {
+      width: 90%;
+      left:50%;
+      transform: translateX(-50%);
+    }
     .mapboxgl-popup {
       bottom: 50px;
       top: auto;
