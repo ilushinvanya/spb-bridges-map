@@ -11,19 +11,15 @@
       round
       color="blue-grey-5"
       icon="clear"
-      style="top:-10px; right:-10px"
-      class="absolute-top-right z-max"
+      style="top:-10px; right:-10px; z-index: 9"
+      class="absolute-top-right"
       @click="open_bridge_id = 0"
     />
 
-
     <q-slide-transition>
-
       <q-video v-if="camera"
                class="height_300"
                :src="open_bridge_obj.custom_youtube_url" />
-
-
       <div v-else
              v-show="!collapse">
       <q-img

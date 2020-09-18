@@ -1,5 +1,5 @@
 <template>
-  <div id="map"></div>
+  <div id="map" :style="{minHeight: min_height}"></div>
 </template>
 
 <script>
@@ -7,6 +7,7 @@
 
     export default {
         name: 'Map',
+        props: ['min_height'],
         data() {
             return {
                 source_bridges: [],
@@ -198,35 +199,6 @@
 </script>
 
 <style lang="scss">
-  #legenda {
-    width: 300px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 999;
-    transition: all .4s ease;
-
-    &.left {
-      right: 100%
-    }
-
-    &.right {
-      right: -300px
-    }
-
-    &.up {
-      top: -1000px
-    }
-
-    &.down {
-      top: 100%
-    }
-
-    & * {
-      user-select: none;
-    }
-  }
-
   body.mobile {
     .mapboxgl-popup {
       bottom: 50px;
@@ -245,7 +217,6 @@
     top: 0;
     bottom: 0;
     width: 100%;
-    height: calc(100vh - 100px);
 
     h6 {
       margin: 0;

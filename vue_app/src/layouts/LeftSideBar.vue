@@ -159,7 +159,7 @@
                 language_list: [
                     {
                         id: 'ch',
-                        label: 'China',
+                        label: 'Chinese',
                         src: flag_ch
                     },
                     {

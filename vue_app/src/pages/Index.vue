@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center overflow-hidden">
+  <q-page class="flex flex-center overflow-hidden" :style-fn="page_height">
 
     <div id="legenda"
          :class="transition_class"
@@ -45,7 +45,7 @@
     </div>
 
 
-    <Map ref="main_map" />
+    <Map ref="main_map" :min_height = "q_page_min_height"/>
 
     <map_data @update_map_data="trigger_update_map"
               @init_map="trigger_init_map"/>
@@ -74,7 +74,8 @@
         },
         data() {
             return {
-                transition_class: "up"
+                transition_class: "up",
+                q_page_min_height: 0
             }
         },
         computed: {
@@ -89,6 +90,11 @@
             }
         },
         methods: {
+            page_height(offset){
+                const min_height = offset ? `calc(100vh - ${offset}px)` : '100vh';
+                this.q_page_min_height = min_height;
+                return { minHeight: min_height }
+            },
             trigger_init_map(){
                 this.$refs.main_map.checkSupportGLBrowser()
             },
@@ -114,6 +120,7 @@
     position: absolute;
     width: 420px;
     bottom: 0;
+    z-index: 3;
   }
   #legenda {
     width: 300px;
@@ -147,93 +154,12 @@
   body.mobile {
     .bottom_block_w_cards {
       width: 90%;
-      left:50%;
+      left: 50%;
       transform: translateX(-50%);
     }
-    .mapboxgl-popup {
-      bottom: 50px;
-      top: auto;
-      left: 50%;
-      transform: translateX(-50%) !important;
-
-      .mapboxgl-popup-tip {
-        display: none;
-      }
-    }
   }
 
-  #map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: calc(100vh - 100px);
-
-    h6 {
-      margin: 0;
-    }
-  }
-
-  body.body--dark {
-    .leaflet-popup-content {
-      background: var(--q-color-dark);
-      color: #fff;
-    }
-
-    .mapboxgl-popup {
-      .q-card {
-        background: #78909c;
-        color: white;
-      }
-    }
-  }
-
-  .marker-title {
-    font-size: 20px;
-  }
-
-  .marker-description {
-    font-size: 16px;
-
-    .bridge_comment {
-      color: #a7a7a7;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    b {
-      color: #792ec0;
-    }
-  }
-
-  .mapboxgl-popup {
-    position: absolute;
-    min-width: 300px;
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 
 
-    .mapboxgl-popup-content {
-      background: transparent;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 0;
-      width: 100%;
-
-      .q-card {
-        width: 100%;
-      }
-    }
-
-    .mapboxgl-popup-close-button {
-      right: 6px;
-      top: 13px;
-      z-index: 99;
-      font-size: 40px;
-    }
-
-    iframe {
-      width: 100%;
-    }
-  }
 
 </style>
