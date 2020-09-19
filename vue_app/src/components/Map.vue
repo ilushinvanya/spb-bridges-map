@@ -53,6 +53,7 @@
                     this.gl_support = true;
                     this.initMapboxGLMap();
                 }
+                this.$q.dark.set(this.dark_mode)
             },
             initMapboxJSMap() {
                 L.mapbox.accessToken = this.mapbox_access_token;
@@ -70,9 +71,18 @@
 
                 const self = this;
 
+
+                let styles;
+                if ( this.dark_mode ){
+                    styles = 'mapbox://styles/mapbox/dark-v10';
+                }else{
+                    styles = 'mapbox://styles/mapbox/streets-v11';
+                }
+
+
                 window.map = new mapboxgl.Map({
                     container: 'map',
-                    style: 'mapbox://styles/mapbox/streets-v11',
+                    style: styles,
                     center: [30.374144114706155, 59.90882829669761],
                     zoom: 11,
                     pitch: 45,
@@ -135,9 +145,11 @@
                             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
                             'text-offset': [0, 0.8],
                             'text-anchor': 'top'
+                        },
+                        paint: {
+                            "text-color": self.dark_mode ? "#fff" : "#000"
                         }
                     });
-
 
                     map.on('click', 'circles', function (e) {
                         self.$store.commit("setOpen_bridge", e.features[0].id)
@@ -174,7 +186,9 @@
 
         },
         watch: {
-
+            dark_mode(newVal){
+                this.checkSupportGLBrowser()
+            },
             Features: {
                 handler(newVal, oldVal) {
                     if (this.gl_support === true) {

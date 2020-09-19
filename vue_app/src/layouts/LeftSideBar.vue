@@ -29,14 +29,14 @@
       <q-item-label header>{{ $t('other') }}</q-item-label>
 
       <!-- dark_mode -->
-<!--      <q-item tag="label" v-ripple>-->
-<!--        <q-item-section>-->
-<!--          <q-item-label>{{ $t('dark_mode') }}</q-item-label>-->
-<!--        </q-item-section>-->
-<!--        <q-item-section side>-->
-<!--          <q-toggle color="blue-grey" v-model="dark_mode"/>-->
-<!--        </q-item-section>-->
-<!--      </q-item>-->
+      <q-item tag="label" v-ripple>
+        <q-item-section>
+          <q-item-label>{{ $t('dark_mode') }}</q-item-label>
+        </q-item-section>
+        <q-item-section side>
+          <q-toggle color="blue-grey" v-model="dark_mode"/>
+        </q-item-section>
+      </q-item>
 
 
       <!-- timing -->
@@ -67,7 +67,6 @@
         </q-item-section>
 
       </q-item>
-
 
 
     </q-list>
@@ -178,16 +177,15 @@
             }
         },
         mounted() {
-            const dark_local = localStorage.getItem("dark");
-            this.dark_mode = dark_local ? !!dark_local : false;
+
         },
         methods: {
-            show_send_dialog(){
+            show_send_dialog() {
                 this.prompt = true;
-                ym(66456622,'reachGoal','show_send_dialog')
+                ym(66456622, 'reachGoal', 'show_send_dialog')
             },
             sendMessage() {
-                ym(66456622,'reachGoal','send_msg');
+                ym(66456622, 'reachGoal', 'send_msg');
 
                 if (this.contact.length === 0) {
                     this.$q.notify({
@@ -229,7 +227,7 @@
                     })
             },
             timing_mode_toggle() {
-                ym(66456622,'reachGoal','timing_mode_toggle')
+                ym(66456622, 'reachGoal', 'timing_mode_toggle')
                 if (this.$store.state.timing_mode === null) {
                     this.$store.commit("setTiming_mode", +this.$moment())
                 } else {
@@ -240,14 +238,21 @@
         },
         computed: {
             dark_mode: {
-                get(){
+                get() {
                     return this.$store.state.dark_mode;
                 },
-                set(value){
+                set(value) {
+                    if (value) {
+                        localStorage.setItem("dark", true)
+                    } else {
+                        localStorage.removeItem("dark")
+                    }
+
+                    ym(66456622, 'reachGoal', 'dark_mode');
                     this.$store.commit("setDarkMode", value)
                 }
             },
-            gl_support(){
+            gl_support() {
                 return this.$store.state.gl_support;
             },
             app_language: {
@@ -262,20 +267,14 @@
         },
         watch: {
             dark_mode(newVal) {
-                ym(66456622,'reachGoal', 'dark_mode');
-                let mapbox_styles = "";
+                let mapbox_styles;
                 if (newVal) {
-                    this.$q.dark.set(true)
-                    mapbox_styles = 'mapbox://styles/mapbox/dark-v10';
-                    localStorage.setItem("dark", true)
+                    mapbox_styles = "mapbox://styles/mapbox/dark-v10";
                 } else {
-                    this.$q.dark.set(false)
-                    mapbox_styles = 'mapbox://styles/mapbox/streets-v11';
-                    localStorage.removeItem("dark")
+                    mapbox_styles = "mapbox://styles/mapbox/streets-v11";
                 }
-                if ( this.gl_support ){
-                    window.map.setStyle(mapbox_styles);
-                }else{
+
+                if (!this.gl_support) {
                     L.mapbox.styleLayer(mapbox_styles).addTo(window.map);
                 }
             }

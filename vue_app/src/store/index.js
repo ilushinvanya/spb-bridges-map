@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const dark_local = localStorage.getItem("dark");
+
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     state: {
@@ -13,7 +15,7 @@ export default function (/* { ssrContext } */) {
       open_bridge_id: 0,
       bridges_with_params: [],
       geoJson_features: {},
-      dark_mode: false
+      dark_mode: dark_local ? !!dark_local : false
     },
     mutations: {
       setDarkMode(state, bool){
