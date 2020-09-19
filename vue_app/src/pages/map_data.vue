@@ -202,7 +202,7 @@
             getBridges() {
                 const local_bridges = localStorage.getItem("bridges");
                 if (local_bridges) {
-                    this.bridges = JSON.parse(local_bridges);
+                    this.source_bridges = JSON.parse(local_bridges);
                 }
 
                 let domain = "";
@@ -232,12 +232,10 @@
                     })
                     .catch(e => {
 
-
                     })
                     .finally(() => {
                         this.$store.commit("setBridges", this.bridges_with_params)
                         this.$emit("init_map")
-                        // this.checkSupportGLBrowser()
                     })
             },
 

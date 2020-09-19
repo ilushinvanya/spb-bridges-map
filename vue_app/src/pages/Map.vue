@@ -16,6 +16,9 @@
             }
         },
         computed: {
+            dark_mode() {
+                return this.$store.state.dark_mode;
+            },
             gl_support: {
                 get() {
                     return this.$store.state.gl_support;
@@ -24,7 +27,7 @@
                     this.$store.commit('setGLSupport', val)
                 }
             },
-            Features(){
+            Features() {
                 return this.$store.state.geoJson_features
             },
             timing_mode() {
@@ -82,17 +85,17 @@
 
                 window.map.on('load', function () {
 
-                    map.loadImage('/map_icons/car.png', function(error, image) {
+                    map.loadImage('/map_icons/car.png', function (error, image) {
                         if (error) throw error;
                         map.addImage('car', image);
                     });
 
-                    map.loadImage('/map_icons/boat.png', function(error, image) {
+                    map.loadImage('/map_icons/boat.png', function (error, image) {
                         if (error) throw error;
                         map.addImage('boat', image);
                     });
 
-                    map.loadImage('/map_icons/cinema.png', function(error, image) {
+                    map.loadImage('/map_icons/cinema.png', function (error, image) {
                         if (error) throw error;
                         map.addImage('cinema', image);
                     });
@@ -123,11 +126,11 @@
                             'text-field': [
                                 'format',
                                 ['upcase', ['get', 'title']],
-                                { 'font-scale': 0.8 },
+                                {'font-scale': 0.8},
                                 '\n',
                                 {},
                                 ['downcase', ['get', 'custom_comment']],
-                                { 'font-scale': 0.6 }
+                                {'font-scale': 0.6}
                             ],
                             'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
                             'text-offset': [0, 0.8],
@@ -167,25 +170,13 @@
                     geoJson
                 );
 
-                //             // Для камеры
-                //             if (new_feature_marker.properties.custom_comment === "camera") {
-                //
-                //                 popup = new mapboxgl.Popup({offset: 0})
-                //                     .setHTML(
-                //                         `<div class="q-card">
-                //                              <div class="q-video">${new_feature_marker.properties.description}</div>
-                //                               <div class="q-card__section q-card__section--vert">
-                //                                  <div class="text-h6">${new_feature_marker.properties.title}</div>
-                //                              </div>
-                //                          </div>`
-                //                     );
-                //
             },
 
         },
         watch: {
+
             Features: {
-                handler(newVal, oldVal){
+                handler(newVal, oldVal) {
                     if (this.gl_support === true) {
                         this.setMarkerData()
                     } else if (this.gl_support === false) {
@@ -254,7 +245,6 @@
       color: #792ec0;
     }
   }
-
 
 
   .mapboxgl-popup {

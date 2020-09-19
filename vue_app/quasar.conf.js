@@ -111,8 +111,8 @@ module.exports = function (/* ctx */) {
     pwa: {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
-        skipWaiting: false,
-        clientsClaim: false
+        skipWaiting: true,
+        clientsClaim: true
       },
       manifest: {
         name: `Разводные мосты Петербурга`,

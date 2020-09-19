@@ -39,8 +39,6 @@
 <!--      </q-item>-->
 
 
-
-
       <!-- timing -->
       <q-item tag="label"
               @click="timing_mode_toggle()"
@@ -173,7 +171,6 @@
                         src: flag_en
                     }
                 ],
-                dark_mode: false,
                 prompt: false,
 
                 text: '',
@@ -242,6 +239,14 @@
             }
         },
         computed: {
+            dark_mode: {
+                get(){
+                    return this.$store.state.dark_mode;
+                },
+                set(value){
+                    this.$store.commit("setDarkMode", value)
+                }
+            },
             gl_support(){
                 return this.$store.state.gl_support;
             },

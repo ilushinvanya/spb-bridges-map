@@ -61,7 +61,7 @@
 <script>
     import Map from "./Map.vue"
     import map_data from "./map_data.vue"
-    import SliderCard from "../components/SliderCard";
+    import SliderCard from "../components/Slider_Card";
     import BridgeCard from "../components/Bridge_Card";
 
     export default {

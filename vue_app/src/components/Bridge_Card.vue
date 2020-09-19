@@ -50,7 +50,7 @@
         <q-chip
           v-for="(time, index) in times_chip"
           :key="index"
-          :color="time.includes('<b>') ? 'red' : ''"
+          :style="{ backgroundColor: time.includes('<b>') ? open_bridge_obj['marker-color'] : '' }"
           :text-color="time.includes('<b>') ? 'white' : ''"
           icon="schedule"
         >

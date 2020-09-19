@@ -12,9 +12,13 @@ export default function (/* { ssrContext } */) {
       yandex_clock: {},
       open_bridge_id: 0,
       bridges_with_params: [],
-      geoJson_features: {}
+      geoJson_features: {},
+      dark_mode: false
     },
     mutations: {
+      setDarkMode(state, bool){
+        state.dark_mode = bool;
+      },
       setFeatures(state, obj){
         state.geoJson_features = obj;
       },
