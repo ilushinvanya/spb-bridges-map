@@ -19,6 +19,15 @@
             dark_mode() {
                 return this.$store.state.dark_mode;
             },
+            map_styles(){
+                let styles;
+                if ( this.dark_mode ){
+                    styles = 'mapbox://styles/mapbox/dark-v10';
+                }else{
+                    styles = 'mapbox://styles/mapbox/streets-v11';
+                }
+                return styles;
+            },
             gl_support: {
                 get() {
                     return this.$store.state.gl_support;
@@ -60,7 +69,7 @@
 
                 window.map = L.mapbox.map('map')
                     .setView([59.935446, 30.328063], 12)
-                    .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
+                    .addLayer(L.mapbox.styleLayer(this.map_styles));
 
                 window.bridges_map_layer = L.mapbox
                     .featureLayer()
@@ -71,18 +80,9 @@
 
                 const self = this;
 
-
-                let styles;
-                if ( this.dark_mode ){
-                    styles = 'mapbox://styles/mapbox/dark-v10';
-                }else{
-                    styles = 'mapbox://styles/mapbox/streets-v11';
-                }
-
-
                 window.map = new mapboxgl.Map({
                     container: 'map',
-                    style: styles,
+                    style: self.map_styles,
                     center: [30.374144114706155, 59.90882829669761],
                     zoom: 11,
                     pitch: 45,

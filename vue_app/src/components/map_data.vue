@@ -10,6 +10,9 @@
             }
         },
         computed: {
+            gl_support() {
+                return this.$store.state.gl_support;
+            },
             open_bridge_id(){
                 return this.$store.state.open_bridge_id;
             },
@@ -81,7 +84,11 @@
 
                     let marker_symbol = "";
                     if ([2, 3].includes(checkTime_obj.status)) {
-                        marker_symbol = 'boat';
+                        if(this.gl_support) {
+                            marker_symbol = 'boat';
+                        }else{
+                          marker_symbol = 'ferry';
+                        }
                     } else if (bridge.time[0].start == 0) {
                         marker_symbol = 'car';
                     } else {
