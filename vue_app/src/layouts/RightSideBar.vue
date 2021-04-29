@@ -1,8 +1,6 @@
 <template>
   <div class="q-pa-none">
     <q-list>
-
-
       <q-item v-for="bridge in bridges_with_params"
               @click="handleClickBridge(bridge)"
               :key="bridge.link"
@@ -30,8 +28,14 @@
 
 
       </q-item>
-
+      <q-separator spaced />
+      <q-item-label header>{{ $t('info') }}</q-item-label>
+      <q-item>{{ $t('last_update') }} - {{parseTime}}</q-item>
+      <q-item>
+        <a href="https://mostotrest-spb.ru/razvodka-mostov" target="_blank">{{ $t('site_mostotrest') }}</a>
+      </q-item>
     </q-list>
+
   </div>
 </template>
 
@@ -50,6 +54,17 @@
             },
             gl_support() {
                 return this.$store.state.gl_support
+            },
+            parseTime() {
+				      if(this.$store.state.parse_time) {
+				      	const currentDate = new Date(this.$store.state.parse_time);
+				      	const day = currentDate.getDate();
+				      	const month = currentDate.getMonth() + 1;
+				      	const year = currentDate.getFullYear();
+				      	const hour = currentDate.getHours();
+				      	const minute = currentDate.getMinutes();
+				      	return `${day}.${month}.${year} // ${hour}:${minute}`;
+              }
             }
         },
         methods: {

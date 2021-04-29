@@ -29,5 +29,8 @@ export default {
 
   timing: 'Timing',
   timing_description: 'By moving the slider, you will see the situation on the bridges at the set time',
-  camera: 'Realtime camera'
+  camera: 'Realtime camera',
+  info: 'Information',
+  last_update: 'Last update',
+  site_mostotrest: 'Site of Mostotrest'
 }

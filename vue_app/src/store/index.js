@@ -15,7 +15,8 @@ export default function (/* { ssrContext } */) {
       open_bridge_id: 0,
       bridges_with_params: [],
       geoJson_features: {},
-      dark_mode: dark_local ? !!dark_local : false
+      dark_mode: dark_local ? !!dark_local : false,
+      parse_time: null,
     },
     mutations: {
       setDarkMode(state, bool){
@@ -41,6 +42,9 @@ export default function (/* { ssrContext } */) {
       },
       setYandexClock(state, payload){
         state.yandex_clock = payload;
+      },
+      setParseTime(state, time_string){
+        state.parse_time = time_string;
       }
     },
     strict: process.env.DEV

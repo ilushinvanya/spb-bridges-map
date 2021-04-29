@@ -29,5 +29,8 @@ export default {
 
   timing: '时间安排',
   timing_description: '通过移动滑块，您将在设定的时间看到桥梁上的情况',
-  camera: '实时摄像头'
+  camera: '实时摄像头',
+  info: '三.信息',
+  last_update: '上次更新',
+  site_mostotrest: '莫斯托特雷斯特遗址'
 }

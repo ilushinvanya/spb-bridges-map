@@ -212,17 +212,17 @@
                     this.source_bridges = JSON.parse(local_bridges);
                 }
 
-                let domain = "";
-                if (process.env.DEV) {
-                    domain = "http://localhost"
-                }
+                let domain = "https://map-bridges-spb.ru";
+                // if (process.env.DEV) {
+                //     domain = "http://localhost"
+                // }
 
                 this.$axios(domain + "/server_bridges/get_bridges.php")
                     .then((response) => {
                         if (typeof response.data === 'object') {
                             if (response.data.hasOwnProperty("bridges")) {
                                 this.source_bridges = response.data.bridges;
-
+                                this.$store.commit('setParseTime', response.data.parse_time);
                                 const stringify_bridges_response = JSON.stringify(response.data.bridges);
 
                                 if (local_bridges) {
