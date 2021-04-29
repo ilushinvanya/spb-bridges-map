@@ -29,10 +29,13 @@
 
       </q-item>
       <q-separator spaced />
-      <q-item-label header>{{ $t('info') }}</q-item-label>
-      <q-item>{{ $t('last_update') }} - {{parseTime}}</q-item>
+      <q-item-label header>{{ $t('last_update') }} - {{parseTime}}</q-item-label>
       <q-item>
-        <a href="https://mostotrest-spb.ru/razvodka-mostov" target="_blank">{{ $t('site_mostotrest') }}</a>
+        <a
+          href="https://mostotrest-spb.ru/razvodka-mostov"
+          target="_blank"
+          class="text-primary"
+        >{{ $t('site_mostotrest') }}</a>
       </q-item>
     </q-list>
 
@@ -40,6 +43,7 @@
 </template>
 
 <script>
+	  import { format } from 'date-fns'
     export default {
         name: 'Bridges_list',
         computed: {
@@ -58,12 +62,7 @@
             parseTime() {
 				      if(this.$store.state.parse_time) {
 				      	const currentDate = new Date(this.$store.state.parse_time);
-				      	const day = currentDate.getDate();
-				      	const month = currentDate.getMonth() + 1;
-				      	const year = currentDate.getFullYear();
-				      	const hour = currentDate.getHours();
-				      	const minute = currentDate.getMinutes();
-				      	return `${day}.${month}.${year} // ${hour}:${minute}`;
+				        return format(currentDate, 'dd.MM.yyyy // HH:mm')
               }
             }
         },
