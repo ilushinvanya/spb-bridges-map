@@ -6,7 +6,7 @@
 
       <q-item v-for="language in language_list"
               :key="language.id"
-              :class="{ 'bg-blue-grey-2' : app_language == language.id }"
+              :class="{ 'bg-blue-grey-2' : app_language === language.id }"
               @click="app_language = language.id"
               tag="label"
               v-ripple>
@@ -191,7 +191,7 @@
                     this.$q.notify({
                         type: 'warning',
                         message: 'Заполните поле с контактом'
-                    })
+                    });
                     return false;
                 }
 
@@ -199,7 +199,7 @@
                     this.$q.notify({
                         type: 'warning',
                         message: 'Заполните поле текстом'
-                    })
+                    });
                     return false;
                 }
 
@@ -227,12 +227,11 @@
                     })
             },
             timing_mode_toggle() {
-                ym(66456622, 'reachGoal', 'timing_mode_toggle')
+                ym(66456622, 'reachGoal', 'timing_mode_toggle');
                 if (this.$store.state.timing_mode === null) {
-                    this.$store.commit("setTiming_mode", +this.$moment())
+                    this.$store.commit("setTiming_mode", +this.$moment());
                 } else {
-                    this.$store.commit("setTiming_mode", null)
-
+                    this.$store.commit("setTiming_mode", null);
                 }
             }
         },
@@ -242,12 +241,6 @@
                     return this.$store.state.dark_mode;
                 },
                 set(value) {
-                    if (value) {
-                        localStorage.setItem("dark", true)
-                    } else {
-                        localStorage.removeItem("dark")
-                    }
-
                     ym(66456622, 'reachGoal', 'dark_mode');
                     this.$store.commit("setDarkMode", value)
                 }
@@ -260,7 +253,7 @@
                     return this.$i18n.locale;
                 },
                 set(val) {
-                    localStorage.setItem("spb_bridges_language", val)
+                    localStorage.setItem("spb_bridges_language", val);
                     this.$i18n.locale = val;
                 }
             }

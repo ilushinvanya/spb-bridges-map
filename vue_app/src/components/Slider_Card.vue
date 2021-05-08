@@ -1,7 +1,6 @@
 <template>
   <q-card
     class="slider_card"
-    v-touch-pan.vertical.prevent.mouse="handleSwipe"
     :class="{ hide_to_bottom }"
     :style="{ 'bottom': offset + 'px' }">
     <q-card-section>
@@ -97,33 +96,18 @@
             if ( this.$moment(this.$store.state.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
                 this.slider_value = this.$store.state.timing_mode;
             }
+            else {
+            	let now = new Date();
+      				now.setHours(1);
+      				now.setMinutes(0);
+				      this.slider_value = Date.parse(now);
+            }
 
         },
         methods:{
             close(){
                 this.$store.commit("setTiming_mode", null)
             },
-            handleSwipe({evt, ...info}) {
-                if (info.direction === "up") {
-                    this.collapse = false;
-                } else if (info.direction === "down") {
-                    if (this.collapse === false) {
-                        this.collapse = true;
-                    } else {
-                        this.offset -= info.delta.y;
-                        if (info.isFinal) {
-                            if (this.offset < -80) {
-                                this.hide_to_bottom = true;
-                                setTimeout(() => {
-                                    this.close()
-                                }, 400);
-                            } else {
-                                this.offset = 0
-                            }
-                        }
-                    }
-                }
-            }
         },
         watch: {
             slider_value(newVal) {

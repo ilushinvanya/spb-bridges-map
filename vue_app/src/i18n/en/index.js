@@ -32,5 +32,7 @@ export default {
   camera: 'Realtime camera',
   info: 'Information',
   last_update: 'Last update',
-  site_mostotrest: 'Site of Mostotrest'
+  site_mostotrest: 'Site of Mostotrest',
+  list_hint: 'Click here to see the schedule of all bridges list',
+  load_error: 'Failed to load the latest schedule. Try later.'
 }

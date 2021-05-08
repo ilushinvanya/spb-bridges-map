@@ -26,7 +26,7 @@
                 return this.$store.state.Time
             },
             bridges_with_params() {
-                let new_bridges_features = this.source_bridges.map((bridge, index) => {
+                return this.source_bridges.map((bridge, index) => {
                     const checkTime_obj = this.checkTime(bridge.time);
 
                     let result_obj = Object.assign({}, bridge);
@@ -38,7 +38,7 @@
                         let string_time = "";
 
                         if (time_obj.hasOwnProperty("start")) {
-                            if (time_obj.start == 0) {
+                            if (time_obj.start === 0) {
                                 string_time = this.$t("not_closed")
                             } else {
                                 string_time += time_obj.start;
@@ -55,7 +55,7 @@
                             string_time = "<b>" + string_time + "</b>";
                         }
                         return string_time;
-                    }).join("<br>")
+                    }).join("<br>");
 
                     result_obj.time_html = bridge_description;
 
@@ -77,8 +77,8 @@
 
                     result_obj.comment = checkTime_obj.comment;
 
-                    const marker_color = this.checkTime_color(checkTime_obj)
-                    result_obj.marker_color = marker_color
+                    const marker_color = this.checkTime_color(checkTime_obj);
+                    result_obj.marker_color = marker_color;
 
                     result_obj.status = checkTime_obj.status;
 
@@ -89,7 +89,7 @@
                         }else{
                           marker_symbol = 'ferry';
                         }
-                    } else if (bridge.time[0].start == 0) {
+                    } else if (bridge.time[0].start === 0) {
                         marker_symbol = 'car';
                     } else {
                         marker_symbol = 'car';
@@ -98,8 +98,7 @@
                     result_obj.marker_symbol = marker_symbol;
 
                     return result_obj;
-                })
-                return new_bridges_features;
+                });
                 //      id
                 //     "title": {
                 //         "ru": "Дворцовый",
@@ -120,7 +119,7 @@
                 //    status
             },
             generateFeatures() {
-                const features = this.bridges_with_params.map((bridge, index) => {
+                const features = this.bridges_with_params.map(bridge => {
 
                     const poster_image = (bridge.status === 0 || bridge.status === 1) ? bridge.images.open : bridge.images.close;
 
@@ -195,23 +194,21 @@
                 //     }
                 // })
 
-
-                var geoJson = {
+                return {
                     type: 'FeatureCollection',
                     features: features
                 };
-
-                return geoJson;
             }
         },
         methods: {
             // Единственный запуск для получения мостов
             getBridges() {
-                const local_bridges = localStorage.getItem("bridges");
+                const local_bridges = this.$store.state.bridges_with_params;
                 if (local_bridges) {
-                    this.source_bridges = JSON.parse(local_bridges);
+                    this.source_bridges = local_bridges;
                 }
 
+                // let domain = "https://map-bridges-spb.ru";
                 let domain = "";
                 if (process.env.DEV) {
                     domain = "http://localhost"
@@ -223,26 +220,29 @@
                             if (response.data.hasOwnProperty("bridges")) {
                                 this.source_bridges = response.data.bridges;
                                 this.$store.commit('setParseTime', response.data.parse_time);
-                                const stringify_bridges_response = JSON.stringify(response.data.bridges);
-
-                                if (local_bridges) {
-                                    if (stringify_bridges_response === local_bridges) {
-                                        // изменений нет
-                                    } else {
-                                        // Есть изменения после последнего получения bridges
-                                    }
-                                }
-
-                                localStorage.setItem("bridges", stringify_bridges_response);
                             }
                         }
                     })
                     .catch(e => {
-
+                        this.$q.notify({
+                          type: 'negative',
+                          message: this.$t('load_error')
+                        });
+                        ym(66456622,'reachGoal','load_error');
                     })
                     .finally(() => {
-                        this.$store.commit("setBridges", this.bridges_with_params)
-                        this.$emit("init_map")
+                        const stringify_bridges_response = JSON.stringify(this.bridges_with_params);
+                        const stringify_bridges_local = JSON.stringify(this.$store.state.bridges_with_params);
+
+                        if (stringify_bridges_response !== stringify_bridges_local) {
+                          // Есть изменения после последнего получения bridges
+                          this.$q.notify({
+                            type: 'positive',
+                            message: 'Расписание обновлено'
+                          })
+                        }
+                        this.$store.commit("setBridges", this.bridges_with_params);
+                        this.$emit("init_map");
                     })
             },
 
@@ -288,7 +288,7 @@
                     for (let [key, value] of Object.entries(time_obj)) {
                         // start: "1:45"
 
-                        if (value == 0) {
+                        if (value === 0) {
                             obj['start'] = 0;
                             return false;
                         }
@@ -348,7 +348,7 @@
                 let G = 216;
                 // const B = 80;
                 const B = 32;
-                const green_start_color = "rgb(63,216,32)";
+                // const green_start_color = "rgb(63,216,32)";
 
                 // checkTime_obj {
                 //     status, comment, time_obj

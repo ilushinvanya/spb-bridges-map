@@ -32,5 +32,7 @@ export default {
   camera: '实时摄像头',
   info: '三.信息',
   last_update: '上次更新',
-  site_mostotrest: '莫斯托特雷斯特遗址'
+  site_mostotrest: '莫斯托特雷斯特遗址',
+  list_hint: '单击此处查看所有桥梁列表的时间表',
+  load_error: '未能加载最新时间表。稍后再试。'
 }

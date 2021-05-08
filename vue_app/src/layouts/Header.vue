@@ -15,14 +15,24 @@
           icon="menu"
           no-caps
           :label="$t('header_toolbar_tab_menu')"
-          @click="left_handle()"
+          @click="left_handle"
         />
 
         <q-tab
           no-caps
           :label="$t('header_toolbar_tab_list')"
-          @click="right_handle()"
-        />
+          color="red"
+          :class="{'bg-yellow text-black': show_hint}"
+          @click="right_handle"
+        >
+          <q-tooltip
+            v-if="show_hint"
+            :value="true"
+            content-class="text-subtitle2 bg-yellow text-black"
+            :offset="[10, 10]"
+          > {{$t('list_hint')}}
+          </q-tooltip>
+        </q-tab>
       </q-tabs>
 
     </q-toolbar>
@@ -38,13 +48,16 @@
         name: 'HeaderComponent',
         props: ["left", "right"],
         computed: {
-
+            show_hint() {
+            	  return this.$store.state.show_hint && this.$store.getters['mobilecheck'];
+            }
         },
         methods: {
             left_handle() {
                 this.$emit("left", !this.left);
             },
             right_handle() {
+                this.$store.commit('setShowHint', false);
                 this.$emit("right", !this.right);
             }
         }

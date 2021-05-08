@@ -157,8 +157,6 @@
 
 
                 })
-
-
             },
 
             // Размещение маркеров на карту
@@ -177,7 +175,7 @@
             },
             setMarkerData() {
                 const geoJson = this.Features;
-
+				        if(!map.getSource('points')) return;
                 map.getSource('points').setData(
                     geoJson
                 );
@@ -186,11 +184,11 @@
 
         },
         watch: {
-            dark_mode(newVal){
+            dark_mode(){
                 this.checkSupportGLBrowser()
             },
             Features: {
-                handler(newVal, oldVal) {
+                handler() {
                     if (this.gl_support === true) {
                         this.setMarkerData()
                     } else if (this.gl_support === false) {
