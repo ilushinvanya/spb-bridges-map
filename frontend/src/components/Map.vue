@@ -1,5 +1,5 @@
 <template>
-  <div id="map" :style="{minHeight: min_height}"></div>
+  <div id="map" "></div>
 </template>
 
 <script setup>
