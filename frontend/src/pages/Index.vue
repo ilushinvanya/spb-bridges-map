@@ -38,10 +38,6 @@ function page_height(offset: number) {
   return {};
 }
 
-function handleSwipe(e: { direction: string }) {
-  transition_class.value = e.direction
-  ym(66456622, 'reachGoal', 'hide_legend')
-}
 </script>
 
 <style lang="scss">
@@ -51,21 +47,7 @@ function handleSwipe(e: { direction: string }) {
     bottom: 0;
     z-index: 3;
   }
-  #legenda {
-    width: 300px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 999;
-    transition: all .4s ease;
 
-    &.left { right: 100% }
-    &.right { right: -300px }
-    &.up { top: -1000px }
-    &.down { top: 100% }
-
-    & * { user-select: none; }
-  }
   .full-dvh-height-w-main-page-offset {
     height: calc(100vh - var(--mainPageOffset));
     height: calc((var(--1dvh, 1vh) * 100) - var(--mainPageOffset));
