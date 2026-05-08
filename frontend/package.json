@@ -29,8 +29,9 @@
     "@quasar/app-webpack": "^4.0.0",
     "@types/node": "^25.6.1",
     "autoprefixer": "^10.4.0",
+    "ts-loader": "^9.5.7",
     "typescript": "^6.0.3",
-    "ts-loader": "^9.5.7"
+    "workbox-webpack-plugin": "^7.4.1"
   },
   "engines": {
     "node": ">= 20.0.0",

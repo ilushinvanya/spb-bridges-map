@@ -1,0 +1,24 @@
+name: Upload content folder
+
+on:
+  push:
+    paths:
+      - 'backend/web-server/statics/**'
+
+jobs:
+  upload:
+    name: 🗂️ Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          local-dir: './frontend/public/statics/'
+          server-dir: 'public_html/statics/'
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_NAME }}
+          password: ${{ secrets.FTP_SECRET }}
+

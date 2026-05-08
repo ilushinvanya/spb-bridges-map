@@ -7,3 +7,5 @@ node_modules
 /.quasar
 /quasar.config.*.temporary.compiled*
 .env.local*
+.env
+.env.local
