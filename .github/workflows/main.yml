@@ -20,7 +20,7 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run build-pwa
+          npm run build
 
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6

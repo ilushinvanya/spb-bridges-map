@@ -122,7 +122,7 @@ function initMapboxGLMap () {
 
 function setGeoJSON () {
   const geoJson = Features.value
-  const camera_string = t('camera')
+  // const camera_string = t('camera')
   window.bridges_map_layer.setGeoJSON(geoJson)
 
   // window.bridges_map_layer.eachLayer(function (layer) {
