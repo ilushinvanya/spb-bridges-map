@@ -13,7 +13,7 @@ const store = useBridgesStore()
 const $q = useQuasar()
 const { t } = useI18n()
 
-const mapbox_access_token = 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg'
+const mapbox_access_token = process.meta.env.VUE_APP_MAPBOX_TOKEN
 const url_webcam = 'https://www.youtube.com/embed/ATyR49Y4IEk'
 
 const dark_mode = computed(() => store.dark_mode)
