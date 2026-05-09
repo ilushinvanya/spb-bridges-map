@@ -3,8 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useQuasar } from 'quasar'
+import { ref } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
