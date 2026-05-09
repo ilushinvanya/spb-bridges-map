@@ -125,12 +125,12 @@ function setGeoJSON () {
   const camera_string = t('camera')
   window.bridges_map_layer.setGeoJSON(geoJson)
 
-  window.bridges_map_layer.eachLayer(function (layer) {
-    if (layer.feature.properties.title === camera_string) {
-      var content = '<iframe width="280" height="200" src="' + url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-      layer.bindPopup(content)
-    }
-  })
+  // window.bridges_map_layer.eachLayer(function (layer) {
+  //   if (layer.feature.properties.title === camera_string) {
+  //     var content = '<iframe width="280" height="200" src="' + url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+  //     layer.bindPopup(content)
+  //   }
+  // })
 }
 
 function setMarkerData () {
