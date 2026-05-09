@@ -45,6 +45,7 @@ import { useBridgesStore } from 'src/stores/bridges'
 
 export default {
   name: 'Bridges_list',
+  emits: ['close'],
   setup () {
     const store = useBridgesStore()
     return { store }
@@ -79,6 +80,10 @@ export default {
             layer.openPopup()
           }
         })
+      }
+
+      if(this.store.mobilecheck) {
+        this.$emit('close')
       }
 
       ym(66456622, 'reachGoal', 'list_' + bridge.link)

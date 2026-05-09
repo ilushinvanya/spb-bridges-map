@@ -13,7 +13,7 @@
     </q-drawer>
 
     <q-drawer show-if-above v-model="right" side="right" bordered :width="360">
-      <RightSideBar/>
+      <RightSideBar @close="right = false"/>
     </q-drawer>
 
     <q-page-container>
