@@ -70,8 +70,7 @@
     <q-list>
       <q-item tag="label">
         <q-item-section>
-          <q-item-label>author</q-item-label>
-          <q-item-label caption>man@bonusuber.ru</q-item-label>
+          <q-item-label>man@bonusuber.ru</q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -84,17 +83,21 @@
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          <q-input outlined
-                   v-model="contact"
-                   :placeholder="$t('write_contact')"
-                   autofocus/>
+          <q-input
+              v-model="contact"
+              outlined
+              autofocus
+              :label="$t('write_contact')"
+          />
         </q-card-section>
 
         <q-card-section>
-          <q-input outlined
-                   type="textarea"
-                   :placeholder="$t('write_letter')"
-                   v-model="text"/>
+          <q-input
+              v-model="text"
+              outlined
+              type="textarea"
+              :label="$t('write_letter')"
+          />
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
@@ -102,12 +105,15 @@
             flat
             no-caps
             :label="$t('cancel')"
-            v-close-popup/>
+            v-close-popup
+          />
           <q-btn
-            no-caps
-            color="primary"
-            :label="$t('send')"
-            @click="sendMessage()"/>
+              :loading="loading"
+              no-caps
+              color="primary"
+              :label="$t('send')"
+              @click="sendMessage()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -136,7 +142,8 @@ export default {
       ],
       prompt: false,
       text: '',
-      contact: ''
+      contact: '',
+      loading: false,
     }
   },
   methods: {
@@ -161,7 +168,8 @@ export default {
       bodyFormData.set('contact', this.contact)
       bodyFormData.set('text', this.text)
 
-      this.$axios.post('/server/send_msg.php', bodyFormData)
+      this.loading = true;
+      this.$axios.post('https://map-bridges-spb.ru/server/send_msg.php', bodyFormData)
         .then((response) => {
           let type = ''
           if (response.data.includes('успешно')) {
@@ -173,6 +181,9 @@ export default {
             type = 'negative'
           }
           this.$q.notify({ type: type, message: response.data })
+        })
+        .finally(() => {
+          this.loading = false;
         })
     },
     timing_mode_toggle () {
