@@ -15,7 +15,7 @@ function parseTimeBridge(array $times): string
 
 function compareFile(): string
 {
-    $ch = curl_init('http://map-bridges-spb.ru/server_bridges/get_bridges.php');
+    $ch = curl_init('http://map-bridges-spb.ru/server/get_bridges.php');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response      = curl_exec($ch);
     // curl_close($ch);
