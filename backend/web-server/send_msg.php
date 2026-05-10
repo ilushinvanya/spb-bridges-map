@@ -31,24 +31,28 @@ $text = urldecode($text);
 $contact = trim($contact);
 $text = trim($text);
 
-// ilushinvan_bridg
-// ilushinvan_bridg
-// Hellomysqlbrigde_12
 if (!isset($_REQUEST)) {
     return;
 }
 $file = 'people.txt';
 $current = file_get_contents($file);
 
-$data = json_encode($_POST);
+$data = json_encode($_POST, JSON_UNESCAPED_UNICODE);
 $current .= "\n" . $data;
 $zapis = file_put_contents($file, $current);
 
 echo "Сообщение успешно отправлено";
 
-// function sendEmail(string $to, string $subject, string $body, string $from) {
-//     $headers = "From: $from\r\nContent-Type: text/plain; charset=UTF-8\r\n";
-//     return mail($to, $subject, $body, $headers);
-// }
+$to = 'ilushinvanya@gmail.com';
+$subject = 'Письмо с сайта bridges-map';
+$message = "Контакт: $contact\nСообщение: $text";
+
+$sendmail = popen('/usr/sbin/sendmail -t', 'w');
+fwrite($sendmail, "To: $to\r\n");
+fwrite($sendmail, "Subject: =?UTF-8?B?" . base64_encode($subject) . "?=\r\n");
+fwrite($sendmail, "Content-Type: text/plain; charset=UTF-8\r\n");
+fwrite($sendmail, "\r\n");
+fwrite($sendmail, $message);
+pclose($sendmail);
 
 ?>
