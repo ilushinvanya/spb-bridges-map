@@ -161,7 +161,7 @@ export default {
       bodyFormData.set('contact', this.contact)
       bodyFormData.set('text', this.text)
 
-      this.$axios.post('/server_bridges/send_msg.php', bodyFormData)
+      this.$axios.post('/server/send_msg.php', bodyFormData)
         .then((response) => {
           let type = ''
           if (response.data.includes('успешно')) {

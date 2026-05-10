@@ -36,7 +36,7 @@ function getNow () {
 function getYandexTime () {
   const domain = 'https://map-bridges-spb.ru'
 
-  axios(domain + '/server_bridges/current_time.php')
+  axios(domain + '/server/current_time.php')
     .then(response => {
       const response_time = response.data.time
       const moment_obj_response_time = moment(response_time)
