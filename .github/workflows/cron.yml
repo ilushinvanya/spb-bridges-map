@@ -19,5 +19,5 @@ jobs:
 
       - name: Run script
         run: |
-          cd php
+          cd backend/php
           php index.php 96#Hd1RSVJJRRFCL
