@@ -1,0 +1,23 @@
+name: Run PHP Script
+
+on:
+  schedule:
+    - cron: '0 12,15,17,20 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Run script
+        run: |
+          cd php
+          php index.php 96#Hd1RSVJJRRFCL

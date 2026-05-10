@@ -312,15 +312,15 @@ export const useBridgesStore = defineStore('bridges', () => {
 
   // ── Simple setters ──────────────────────────────────────────────────────────
 
-  const setDarkMode    = (bool: boolean)           => { dark_mode.value    = bool }
-  const setFeatures    = (obj: object)             => { geoJson_features.value = obj }
-  const setOpen_bridge = (id: number)              => { open_bridge_id.value = id }
-  const setGLSupport   = (bool: boolean)           => { gl_support.value   = bool }
-  const setTime        = (payload: Moment | number)=> { Time.value         = payload }
-  const setTiming_mode = (payload: number | null)  => { timing_mode.value  = payload }
+  const setDarkMode = (bool: boolean)           => { dark_mode.value = bool }
+  const setFeatures = (obj: object)             => { geoJson_features.value = obj }
+  const setOpen_bridge= (id: number)              => { open_bridge_id.value = id }
+  const setGLSupport = (bool: boolean)           => { gl_support.value = bool }
+  const setTime = (payload: Moment | number)=> { Time.value = payload }
+  const setTiming_mode = (payload: number | null)  => { timing_mode.value = payload }
   const setYandexClock = (payload: YandexClock)    => { yandex_clock.value = payload }
-  const setParseTime   = (v: string | null)        => { parse_time.value   = v }
-  const setShowHint    = (bool: boolean)           => { show_hint.value    = bool }
+  const setParseTime = (v: string | null)        => { parse_time.value = v }
+  const setShowHint = (bool: boolean)           => { show_hint.value = bool }
 
   return {
     // state

@@ -8,22 +8,12 @@
             },
             "time": [
                 {
-                    "start": "1:25",
-                    "end": "2:45"
-                },
-                {
-                    "start": "3:10",
-                    "end": "5:00"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778279100,
-                    "end": 1778283900
-                },
-                {
-                    "start": 1778285400,
-                    "end": 1778292000
+                    "start": 0
                 }
             ],
             "link": "blagoveshhenskij",
@@ -44,22 +34,12 @@
             },
             "time": [
                 {
-                    "start": "1:10",
-                    "end": "2:50"
-                },
-                {
-                    "start": "3:10",
-                    "end": "4:55"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778278200,
-                    "end": 1778284200
-                },
-                {
-                    "start": 1778285400,
-                    "end": 1778291700
+                    "start": 0
                 }
             ],
             "link": "dvorczovyj",
@@ -80,14 +60,12 @@
             },
             "time": [
                 {
-                    "start": "1:20",
-                    "end": "4:50"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778278800,
-                    "end": 1778291400
+                    "start": 0
                 }
             ],
             "link": "troiczkij",
@@ -108,14 +86,12 @@
             },
             "time": [
                 {
-                    "start": "1:40",
-                    "end": "4:45"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778280000,
-                    "end": 1778291100
+                    "start": 0
                 }
             ],
             "link": "litejnyj",
@@ -136,14 +112,12 @@
             },
             "time": [
                 {
-                    "start": "2:00",
-                    "end": "5:00"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778281200,
-                    "end": 1778292000
+                    "start": 0
                 }
             ],
             "link": "bolsheohtinskij-most",
@@ -164,14 +138,12 @@
             },
             "time": [
                 {
-                    "start": "2:20",
-                    "end": "5:10"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778282400,
-                    "end": 1778292600
+                    "start": 0
                 }
             ],
             "link": "aleksandra-nevskogo",
@@ -192,22 +164,12 @@
             },
             "time": [
                 {
-                    "start": "2:00",
-                    "end": "3:45"
-                },
-                {
-                    "start": "4:15",
-                    "end": "5:30"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778281200,
-                    "end": 1778287500
-                },
-                {
-                    "start": 1778289300,
-                    "end": 1778293800
+                    "start": 0
                 }
             ],
             "link": "volodarskij",
@@ -228,14 +190,12 @@
             },
             "time": [
                 {
-                    "start": "3:35",
-                    "end": "4:55"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778286900,
-                    "end": 1778291700
+                    "start": 0
                 }
             ],
             "link": "birzhevoj",
@@ -256,14 +216,12 @@
             },
             "time": [
                 {
-                    "start": "3:35",
-                    "end": "4:55"
+                    "start": 0
                 }
             ],
             "timestamp": [
                 {
-                    "start": 1778286900,
-                    "end": 1778291700
+                    "start": 0
                 }
             ],
             "link": "tuchkov",
@@ -355,5 +313,5 @@
             }
         }
     ],
-    "parse_time": "2026-05-08 18:14:51"
+    "parse_time": "2026-05-09 20:01:18"
 }
