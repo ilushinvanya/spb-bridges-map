@@ -46,10 +46,9 @@ $zapis = file_put_contents($file, $current);
 
 echo "Сообщение успешно отправлено";
 
-function sendEmail(string $to, string $subject, string $body, string $from): bool
-{
-    $headers = "From: $from\r\nContent-Type: text/plain; charset=UTF-8\r\n";
-    return mail($to, $subject, $body, $headers);
-}
+// function sendEmail(string $to, string $subject, string $body, string $from) {
+//     $headers = "From: $from\r\nContent-Type: text/plain; charset=UTF-8\r\n";
+//     return mail($to, $subject, $body, $headers);
+// }
 
 ?>
