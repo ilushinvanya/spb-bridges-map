@@ -13,6 +13,7 @@ const store = useBridgesStore()
 const $q = useQuasar()
 const { t } = useI18n()
 
+
 const mapbox_access_token = process.env.MAPBOX_TOKEN
 const url_webcam = process.env.WEBCAM_URL
 

@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar build -m pwa",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "server": "npx http-server ./dist/pwa"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.0",

@@ -1,4 +1,7 @@
 import { defineConfig } from '#q-app/wrappers'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export default defineConfig(function (/* ctx */) {
   return {
