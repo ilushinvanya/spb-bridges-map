@@ -89,7 +89,13 @@ export default {
       ym(66456622, 'reachGoal', 'list_' + bridge.link)
 
       const coords = bridge.coordinates
-      window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
+      if (this.gl_support) {
+        // Для Mapbox GL используем panTo с [lng, lat]
+        window.map.panTo([coords[0] + 0.003, coords[1] - 0.004])
+      } else {
+        // Для Leaflet используем L.latLng с [lat, lng]
+        window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <q-card
     class="slider_card"
-    :class="{ hide_to_bottom }"
+    :class="{ hide_to_bottom: hideToBottom }"
     :style="{ 'bottom': offset + 'px' }">
     <q-card-section>
 
@@ -17,13 +17,13 @@
       />
 
       <q-slider
-        v-model="slider_value"
-        :min="slider_min"
-        :max="slider_max"
-        :step="60"
+        v-model="sliderValue"
+        :min="sliderMin"
+        :max="sliderMax"
+        :step="SLIDER_STEP"
         label
         label-always
-        :label-value="slider_label_value"
+        :label-value="sliderLabelValue"
         color="green"
       />
 
@@ -31,89 +31,82 @@
   </q-card>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
+import moment from 'moment'
 
-export default {
-  name: 'Slider',
-  setup () {
-    const store = useBridgesStore()
-    return { store }
-  },
-  data () {
-    return {
-      slider_value: null,
-      offset: 0,
-      hide_to_bottom: true
+const SLIDER_MIN_HOUR = 1
+const SLIDER_MAX_HOUR = 6
+const SLIDER_STEP = 60
+
+const store = useBridgesStore()
+
+const sliderValue = ref<number | null>(null)
+const offset = ref(0)
+const hideToBottom = ref(true)
+
+const sliderMin = computed(() => {
+  return +moment().hour(SLIDER_MIN_HOUR).minute(0)
+})
+
+const sliderMax = computed(() => {
+  return +moment().hour(SLIDER_MAX_HOUR).minute(0)
+})
+
+const yandexClock = computed(() => store.yandex_clock)
+
+const sunriseSunsetData = computed(() => {
+  const clock = yandexClock.value
+  if (!clock?.showSunriseSunset || !clock.sunset || !clock.sunrise) {
+    return null
+  }
+  return { sunset: clock.sunset, sunrise: clock.sunrise }
+})
+
+const sliderLabelValue = computed(() => {
+  if (sliderValue.value === null) {
+    return '0'
+  }
+
+  const timeFormat = moment(sliderValue.value).format('HH:mm')
+  let label = timeFormat
+
+  if (sunriseSunsetData.value) {
+    if (timeFormat === sunriseSunsetData.value.sunset) {
+      label += ' 🌇'
     }
-  },
-  computed: {
-    slider_min () {
-      const unix = this.$moment().hour(1).minute(0)
-      return +unix
-    },
-    slider_max () {
-      const unix = this.$moment().hour(6).minute(0)
-      return +unix
-    },
-    slider_label_value () {
-      if (this.slider_value === null) {
-        return 0
-      }
-
-      let return_string = ''
-      const moment_slider_value_format = this.$moment(this.slider_value).format('HH:mm')
-      return_string += moment_slider_value_format
-
-      if (moment_slider_value_format === this.showSunriseSunset.sunset) {
-        return_string += ' 🌇'
-      }
-      if (moment_slider_value_format === this.showSunriseSunset.sunrise) {
-        return_string += ' 🌅'
-      }
-
-      return return_string
-    },
-    yandex_clock () {
-      return this.store.yandex_clock
-    },
-    showSunriseSunset () {
-      if (Object.prototype.hasOwnProperty.call(this.yandex_clock, 'showSunriseSunset')) {
-        if (this.yandex_clock.showSunriseSunset) {
-          if (!Object.prototype.hasOwnProperty.call(this.yandex_clock, 'sunset')) return false
-          if (!Object.prototype.hasOwnProperty.call(this.yandex_clock, 'sunrise')) return false
-
-          return {
-            sunset: this.yandex_clock.sunset,
-            sunrise: this.yandex_clock.sunrise
-          }
-        }
-      }
-      return false
-    },
-  },
-  mounted () {
-    this.hide_to_bottom = false
-    if (this.$moment(this.store.timing_mode).isBetween(this.slider_min, this.slider_max, undefined, '[)')) {
-      this.slider_value = this.store.timing_mode
-    } else {
-      let now = new Date()
-      now.setHours(1)
-      now.setMinutes(0)
-      this.slider_value = Date.parse(now)
-    }
-  },
-  methods: {
-    close () {
-      this.store.setTiming_mode(null)
-    },
-  },
-  watch: {
-    slider_value (newVal) {
-      this.store.setTiming_mode(newVal)
+    if (timeFormat === sunriseSunsetData.value.sunrise) {
+      label += ' 🌅'
     }
   }
+
+  return label
+})
+
+function close() {
+  store.setTiming_mode(null)
 }
+
+watch(sliderValue, (newVal) => {
+  if (newVal !== null) {
+    store.setTiming_mode(newVal)
+  }
+})
+
+onMounted(() => {
+  hideToBottom.value = false
+
+  const timingMode = store.timing_mode
+  if (timingMode && moment(timingMode).isBetween(sliderMin.value, sliderMax.value, undefined, '[)')) {
+    sliderValue.value = timingMode
+  } else {
+    const now = new Date()
+    now.setHours(SLIDER_MIN_HOUR)
+    now.setMinutes(0)
+    sliderValue.value = Date.parse(now.toString())
+  }
+})
 </script>
 
 <style lang="scss">

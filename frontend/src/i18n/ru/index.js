@@ -38,5 +38,13 @@ export default {
   list_hint: 'Нажмите сюда чтобы увидеть расписание всех мостов списком',
   load_error: 'Не удалось загрузить свежее расписание. Попробуйте позже.',
   first_string: 'Мост сегодня будет разведен с {firstStart} до {firstEnd}',
-  second_string: 'И повторно с {secondStart} до {secondEnd}'
+  second_string: 'И повторно с {secondStart} до {secondEnd}',
+
+  summary_all_closed: 'Сегодня уже мосты не разведутся. Всё уже сведено.',
+  summary_no_data: 'Новых данных для сегодняшнего дня нет, пока что по расписанию.',
+  summary_in_progress: 'Разведено {opened} {opened_word}, сведены {closed} {closed_word}',
+  summary_all_open: 'Мосты ещё сведены',
+  bridge_word_1: 'мост',
+  bridge_word_2: 'моста',
+  bridge_word_5: 'мостов'
 }

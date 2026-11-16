@@ -2,8 +2,8 @@
   <div id="map"></div>
 </template>
 
-<script setup>
-import { computed, watch } from 'vue'
+<script setup lang="ts">
+import { computed, watch, shallowRef, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import mapboxgl from 'mapbox-gl'
@@ -13,8 +13,11 @@ const store = useBridgesStore()
 const $q = useQuasar()
 const { t } = useI18n()
 
-const mapbox_access_token = 'pk.eyJ1IjoiaWx1c2hpbnZhbnlhIiwiYSI6ImNrZGVvcmhmbzI5M2UyeXM4bHFlYmpnZmwifQ.fZxiJyYQDS_CxhEXoZIueg'
-const url_webcam = 'https://www.youtube.com/embed/ATyR49Y4IEk'
+const mapbox_access_token = process.env.MAPBOX_TOKEN
+const url_webcam = process.env.WEBCAM_URL
+
+const map = shallowRef<any>(null)
+const bridges_map_layer = shallowRef<any>(null)
 
 const dark_mode = computed(() => store.dark_mode)
 const Features = computed(() => store.geoJson_features)
@@ -42,18 +45,84 @@ function checkSupportGLBrowser () {
 function initMapboxJSMap () {
   L.mapbox.accessToken = mapbox_access_token
 
-  window.map = L.mapbox.map('map')
+  map.value = L.mapbox.map('map')
     .setView([59.935446, 30.328063], 12)
     .addLayer(L.mapbox.styleLayer(map_styles.value))
 
-  window.bridges_map_layer = L.mapbox
+  bridges_map_layer.value = L.mapbox
     .featureLayer()
-    .addTo(window.map)
+    .addTo(map.value)
+
+  // Делаем карту и слой глобальными для доступа из других компонентов
+  window.map = map.value
+  window.bridges_map_layer = bridges_map_layer.value
+
   setGeoJSON()
 }
 
+function setupMapLayers () {
+  const geoJson = Features.value
+
+  map.value.loadImage('/map_icons/car.png', function (error, image) {
+    if (error) {
+      console.error('Failed to load car icon:', error)
+      return
+    }
+    map.value.addImage('car', image)
+  })
+  map.value.loadImage('/map_icons/boat.png', function (error, image) {
+    if (error) {
+      console.error('Failed to load boat icon:', error)
+      return
+    }
+    map.value.addImage('boat', image)
+  })
+  map.value.loadImage('/map_icons/cinema.png', function (error, image) {
+    if (error) {
+      console.error('Failed to load cinema icon:', error)
+      return
+    }
+    map.value.addImage('cinema', image)
+  })
+
+  map.value.addSource('points', { 'type': 'geojson', 'data': geoJson })
+
+  map.value.addLayer({
+    'id': 'circles',
+    'type': 'circle',
+    'source': 'points',
+    'paint': {
+      'circle-stroke-color': ['get', 'custom_active_color'],
+      'circle-stroke-width': ['get', 'custom_active_stroke_size'],
+      'circle-color': ['get', 'marker-color'],
+      'circle-radius': 16
+    }
+  })
+
+  map.value.addLayer({
+    'id': 'symbols',
+    'type': 'symbol',
+    'source': 'points',
+    'layout': {
+      'icon-image': ['get', 'marker-symbol'],
+      'text-field': [
+        'format',
+        ['upcase', ['get', 'title']], { 'font-scale': 0.8 },
+        '\n', {},
+        ['downcase', ['get', 'custom_comment']], { 'font-scale': 0.6 }
+      ],
+      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+      'text-offset': [0, 0.8],
+      'text-anchor': 'top'
+    },
+    paint: {
+      'text-color': dark_mode.value ? '#fff' : '#000'
+    }
+  })
+}
+
 function initMapboxGLMap () {
-  window.map = new mapboxgl.Map({
+  map.value = new mapboxgl.Map({
     container: 'map',
     style: map_styles.value,
     center: [30.374144114706155, 59.90882829669761],
@@ -63,58 +132,13 @@ function initMapboxGLMap () {
     antialias: true
   })
 
-  const geoJson = Features.value
+  // Делаем карту глобальной для доступа из других компонентов
+  window.map = map.value
 
-  window.map.on('load', function () {
-    map.loadImage('/map_icons/car.png', function (error, image) {
-      if (error) throw error
-      map.addImage('car', image)
-    })
-    map.loadImage('/map_icons/boat.png', function (error, image) {
-      if (error) throw error
-      map.addImage('boat', image)
-    })
-    map.loadImage('/map_icons/cinema.png', function (error, image) {
-      if (error) throw error
-      map.addImage('cinema', image)
-    })
+  map.value.on('load', function () {
+    setupMapLayers()
 
-    window.map.addSource('points', { 'type': 'geojson', 'data': geoJson })
-
-    window.map.addLayer({
-      'id': 'circles',
-      'type': 'circle',
-      'source': 'points',
-      'paint': {
-        'circle-stroke-color': ['get', 'custom_active_color'],
-        'circle-stroke-width': ['get', 'custom_active_stroke_size'],
-        'circle-color': ['get', 'marker-color'],
-        'circle-radius': 16
-      }
-    })
-
-    window.map.addLayer({
-      'id': 'symbols',
-      'type': 'symbol',
-      'source': 'points',
-      'layout': {
-        'icon-image': ['get', 'marker-symbol'],
-        'text-field': [
-          'format',
-          ['upcase', ['get', 'title']], { 'font-scale': 0.8 },
-          '\n', {},
-          ['downcase', ['get', 'custom_comment']], { 'font-scale': 0.6 }
-        ],
-        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-        'text-offset': [0, 0.8],
-        'text-anchor': 'top'
-      },
-      paint: {
-        'text-color': dark_mode.value ? '#fff' : '#000'
-      }
-    })
-
-    map.on('click', 'circles', function (e) {
+    map.value.on('click', 'circles', function (e) {
       store.setOpen_bridge(e.features[0].id)
     })
   })
@@ -122,35 +146,46 @@ function initMapboxGLMap () {
 
 function setGeoJSON () {
   const geoJson = Features.value
-  // const camera_string = t('camera')
-  window.bridges_map_layer.setGeoJSON(geoJson)
-
-  // window.bridges_map_layer.eachLayer(function (layer) {
-  //   if (layer.feature.properties.title === camera_string) {
-  //     var content = '<iframe width="280" height="200" src="' + url_webcam + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-  //     layer.bindPopup(content)
-  //   }
-  // })
+  if (!bridges_map_layer.value) return
+  bridges_map_layer.value.setGeoJSON(geoJson)
 }
 
 function setMarkerData () {
   const geoJson = Features.value
-  if (!window.map || typeof window.map.getSource !== 'function') return
-  if (!window.map.getSource('points')) return
-  window.map.getSource('points').setData(geoJson)
+  if (!map.value || typeof map.value.getSource !== 'function') return
+  if (!map.value.getSource('points')) return
+  map.value.getSource('points').setData(geoJson)
 }
 
 watch(dark_mode, () => {
-  checkSupportGLBrowser()
+  if (map.value && store.gl_support) {
+    map.value.setStyle(map_styles.value)
+    // После setStyle все источники и слои уничтожаются — восстанавливаем их
+    map.value.once('style.load', () => {
+      setupMapLayers()
+    })
+  } else {
+    checkSupportGLBrowser()
+  }
+  $q.dark.set(dark_mode.value)
 })
 
 watch(Features, () => {
   if (store.gl_support) {
     setMarkerData()
-  } else if (!store.gl_support) {
+  } else {
     setGeoJSON()
   }
-}, { deep: true })
+})
+
+onUnmounted(() => {
+  if (map.value && typeof map.value.remove === 'function') {
+    map.value.remove()
+  }
+  // Очищаем глобальные ссылки
+  window.map = null
+  window.bridges_map_layer = null
+})
 
 defineExpose({ checkSupportGLBrowser })
 </script>

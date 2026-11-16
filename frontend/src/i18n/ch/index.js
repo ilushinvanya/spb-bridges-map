@@ -37,5 +37,13 @@ export default {
   load_error: '未能加载最新时间表。稍后再试。',
   update_available: '有可用更新<br/> 按"确定"更新应用程序',
   first_string: '今天，大桥将从{firstStart}到{firstEnd}封闭',
-  second_string: '再次从 {secondStart} 到 {secondEnd}'
+  second_string: '再次从 {secondStart} 到 {secondEnd}',
+
+  summary_all_closed: '今天所有的桥梁都已经关闭。 一切都已经开放。',
+  summary_no_data: '今天还没有新的数据，仍然按照时间表。',
+  summary_in_progress: '{opened} {opened_word} 关闭, {closed} {closed_word} 打开',
+  summary_all_open: '所有的桥梁仍然开放',
+  bridge_word_1: '桥',
+  bridge_word_2: '桥',
+  bridge_word_5: '桥'
 }

@@ -37,5 +37,13 @@ export default {
   load_error: 'Failed to load the latest schedule. Try later.',
   update_available: 'Update available<br/> Press "Ok" to update the app',
   first_string: 'The bridge will be closed today from {firstStart} to {firstEnd}',
-  second_string: 'And again from {secondStart} to {secondEnd}'
+  second_string: 'And again from {secondStart} to {secondEnd}',
+
+  summary_all_closed: 'All bridges are already closed for today. Everything is already open.',
+  summary_no_data: 'No new data for today yet, still according to schedule.',
+  summary_in_progress: '{opened} {opened_word} closed, {closed} {closed_word} open',
+  summary_all_open: 'All bridges are still open',
+  bridge_word_1: 'bridge',
+  bridge_word_2: 'bridges',
+  bridge_word_5: 'bridges'
 }

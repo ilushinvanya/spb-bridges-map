@@ -17,6 +17,12 @@ export default defineConfig(function (/* ctx */) {
     ],
 
     build: {
+      env: {
+        MAPBOX_TOKEN: process.env.VITE_MAPBOX_TOKEN,
+        WEBCAM_URL: process.env.VITE_WEBCAM_URL,
+        API_DOMAIN: process.env.VITE_API_DOMAIN,
+        YM_ID: process.env.VITE_YM_ID,
+      },
       vueRouterMode: 'hash',
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],

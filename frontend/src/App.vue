@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -13,6 +13,10 @@ const store = useBridgesStore()
 const { locale } = useI18n()
 
 const serverOffset = ref(0)
+let intervalId = null
+
+const ymId = parseInt(process.env.YM_ID || '66456622')
+const apiDomain = process.env.API_DOMAIN || 'https://map-bridges-spb.ru'
 
 const now = moment()
 if (now.utcOffset() !== 180) {
@@ -21,7 +25,7 @@ if (now.utcOffset() !== 180) {
 store.setTime(now)
 
 window.addEventListener('appinstalled', () => {
-  ym(66456622, 'reachGoal', 'appinstalled')
+  ym(ymId, 'reachGoal', 'appinstalled')
 })
 
 function getNow () {
@@ -34,9 +38,7 @@ function getNow () {
 }
 
 function getYandexTime () {
-  const domain = 'https://map-bridges-spb.ru'
-
-  axios(domain + '/server/current_time.php')
+  axios(apiDomain + '/server/current_time.php')
     .then(response => {
       const response_time = response.data.time
       const moment_obj_response_time = moment(response_time)
@@ -50,12 +52,16 @@ function getYandexTime () {
     })
     .catch(e => {
       console.log(e)
-      ym(66456622, 'reachGoal', 'error_time')
+      ym(ymId, 'reachGoal', 'error_time')
     })
     .finally(() => {
-      setInterval(getNow, 1000)
+      intervalId = setInterval(getNow, 1000)
     })
 }
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId)
+})
 
 getYandexTime()
 </script>

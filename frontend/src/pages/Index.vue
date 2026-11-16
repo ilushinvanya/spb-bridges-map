@@ -6,6 +6,7 @@
     <div class="bottom_block_w_cards">
       <BridgeCard v-if="open_bridge"/>
       <SliderCard v-if="timing_mode"/>
+      <Summary />
     </div>
 
   </q-page>
@@ -16,6 +17,7 @@ import { ref, computed, watch } from 'vue'
 import Map from '../components/Map.vue'
 import SliderCard from '../components/Slider_Card.vue'
 import BridgeCard from '../components/Bridge_Card.vue'
+import Summary from '../components/Summary.vue'
 import { useBridgesStore } from 'src/stores/bridges'
 
 const store = useBridgesStore()
@@ -26,7 +28,7 @@ const open_bridge = computed(() => store.open_bridge_id)
 const timing_mode = computed(() => store.timing_mode)
 
 watch(() => store.map_init_counter, (val) => {
-  console.log(val)
+  // console.log(val)
   if (val > 0) main_map.value?.checkSupportGLBrowser()
 })
 
