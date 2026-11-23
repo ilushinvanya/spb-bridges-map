@@ -23,8 +23,8 @@ onMounted(() => {
 const serverOffset = ref(0)
 let intervalId = null
 
-const ymId = parseInt(process.env.YM_ID || '66456622')
-const apiDomain = process.env.API_DOMAIN || 'https://map-bridges-spb.ru'
+const ymId = parseInt(import.meta.env.VITE_YM_ID || '66456622')
+const apiDomain = import.meta.env.VITE_API_DOMAIN || 'https://map-bridges-spb.ru'
 
 const now = moment()
 if (now.utcOffset() !== 180) {

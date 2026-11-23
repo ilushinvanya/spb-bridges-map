@@ -2,7 +2,6 @@
   <q-card
     v-if="visible"
     class="summary-card"
-    :class="{ hide_to_bottom: hideToBottom }"
   >
     <q-btn
       dense
@@ -20,13 +19,13 @@
     </q-card-section>
 
     <q-card-section>
-      <div class="text-body1">{{ message }}</div>
+      <div class="text-body1" v-html="message"></div>
     </q-card-section>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import moment from 'moment'
@@ -36,10 +35,7 @@ const ANIMATION_DURATION_MS = 400
 const store = useBridgesStore()
 const { t } = useI18n()
 
-const visible = ref(false)
-const hideToBottom = ref(true)
-const message = ref('')
-const hasShown = ref(false)
+const visible = ref(true)
 
 function getBridgeWord(count: number, locale: string): string {
   if (locale !== 'ru') {
@@ -54,9 +50,9 @@ function getBridgeWord(count: number, locale: string): string {
   return word
 }
 
-const computeSummary = () => {
+const computeSummary = computed(() => {
   const bridges = store.bridges_with_params
-  if (!bridges || bridges.length === 0) return
+  if (!bridges || bridges.length === 0) return ''
 
   const currentTime = moment(store.Time)
 
@@ -111,50 +107,31 @@ const computeSummary = () => {
   const currentHour = currentTime.hour()
 
   if (latestEndTime && currentTime.isAfter(latestEndTime) && currentHour < 12) {
-    message.value = t('summary_all_closed')
+    return t('summary_all_closed')
   } else if (currentHour >= 12 && !isDataFresh) {
-    message.value = t('summary_no_data')
+    return t('summary_no_data')
   } else if (openedBridges.length > 0) {
     const openedWord = getBridgeWord(openedBridges.length, store.app_language)
     const closedWord = getBridgeWord(closedBridges.length, store.app_language)
-    message.value = t('summary_in_progress', {
+    return t('summary_in_progress', {
       opened: openedBridges.length,
       opened_word: openedWord,
       closed: closedBridges.length,
       closed_word: closedWord,
-      not_today: notTodayBridges,
+      not_today: notTodayBridges.length,
     })
   } else if (earliestStartTime && currentTime.isBefore(earliestStartTime)) {
-    message.value = t('summary_all_open')
+    return t('summary_all_open')
   } else {
-    message.value = t('summary_all_open')
+    return t('summary_all_open')
   }
+})
 
-  visible.value = true
-  nextTick(() => {
-    hideToBottom.value = false
-  })
-}
+const message = computeSummary
 
 function close() {
-  hideToBottom.value = true
   visible.value = false
 }
-
-watch([
-  () => store.bridges_with_params,
-  () => store.Time,
-  () => store.yandex_clock
-], ([bridges, time]) => {
-  if (bridges && bridges.length > 0 && time && !hasShown.value) {
-    setTimeout(() => {
-      if (!hasShown.value) {
-        computeSummary()
-        hasShown.value = true
-      }
-    }, 1000)
-  }
-}, { immediate: true })
 </script>
 
 <style lang="scss">

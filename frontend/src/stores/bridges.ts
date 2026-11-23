@@ -323,7 +323,7 @@ export const useBridgesStore = defineStore('bridges', () => {
   // ── getBridges ──────────────────────────────────────────────────────────────
 
   async function getBridges(): Promise<void> {
-    const domain = process.env.API_DOMAIN || 'https://map-bridges-spb.ru'
+    const domain = import.meta.env.VITE_API_DOMAIN || 'https://map-bridges-spb.ru'
 
     try {
       const response = await axios(domain + '/api/get_bridges.php')
@@ -337,9 +337,9 @@ export const useBridgesStore = defineStore('bridges', () => {
           Notify.create({ type: 'positive', message: 'Расписание обновлено' })
         }
       }
-    } catch {
+    } catch (error) {
       Notify.create({ type: 'negative', message: t('load_error') })
-      const ymId = process.env.YM_ID || '66456622'
+      const ymId = import.meta.env.VITE_YM_ID || '66456622'
       ym(parseInt(ymId), 'reachGoal', 'load_error')
     } finally {
       map_init_counter.value++

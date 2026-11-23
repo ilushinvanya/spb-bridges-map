@@ -1,6 +1,6 @@
-import { defineBoot } from '#q-app/wrappers'
+import { defineBoot } from '@quasar/app-vite'
 import { createI18n } from 'vue-i18n'
-import messages from 'src/i18n'
+import messages from '../i18n/index.js'
 
 const navigator_language = window.navigator.language
 let app_language = 'ru'

@@ -1,7 +1,6 @@
 <template>
   <q-card
     class="slider_card"
-    :class="{ hide_to_bottom: hideToBottom }"
     :style="{ 'bottom': offset + 'px' }">
     <q-card-section>
 
@@ -44,7 +43,6 @@ const store = useBridgesStore()
 
 const sliderValue = ref<number | null>(null)
 const offset = ref(0)
-const hideToBottom = ref(true)
 
 const sliderMin = computed(() => {
   return +moment().hour(SLIDER_MIN_HOUR).minute(0)
@@ -95,8 +93,6 @@ watch(sliderValue, (newVal) => {
 })
 
 onMounted(() => {
-  hideToBottom.value = false
-
   const timingMode = store.timing_mode
   if (timingMode && moment(timingMode).isBetween(sliderMin.value, sliderMax.value, undefined, '[)')) {
     sliderValue.value = timingMode

@@ -1,8 +1,8 @@
 import { register } from 'register-service-worker'
 import { Notify } from 'quasar'
-import { i18n } from 'boot/i18n'
+import { i18n } from '../src/boot/i18n.ts'
 
-register(process.env.SERVICE_WORKER_FILE, {
+register(import.meta.env.SERVICE_WORKER_FILE, {
   ready (/* registration */) {
   },
 

@@ -6,8 +6,8 @@
 
       <q-item v-for="language in language_list"
               :key="language.id"
-              :class="{ 'bg-blue-grey-2' : app_language === language.id }"
-              @click="app_language = language.id"
+              :active="app_language === language.id"
+              @click="setLanguage(language.id)"
               tag="label"
               v-ripple>
 
@@ -121,116 +121,96 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useBridgesStore } from 'src/stores/bridges'
+import { useQuasar } from 'quasar'
+import axios from 'axios'
 import flag_ru from '../assets/icon_flag_ru.svg'
 import flag_ch from '../assets/icon_flag_ch.svg'
 import flag_en from '../assets/icon_flag_en.svg'
-import { useBridgesStore } from 'src/stores/bridges'
 
-export default {
-  name: 'Language',
-  setup () {
-    const store = useBridgesStore()
-    return { store }
-  },
-  data () {
-    return {
-      language_list: [
-        { id: 'ch', label: 'Chinese', src: flag_ch },
-        { id: 'ru', label: 'Русский', src: flag_ru },
-        { id: 'en', label: 'English', src: flag_en }
-      ],
-      prompt: false,
-      text: '',
-      contact: '',
-      loading: false,
-    }
-  },
-  methods: {
-    show_send_dialog () {
-      this.prompt = true
-      ym(66456622, 'reachGoal', 'show_send_dialog')
-    },
-    sendMessage () {
-      ym(66456622, 'reachGoal', 'send_msg')
+const store = useBridgesStore()
+const $q = useQuasar()
+const { t, locale } = useI18n()
 
-      if (this.contact.length === 0) {
-        this.$q.notify({ type: 'warning', message: 'Заполните поле с контактом' })
-        return false
-      }
+const language_list = ref([
+  { id: 'ch', label: 'Chinese', src: flag_ch },
+  { id: 'ru', label: 'Русский', src: flag_ru },
+  { id: 'en', label: 'English', src: flag_en }
+])
 
-      if (this.text.length === 0) {
-        this.$q.notify({ type: 'warning', message: 'Заполните поле текстом' })
-        return false
-      }
+const prompt = ref(false)
+const text = ref('')
+const contact = ref('')
+const loading = ref(false)
 
-      var bodyFormData = new FormData()
-      bodyFormData.set('contact', this.contact)
-      bodyFormData.set('text', this.text)
+const app_language = computed(() => locale.value)
+const dark_mode = computed({
+  get: () => store.dark_mode,
+  set: (value) => {
+    ym(66456622, 'reachGoal', 'dark_mode')
+    store.setDarkMode(value)
+  }
+})
 
-      this.loading = true;
-      this.$axios.post('https://map-bridges-spb.ru/api/send_msg.php', bodyFormData)
-        .then((response) => {
-          let type = ''
-          if (response.data.includes('успешно')) {
-            type = 'positive'
-            this.text = ''
-            this.contact = ''
-            this.prompt = false
-          } else if (response.data.includes('ошибки')) {
-            type = 'negative'
-          }
-          this.$q.notify({ type: type, message: response.data })
-        })
-        .finally(() => {
-          this.loading = false;
-        })
-    },
-    timing_mode_toggle () {
-      ym(66456622, 'reachGoal', 'timing_mode_toggle')
-      if (this.store.timing_mode === null) {
-        this.store.setTiming_mode(+this.$moment())
-      } else {
-        this.store.setTiming_mode(null)
-      }
-    }
-  },
-  computed: {
-    dark_mode: {
-      get () {
-        return this.store.dark_mode
-      },
-      set (value) {
-        ym(66456622, 'reachGoal', 'dark_mode')
-        this.store.setDarkMode(value)
-      }
-    },
-    gl_support () {
-      return this.store.gl_support
-    },
-    app_language: {
-      get () {
-        return this.$i18n.locale
-      },
-      set (val) {
-        localStorage.setItem('spb_bridges_language', val)
-        this.$i18n.locale = val
-      }
-    }
-  },
-  watch: {
-    dark_mode (newVal) {
-      let mapbox_styles
-      if (newVal) {
-        mapbox_styles = 'mapbox://styles/mapbox/dark-v10'
-      } else {
-        mapbox_styles = 'mapbox://styles/mapbox/streets-v11'
-      }
+onMounted(() => {
+  // Component mounted
+})
 
-      if (!this.gl_support) {
-        L.mapbox.styleLayer(mapbox_styles).addTo(window.map)
+function setLanguage(lang) {
+  localStorage.setItem('spb_bridges_language', lang)
+  locale.value = lang
+}
+
+function show_send_dialog() {
+  prompt.value = true
+  ym(66456622, 'reachGoal', 'show_send_dialog')
+}
+
+function sendMessage() {
+  ym(66456622, 'reachGoal', 'send_msg')
+
+  if (contact.value.length === 0) {
+    $q.notify({ type: 'warning', message: 'Заполните поле с контактом' })
+    return false
+  }
+
+  if (text.value.length === 0) {
+    $q.notify({ type: 'warning', message: 'Заполните поле текстом' })
+    return false
+  }
+
+  const bodyFormData = new FormData()
+  bodyFormData.set('contact', contact.value)
+  bodyFormData.set('text', text.value)
+
+  loading.value = true
+  axios.post('https://map-bridges-spb.ru/api/send_msg.php', bodyFormData)
+    .then((response) => {
+      let type = ''
+      if (response.data.includes('успешно')) {
+        type = 'positive'
+        text.value = ''
+        contact.value = ''
+        prompt.value = false
+      } else if (response.data.includes('ошибки')) {
+        type = 'negative'
       }
-    }
+      $q.notify({ type: type, message: response.data })
+    })
+    .finally(() => {
+      loading.value = false
+    })
+}
+
+function timing_mode_toggle() {
+  ym(66456622, 'reachGoal', 'timing_mode_toggle')
+  if (store.timing_mode === null) {
+    store.setTiming_mode(+new Date())
+  } else {
+    store.setTiming_mode(null)
   }
 }
 </script>

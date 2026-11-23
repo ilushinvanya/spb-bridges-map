@@ -8,11 +8,11 @@
       @right="right = $event"
     />
 
-    <q-drawer show-if-above v-model="left" side="left" bordered>
+    <q-drawer v-model="left" side="left" bordered>
       <LeftSideBar/>
     </q-drawer>
 
-    <q-drawer show-if-above v-model="right" side="right" bordered :width="360">
+    <q-drawer v-model="right" side="right" bordered :width="360">
       <RightSideBar @close="right = false"/>
     </q-drawer>
 
@@ -40,6 +40,6 @@ onMounted(() => {
   store.getBridges()
 })
 
-const left = ref(false)
-const right = ref(false)
+const left = ref(true)
+const right = ref(true)
 </script>

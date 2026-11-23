@@ -39,64 +39,49 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, onMounted } from 'vue'
 import { format } from 'date-fns'
+import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
 
-export default {
-  name: 'Bridges_list',
-  emits: ['close'],
-  setup () {
-    const store = useBridgesStore()
-    return { store }
-  },
-  computed: {
-    open_bridge_id () {
-      return this.store.open_bridge_id
-    },
-    app_language () {
-      return this.$i18n.locale
-    },
-    bridges_with_params () {
-      return this.store.bridges_with_params
-    },
-    gl_support () {
-      return this.store.gl_support
-    },
-    parseTime () {
-      if (this.store.parse_time) {
-        const currentDate = new Date(this.store.parse_time)
-        return format(currentDate, 'dd.MM.yyyy // HH:mm')
-      }
-    }
-  },
-  methods: {
-    handleClickBridge (bridge) {
-      if (this.gl_support) {
-        this.store.setOpen_bridge(bridge.id)
-      } else {
-        window.bridges_map_layer.eachLayer((layer) => {
-          if (bridge.title[this.app_language] === layer.feature.properties.title) {
-            layer.openPopup()
-          }
-        })
-      }
+const store = useBridgesStore()
+const { locale: app_language, t } = useI18n()
 
-      if(this.store.mobilecheck) {
-        this.$emit('close')
-      }
+const bridges_with_params = computed(() => store.bridges_with_params)
+const open_bridge_id = computed(() => store.open_bridge_id)
+const parseTime = computed(() => {
+  if (store.parse_time) {
+    const currentDate = new Date(store.parse_time)
+    return format(currentDate, 'dd.MM.yyyy // HH:mm')
+  }
+  return ''
+})
 
-      ym(66456622, 'reachGoal', 'list_' + bridge.link)
+onMounted(() => {
+  // Component mounted
+})
 
-      const coords = bridge.coordinates
-      if (this.gl_support) {
-        // Для Mapbox GL используем panTo с [lng, lat]
-        window.map.panTo([coords[0] + 0.003, coords[1] - 0.004])
-      } else {
-        // Для Leaflet используем L.latLng с [lat, lng]
-        window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
+function handleClickBridge(bridge) {
+  if (store.gl_support) {
+    store.setOpen_bridge(bridge.id)
+  } else {
+    window.bridges_map_layer.eachLayer((layer) => {
+      if (bridge.title[app_language.value] === layer.feature.properties.title) {
+        layer.openPopup()
       }
-    }
+    })
+  }
+
+  ym(66456622, 'reachGoal', 'list_' + bridge.link)
+
+  const coords = bridge.coordinates
+  if (store.gl_support) {
+    // Для Mapbox GL используем panTo с [lng, lat]
+    window.map.panTo([coords[0] + 0.003, coords[1] - 0.004])
+  } else {
+    // Для Leaflet используем L.latLng с [lat, lng]
+    window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
   }
 }
 </script>

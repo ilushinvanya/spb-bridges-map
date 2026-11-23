@@ -1,7 +1,14 @@
-import { defineConfig } from '#q-app/wrappers'
+import { defineConfig } from '@quasar/app-vite'
+import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
 
+// Явно загружаем .env файл
 dotenv.config()
+
+console.log('=== Environment Check ===')
+console.log('VITE_MAPBOX_TOKEN:', process.env.VITE_MAPBOX_TOKEN ? 'loaded' : 'MISSING')
+console.log('VITE_WEBCAM_URL:', process.env.VITE_WEBCAM_URL ? 'loaded' : 'MISSING')
+console.log('========================')
 
 export default defineConfig(function (/* ctx */) {
   return {
@@ -20,20 +27,26 @@ export default defineConfig(function (/* ctx */) {
     ],
 
     build: {
-      env: {
-        MAPBOX_TOKEN: process.env.VITE_MAPBOX_TOKEN,
-        WEBCAM_URL: process.env.VITE_WEBCAM_URL,
-        API_DOMAIN: process.env.VITE_API_DOMAIN,
-        YM_ID: process.env.VITE_YM_ID,
-      },
       vueRouterMode: 'hash',
       target: {
-        browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
+        browser: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
         node: 'node20',
       },
-      typescript: {
-        strict: true,
-        vueShim: true,
+      env: {
+        VITE_MAPBOX_TOKEN: process.env.VITE_MAPBOX_TOKEN,
+        VITE_WEBCAM_URL: process.env.VITE_WEBCAM_URL,
+        VITE_API_DOMAIN: process.env.VITE_API_DOMAIN,
+        VITE_YM_ID: process.env.VITE_YM_ID,
+      },
+      extendViteConf (viteConf) {
+        Object.assign(viteConf.resolve.alias, {
+          src: fileURLToPath(new URL('./src', import.meta.url)),
+          boot: fileURLToPath(new URL('./src/boot', import.meta.url)),
+          layouts: fileURLToPath(new URL('./src/layouts', import.meta.url)),
+          pages: fileURLToPath(new URL('./src/pages', import.meta.url)),
+          components: fileURLToPath(new URL('./src/components', import.meta.url)),
+          stores: fileURLToPath(new URL('./src/stores', import.meta.url)),
+        })
       },
     },
 

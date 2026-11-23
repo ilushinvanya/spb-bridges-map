@@ -1,4 +1,4 @@
-import { defineBoot } from '#q-app/wrappers'
+import { defineBoot } from '@quasar/app-vite'
 import moment from 'moment'
 
 export default defineBoot(({ app }) => {

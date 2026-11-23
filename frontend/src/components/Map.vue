@@ -11,11 +11,11 @@ import { useBridgesStore } from 'src/stores/bridges'
 
 const store = useBridgesStore()
 const $q = useQuasar()
-const { t } = useI18n()
+const { locale } = useI18n()
 
 
-const mapbox_access_token = process.env.MAPBOX_TOKEN
-const url_webcam = process.env.WEBCAM_URL
+const mapbox_access_token = import.meta.env.VITE_MAPBOX_TOKEN
+const url_webcam = import.meta.env.VITE_WEBCAM_URL
 
 const map = shallowRef<any>(null)
 const bridges_map_layer = shallowRef<any>(null)
@@ -30,7 +30,13 @@ const map_styles = computed(() =>
 )
 
 function checkSupportGLBrowser () {
+  if (!mapbox_access_token) {
+    console.error('Mapbox access token is not defined!')
+    return
+  }
+
   mapboxgl.accessToken = mapbox_access_token
+
   if (!mapboxgl.supported()) {
     initMapboxJSMap()
     store.setGLSupport(false)
@@ -136,9 +142,34 @@ function initMapboxGLMap () {
   // Делаем карту глобальной для доступа из других компонентов
   window.map = map.value
 
-  map.value.on('load', function () {
-    setupMapLayers()
+  const setLanguage = (lang: string) => {
+    const layers = map.value.getStyle()?.layers;
+    if (!layers) {
+      return;
+    }
 
+    const layerIds: string[] = [];
+
+    layers.forEach((layer) => {
+      const textField = layer.layout && 'text-field' in layer.layout;
+      if (textField) {
+        layerIds.push(layer.id);
+      }
+    });
+
+    layerIds.forEach((layerId) => {
+      map.value.setLayoutProperty(layerId, 'text-field', [
+        'get',
+        'name_' + lang,
+      ]);
+    });
+  };
+
+  map.value.on('load', function () {
+    const mapLocale = locale.value === 'ch' ? 'en' : locale.value
+    setLanguage(mapLocale);
+
+    setupMapLayers()
     map.value.on('click', 'circles', function (e) {
       store.setOpen_bridge(e.features[0].id)
     })

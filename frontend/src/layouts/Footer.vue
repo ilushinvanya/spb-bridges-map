@@ -3,7 +3,7 @@
     <q-toolbar>
 
       <q-avatar size="50px">
-        <div class="hero-circle">
+        <div class="hero-circle" v-if="Time && typeof Time.seconds === 'function'">
           <div class="hero-face">
             <div id="hour"
                  class="hero-hour"
@@ -27,7 +27,7 @@
       <span>
         <div>
             <span v-if="time_check">{{ $t('time_footer') }} - </span>
-            <span>{{ Time.format("HH:mm:ss") }}</span>
+            <span v-if="Time && typeof Time.format === 'function'">{{ Time.format("HH:mm:ss") }}</span>
         </div>
         <div>
           <div class="weather"
