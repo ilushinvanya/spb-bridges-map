@@ -339,8 +339,8 @@ export const useBridgesStore = defineStore('bridges', () => {
       }
     } catch (error) {
       Notify.create({ type: 'negative', message: t('load_error') })
-      const ymId = import.meta.env.VITE_YM_ID || '66456622'
-      ym(parseInt(ymId), 'reachGoal', 'load_error')
+      const ymId = parseInt(import.meta.env.VITE_YM_ID)
+      ym(ymId, 'reachGoal', 'load_error')
     } finally {
       map_init_counter.value++
     }

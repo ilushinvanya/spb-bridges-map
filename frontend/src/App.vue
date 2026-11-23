@@ -23,7 +23,7 @@ onMounted(() => {
 const serverOffset = ref(0)
 let intervalId = null
 
-const ymId = parseInt(import.meta.env.VITE_YM_ID || '66456622')
+const ymId = parseInt(import.meta.env.VITE_YM_ID)
 const apiDomain = import.meta.env.VITE_API_DOMAIN || 'https://map-bridges-spb.ru'
 
 const now = moment()
