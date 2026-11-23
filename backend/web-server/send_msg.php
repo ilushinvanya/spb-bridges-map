@@ -1,4 +1,4 @@
-<?
+<?php
 function cors() {
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
@@ -16,8 +16,8 @@ function cors() {
 }
 
 cors();
-ini_set('display_errors','On');
-error_reporting('E_ALL');
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
 
 $contact = $_POST['contact'];
 $text = $_POST['text'];
