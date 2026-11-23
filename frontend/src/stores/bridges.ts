@@ -317,7 +317,7 @@ export const useBridgesStore = defineStore('bridges', () => {
     const domain = process.env.API_DOMAIN || 'https://map-bridges-spb.ru'
 
     try {
-      const response = await axios(domain + '/server/get_bridges.php')
+      const response = await axios(domain + '/api/get_bridges.php')
       if (typeof response.data === 'object' &&
           Object.prototype.hasOwnProperty.call(response.data, 'bridges')) {
         const prev = JSON.stringify(source_bridges.value)

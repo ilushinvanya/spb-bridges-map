@@ -169,7 +169,7 @@ export default {
       bodyFormData.set('text', this.text)
 
       this.loading = true;
-      this.$axios.post('https://map-bridges-spb.ru/server/send_msg.php', bodyFormData)
+      this.$axios.post('https://map-bridges-spb.ru/api/send_msg.php', bodyFormData)
         .then((response) => {
           let type = ''
           if (response.data.includes('успешно')) {

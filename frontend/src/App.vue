@@ -38,7 +38,7 @@ function getNow () {
 }
 
 function getYandexTime () {
-  axios(apiDomain + '/server/current_time.php')
+  axios(apiDomain + '/api/current_time.php')
     .then(response => {
       const response_time = response.data.time
       const moment_obj_response_time = moment(response_time)
