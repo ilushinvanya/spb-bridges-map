@@ -11,13 +11,14 @@
         inline-label>
 
         <q-tab
-          icon="menu"
+          icon="more_horiz"
           no-caps
           :label="$t('header_toolbar_tab_menu')"
           @click="left_handle"
         />
 
         <q-tab
+          icon="format_list_bulleted"
           no-caps
           :label="$t('header_toolbar_tab_list')"
           color="red"

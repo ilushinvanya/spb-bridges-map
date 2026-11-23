@@ -47,7 +47,7 @@ export interface Bridge {
 }
 
 interface CheckTimeResult {
-  status: number
+  status: number  // 0: open, 1: will close, 2: close, 3: will open, 4: not opening today
   time_obj: BridgeTime | Record<string, never>
   comment: string
 }
@@ -58,6 +58,7 @@ const TIME_REGEX = /([0-9]*):([0-9]*)/
 const WARNING_THRESHOLD_MINUTES = 20
 const COLOR_BASE = { r: 63, g: 216, b: 32 }
 const COLOR_CLOSE = '#ff5b50'
+const COLOR_NOT_OPENING = '#808080'  // grey for bridges not opening today
 
 // ─── Helpers (pure, no store dependency) ──────────────────────────────────────
 
@@ -98,6 +99,8 @@ function checkTime_color(checkTime_obj: CheckTimeResult): string {
         const new_R = Math.min(255, 255 - 19 * (10 - minutes))
         return rgbToHex(new_R, g, b)
       }
+    case 4:
+      return COLOR_NOT_OPENING
     default:
       return rgbToHex(r, g, b)
   }
@@ -157,6 +160,11 @@ export const useBridgesStore = defineStore('bridges', () => {
   // ── checkTime ───────────────────────────────────────────────────────────────
 
   function checkTime(time_array: BridgeTime[], use_timestamp?: boolean): CheckTimeResult {
+    // Если массив времени пуст или содержит только {start: 0}, мост сегодня не разводится
+    if (time_array.length === 0 || (time_array.length === 1 && time_array[0].start === 0)) {
+      return { status: 4, time_obj: {}, comment: t('not_opening_today') }
+    }
+
     let result: CheckTimeResult = { status: 0, time_obj: {}, comment: t('open') }
     const now = getMomentNowTime()
 
@@ -273,7 +281,7 @@ export const useBridgesStore = defineStore('bridges', () => {
 
   const geoJson_features = computed(() => {
     const features = bridges_with_params.value.map(bridge => {
-      const poster_image = (bridge.status === 0 || bridge.status === 1)
+      const poster_image = (bridge.status === 0 || bridge.status === 1 || bridge.status === 4)
         ? bridge.images.open
         : bridge.images.close
 
@@ -282,6 +290,7 @@ export const useBridgesStore = defineStore('bridges', () => {
       else if (bridge.status === 1) custom_status = { color: 'light-green', text: t('open') }
       else if (bridge.status === 2) custom_status = { color: 'red', text: '&nbsp;' }
       else if (bridge.status === 3) custom_status = { color: 'red', text: t('close') }
+      else if (bridge.status === 4) custom_status = { color: 'grey', text: t('not_opening_today') }
 
       // Используем timestamp если доступен, иначе time
       const timeArray = bridge.timestamp && bridge.timestamp.length > 0 ? bridge.timestamp : bridge.time

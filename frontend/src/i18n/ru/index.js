@@ -13,6 +13,7 @@ export default {
   will_close: "Скоро разводится",
 
   not_closed: "Мост сегодня не разводится",
+  not_opening_today: "Сегодня не разводится",
 
   time_footer: "Точное время в Петербурге",
   language_string: 'Язык',
@@ -42,7 +43,7 @@ export default {
 
   summary_all_closed: 'Сегодня мосты уже не разведутся. Всё сведено.',
   summary_no_data: 'Новых данных на сегодня пока нет, пока что по расписанию.',
-  summary_in_progress: 'Разведено {opened} {opened_word}, сведены {closed} {closed_word}',
+  summary_in_progress: 'Разведено {opened} {opened_word}, сведены {closed} {closed_word}, не разводятся {not_today}',
   summary_all_open: 'Мосты ещё сведены',
   bridge_word_1: 'мост',
   bridge_word_2: 'моста',

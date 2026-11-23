@@ -13,6 +13,7 @@ export default {
   will_close: "桥将关闭",
 
   not_closed: "这座桥今天没有关闭",
+  not_opening_today: "今天不开放",
 
   time_footer: "圣彼得堡时间",
   language_string: '语言',

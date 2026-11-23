@@ -13,6 +13,7 @@ export default {
   will_close: "The bridge will close",
 
   not_closed: "Bridge are not closed today",
+  not_opening_today: "Not opening today",
 
   time_footer: "Time in St. Petersburg",
   language_string: 'Language',

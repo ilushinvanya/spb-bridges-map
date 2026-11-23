@@ -62,6 +62,7 @@ const computeSummary = () => {
 
   const openedBridges = bridges.filter(b => b.status === 2 || b.status === 3)
   const closedBridges = bridges.filter(b => b.status === 0 || b.status === 1)
+  const notTodayBridges = bridges.filter(b => b.status === 4)
 
   let latestEndTime: moment.Moment | null = null
   let earliestStartTime: moment.Moment | null = null
@@ -120,7 +121,8 @@ const computeSummary = () => {
       opened: openedBridges.length,
       opened_word: openedWord,
       closed: closedBridges.length,
-      closed_word: closedWord
+      closed_word: closedWord,
+      not_today: notTodayBridges,
     })
   } else if (earliestStartTime && currentTime.isBefore(earliestStartTime)) {
     message.value = t('summary_all_open')
