@@ -2,8 +2,8 @@
 
 function mergeFiles(): void
 {
-    $bridges_data     = json_decode(file_get_contents(__DIR__ . '/../jsons/bridges-data.json'), true);
-    $bridges_schedule = json_decode(file_get_contents(__DIR__ . '/../jsons/bridges-schedule.json'), true);
+    $bridges_data     = json_decode(file_get_contents(__DIR__ . '/../data/bridges-data.json'), true);
+    $bridges_schedule = json_decode(file_get_contents(__DIR__ . '/../data/bridges-schedule.json'), true);
 
     foreach ($bridges_data['bridges'] as &$bridge_data) {
         $bridge_data_title = $bridge_data['title']['ru'];
@@ -29,5 +29,19 @@ function mergeFiles(): void
     $bridges_data['parse_time'] = $bridges_schedule['parse_time'];
 
     $json_string = json_encode($bridges_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    file_put_contents(__DIR__ . '/../jsons/bridges-result.json', $json_string);
+
+    $result = file_put_contents(__DIR__ . '/../data/bridges-result.json', $json_string);
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    if ($result === false) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Не удалось записать файл bridges-result.json'
+        ], JSON_UNESCAPED_UNICODE);
+    } else {
+        http_response_code(200);
+        echo $json_string;
+    }
 }

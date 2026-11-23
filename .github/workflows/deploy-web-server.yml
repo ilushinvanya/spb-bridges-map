@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'backend/web-server/**'
+      - 'api/**'
 
   workflow_dispatch:
 
@@ -20,8 +20,8 @@ jobs:
       - name: Upload files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          local-dir: './backend/web-server/'
-          server-dir: 'public_html/server/'
+          local-dir: './api/'
+          server-dir: 'public_html/api/'
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_NAME }}
           password: ${{ secrets.FTP_SECRET }}

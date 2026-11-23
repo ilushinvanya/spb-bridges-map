@@ -10,7 +10,7 @@ function uploadFile(string $nameFile, string $ftppass): void
     ftp_pasv($ftp, true);
     ftp_chdir($ftp, 'public_html/server');
 
-    $local_file = __DIR__ . '/../jsons/' . $nameFile;
+    $local_file = __DIR__ . '/../data/' . $nameFile;
     ftp_put($ftp, 'bridges.json', $local_file, FTP_BINARY);
 
     ftp_close($ftp);

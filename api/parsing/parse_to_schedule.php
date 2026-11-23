@@ -131,7 +131,7 @@ function parseSite(): string
     ];
 
     $json_string = json_encode($bridges_object, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    file_put_contents(__DIR__ . '/../jsons/bridges-schedule.json', $json_string);
+    file_put_contents(__DIR__ . '/../data/bridges-schedule.json', $json_string);
 
     return $message_text;
 }

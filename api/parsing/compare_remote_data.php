@@ -21,7 +21,7 @@ function compareFile(): string
     // curl_close($ch);
     $remote_bridges = json_decode($response, true);
 
-    $local_bridges = json_decode(file_get_contents(__DIR__ . '/../jsons/bridges-result.json'), true);
+    $local_bridges = json_decode(file_get_contents(__DIR__ . '/../data/bridges-result.json'), true);
 
     $flag_has_change = false;
     $message_text    = '🔅 Новые изменения: ' . "\n";

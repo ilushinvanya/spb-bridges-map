@@ -2,7 +2,7 @@
 
 function readingFile(string $nameFile): string
 {
-    $parsed = json_decode(file_get_contents(__DIR__ . '../jsons/' . $nameFile), true);
+    $parsed = json_decode(file_get_contents(__DIR__ . '../data/' . $nameFile), true);
 
     $message_text = '🔅 Чтение нового файла ' . "\n";
 
