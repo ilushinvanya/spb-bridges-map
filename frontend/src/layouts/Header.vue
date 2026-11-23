@@ -31,30 +31,23 @@
   </q-header>
 </template>
 
-<script>
+<script setup>
 import { useBridgesStore } from 'src/stores/bridges'
 
-export default {
-  name: 'HeaderComponent',
-  props: ['left', 'right'],
-  setup () {
-    const store = useBridgesStore()
-    return { store }
-  },
-  computed: {
-    show_hint () {
-      return this.store.show_hint && this.store.mobilecheck
-    }
-  },
-  methods: {
-    left_handle () {
-      this.$emit('left', !this.left)
-    },
-    right_handle () {
-      this.store.setShowHint(false)
-      this.$emit('right', !this.right)
-    }
-  }
+const props = defineProps({
+  left: Boolean,
+  right: Boolean
+})
+
+const emit = defineEmits(['left', 'right'])
+const store = useBridgesStore()
+
+const left_handle = () => {
+  emit('left', !props.left)
+}
+
+const right_handle = () => {
+  emit('right', !props.right)
 }
 </script>
 
