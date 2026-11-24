@@ -191,6 +191,7 @@ export const useBridgesStore = defineStore('bridges', () => {
   const parse_time           = ref<string | null>(null)
   const map_init_counter     = ref<number>(0)       // increments after getBridges → triggers map init
   const selected_ad_index    = ref<number>(0)       // индекс выбранного объявления
+  const summary_visible      = ref<boolean>(true)   // контролирует видимость Summary
 
   // Cache for bridges_with_params optimization
   const lastCheckMinute = ref<number>(-1)
@@ -385,7 +386,7 @@ export const useBridgesStore = defineStore('bridges', () => {
       else if (bridge.status === 1) custom_status = { color: 'light-green', text: t('open') }
       else if (bridge.status === 2) custom_status = { color: 'red', text: '&nbsp;' }
       else if (bridge.status === 3) custom_status = { color: 'red', text: t('close') }
-      else if (bridge.status === 4) custom_status = { color: 'grey', text: t('not_opening_today') }
+      else if (bridge.status === 4) custom_status = { color: 'grey', text: '&nbsp;' }
 
       // Используем timestamp если доступен, иначе time
       const timeArray = bridge.timestamp && bridge.timestamp.length > 0 ? bridge.timestamp : bridge.time
@@ -458,18 +459,19 @@ export const useBridgesStore = defineStore('bridges', () => {
   const setTiming_mode = (payload: number | null) => { timing_mode.value = payload }
   const setYandexClock = (payload: YandexClock)   => { yandex_clock.value = payload }
   const setParseTime = (v: string | null)         => { parse_time.value = v }
+  const setSummaryVisible = (bool: boolean)       => { summary_visible.value = bool }
 
   return {
     // state
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
     geoJson_features, dark_mode, parse_time,
-    map_init_counter, light_status, selected_ad_index,
+    map_init_counter, light_status, selected_ad_index, summary_visible,
     // computed
     mobilecheck, app_language,
     // actions
     getBridges, initializeAdvertisement,
     setDarkMode, setOpen_bridge, setGLSupport,
-    setTime, setTiming_mode, setYandexClock, setParseTime,
+    setTime, setTiming_mode, setYandexClock, setParseTime, setSummaryVisible,
   }
 })

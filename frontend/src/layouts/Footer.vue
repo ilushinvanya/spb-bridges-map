@@ -106,51 +106,11 @@ const apiIconToIconCode = {
   'vlka': 'vlka'
 }
 
-const weatherIconMapping = {
-  'skc_d': 'https://yastatic.net/weather/i/icons/funky/dark/skc_d.svg',
-  'skc_n': 'https://yastatic.net/weather/i/icons/funky/dark/skc_n.svg',
-  'fg_d': 'https://yastatic.net/weather/i/icons/funky/dark/fg_d.svg',
-  'fg_n': 'https://yastatic.net/weather/i/icons/funky/dark/fg_n.svg',
-  'bkn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_d.svg',
-  'bkn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_n.svg',
-  'bkn_-ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-ra_d.svg',
-  'bkn_-ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-ra_n.svg',
-  'bkn_-sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-sn_d.svg',
-  'bkn_-sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-sn_n.svg',
-  'bkn_ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_ra_d.svg',
-  'bkn_ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_ra_n.svg',
-  'bkn_sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_sn_d.svg',
-  'bkn_sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_sn_n.svg',
-  'bkn_+ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bra_d.svg',
-  'bkn_+ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bra_n.svg',
-  'bkn_+sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bsn_d.svg',
-  'bkn_+sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bsn_n.svg',
-  'ovc_ts': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts.svg',
-  'ovc_ts_ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts_ra.svg',
-  'ovc_ts_ha': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts_ha.svg',
-  'ovc': 'https://yastatic.net/weather/i/icons/funky/dark/ovc.svg',
-  'ovc_-ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_-ra.svg',
-  'ovc_-sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_-sn.svg',
-  'ovc_ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ra.svg',
-  'ovc_sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_sn.svg',
-  'ovc_+ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_%2Bra.svg',
-  'ovc_+sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_%2Bsn.svg',
-  'ovc_ra_sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ra_sn.svg',
-  'ovc_ha': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ha.svg',
-  '-bl': 'https://yastatic.net/weather/i/icons/funky/dark/-bl.svg',
-  'bl': 'https://yastatic.net/weather/i/icons/funky/dark/bl.svg',
-  'dst': 'https://yastatic.net/weather/i/icons/funky/dark/dst.svg',
-  'du_st': 'https://yastatic.net/weather/i/icons/funky/dark/du_st.svg',
-  'smog': 'https://yastatic.net/weather/i/icons/funky/dark/smog.svg',
-  'strm': 'https://yastatic.net/weather/i/icons/funky/dark/strm.svg',
-  'vlka': 'https://yastatic.net/weather/i/icons/funky/dark/vlka.svg'
-}
-
 const weatherIconUrl = computed(() => {
   if (weather.value && weather.value.icon) {
     // Преобразуем код из API (с тире) в код для иконок (с подчеркиванием)
     const iconCode = apiIconToIconCode[weather.value.icon]
-    return weatherIconMapping[iconCode] || `https://yastatic.net/weather/i/icons/funky/dark/${weather.value.icon}.svg`
+    return `https://yastatic.net/weather/i/icons/funky/dark/${iconCode}.svg`
   }
   return ''
 })

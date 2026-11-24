@@ -6,7 +6,7 @@
     <div class="bottom_block_w_cards">
       <BridgeCard v-if="open_bridge"/>
       <SliderCard v-if="timing_mode"/>
-      <Summary />
+      <Summary v-if="summary_visible"/>
     </div>
 
   </q-page>
@@ -26,6 +26,7 @@ const transition_class = ref('up')
 
 const open_bridge = computed(() => store.open_bridge_id)
 const timing_mode = computed(() => store.timing_mode)
+const summary_visible = computed(() => store.summary_visible)
 
 watch(() => store.map_init_counter, (val) => {
   // console.log(val)

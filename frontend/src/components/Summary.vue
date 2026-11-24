@@ -1,6 +1,5 @@
 <template>
   <q-card
-    v-if="visible"
     class="summary-card"
     flat bordered
   >
@@ -26,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { computed } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import moment from 'moment'
@@ -35,8 +34,6 @@ const ANIMATION_DURATION_MS = 400
 
 const store = useBridgesStore()
 const { t } = useI18n()
-
-const visible = ref(true)
 
 function getBridgeWord(count: number, locale: string): string {
   if (locale !== 'ru') {
@@ -131,7 +128,7 @@ const computeSummary = computed(() => {
 const message = computeSummary
 
 function close() {
-  visible.value = false
+  store.setSummaryVisible(false)
 }
 </script>
 
