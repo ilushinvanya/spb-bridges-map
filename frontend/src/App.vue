@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import axios from 'axios'
@@ -11,14 +11,6 @@ import moment from 'moment'
 
 const store = useBridgesStore()
 const { locale } = useI18n()
-
-// Инициализация тёмной темы на основе системных настроек
-onMounted(() => {
-  if (window.matchMedia) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    store.setDarkMode(prefersDark)
-  }
-})
 
 const serverOffset = ref(0)
 let intervalId = null

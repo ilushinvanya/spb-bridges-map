@@ -64,6 +64,21 @@
         </q-item-section>
       </q-item>
 
+      <q-separator/>
+
+      <!-- light status -->
+      <q-item tag="label" @click="goToLensvet()">
+        <q-item-section>
+          <q-item-label>
+            <span v-if="light_status.isLightOn" class="text-positive">{{ $t('light_on') }}</span>
+            <span v-else class="text-warning">{{ $t('light_off') }}</span>
+          </q-item-label>
+          <q-item-label caption v-if="light_status.nextEventTime > 0">
+            {{ formatNextEvent() }}
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+
     </q-list>
 
 
@@ -127,6 +142,7 @@ import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
+import moment from 'moment'
 import flag_ru from '../assets/icon_flag_ru.svg'
 import flag_ch from '../assets/icon_flag_ch.svg'
 import flag_en from '../assets/icon_flag_en.svg'
@@ -147,6 +163,7 @@ const contact = ref('')
 const loading = ref(false)
 
 const app_language = computed(() => locale.value)
+const light_status = computed(() => store.light_status)
 const dark_mode = computed({
   get: () => store.dark_mode,
   set: (value) => {
@@ -212,6 +229,39 @@ function timing_mode_toggle() {
   } else {
     store.setTiming_mode(null)
   }
+}
+
+function formatNextEvent() {
+  if (light_status.value.nextEventTime <= 0) {
+    return ''
+  }
+
+  const times = store.Time
+  if (!times || typeof times.unix !== 'function') {
+    return ''
+  }
+
+  const currentTimestamp = times.unix()
+  const timeDiff = light_status.value.nextEventTime - currentTimestamp
+
+  if (timeDiff <= 0) {
+    return ''
+  }
+
+  const hours = Math.floor(timeDiff / 3600)
+  const minutes = Math.floor((timeDiff % 3600) / 60)
+
+  const eventTime = moment.unix(light_status.value.nextEventTime).format('HH:mm')
+
+  if (light_status.value.isLightOn) {
+    return `${t('light_will_off')} ${t('through')} ${hours}ч ${minutes}м ${t('at')} ${eventTime}`
+  } else {
+    return `${t('light_will_on')} ${t('through')} ${hours}ч ${minutes}м ${t('at')} ${eventTime}`
+  }
+}
+
+const goToLensvet = () => {
+  window.open('https://lensvet.spb.ru/grafik_raboty_naruzhnogo_osvescheni/', 'blank')
 }
 </script>
 

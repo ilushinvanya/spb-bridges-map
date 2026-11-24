@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal bordered class="bg-blue-grey-5 text-white">
+  <q-header reveal bordered class="bg-blue-grey-5 text-white" :style="headerStyle">
     <q-toolbar class="custom_toolbar_class">
 
       <q-toolbar-title class="flex no-wrap">
@@ -32,6 +32,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 
 const props = defineProps({
@@ -42,6 +43,8 @@ const props = defineProps({
 const emit = defineEmits(['left', 'right'])
 const store = useBridgesStore()
 
+const yandex_clock = computed(() => store.yandex_clock)
+
 const left_handle = () => {
   emit('left', !props.left)
 }
@@ -49,9 +52,20 @@ const left_handle = () => {
 const right_handle = () => {
   emit('right', !props.right)
 }
+
+const headerStyle = computed(() => {
+  if (yandex_clock.value.skyColor) {
+    return { 'background-color': yandex_clock.value.skyColor + ' !important' }
+  }
+  return {}
+})
 </script>
 
 <style lang="scss">
+  .q-header {
+    text-shadow: 0 0 3px black;
+  }
+
   .q-toolbar__title:first-child {
     padding: 0;
   }

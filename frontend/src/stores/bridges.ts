@@ -5,6 +5,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { Notify, useQuasar } from 'quasar'
 import { i18n } from 'src/boot/i18n.ts'
+import lightsData from '../assets/lights.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,6 +15,7 @@ export interface YandexClock {
   showSunriseSunset?: boolean
   sunset?: string
   sunrise?: string
+  skyColor?: string
   [key: string]: unknown
 }
 
@@ -50,6 +52,14 @@ interface CheckTimeResult {
   status: number  // 0: open, 1: will close, 2: close, 3: will open, 4: not opening today
   time_obj: BridgeTime | Record<string, never>
   comment: string
+}
+
+interface LightStatus {
+  isLightOn: boolean
+  currentIndex: number
+  nextIndex: number
+  nextEventTime: number
+  nextEventType: string
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -106,6 +116,59 @@ function checkTime_color(checkTime_obj: CheckTimeResult): string {
   }
 }
 
+// ── Light detection function ────────────────────────────────────────────────────
+
+function checkLightStatus(currentTimestamp: number): LightStatus {
+  const lights = lightsData as number[]
+
+  // Если нет данных или текущее время раньше первого события
+  if (lights.length === 0 || currentTimestamp < lights[0]) {
+    return {
+      isLightOn: false,
+      currentIndex: -1,
+      nextIndex: 0,
+      nextEventTime: lights.length > 0 ? lights[0] : 0,
+      nextEventType: 'light_on'
+    }
+  }
+
+  // Находим, между какими элементами находится текущее время
+  let currentIndex = -1
+  let nextIndex = -1
+
+  for (let i = 0; i < lights.length - 1; i++) {
+    if (currentTimestamp >= lights[i] && currentTimestamp < lights[i + 1]) {
+      currentIndex = i
+      nextIndex = i + 1
+      break
+    }
+  }
+
+  // Если время после последнего события
+  if (currentIndex === -1 && currentTimestamp >= lights[lights.length - 1]) {
+    currentIndex = lights.length - 1
+    nextIndex = -1
+  }
+
+  // Определяем статус освещения по индексу
+  // Четные индексы (0, 2, 4...) - свет выключен
+  // Нечетные индексы (1, 3, 5...) - свет включен
+  const isLightOn = currentIndex >= 0 && currentIndex % 2 === 1
+
+  const nextEventTime = nextIndex >= 0 ? lights[nextIndex] : 0
+  const nextEventType = nextIndex >= 0
+    ? (nextIndex % 2 === 0 ? 'light_on' : 'light_off')
+    : 'unknown'
+
+  return {
+    isLightOn,
+    currentIndex,
+    nextIndex,
+    nextEventTime,
+    nextEventType
+  }
+}
+
 // ─── Store ────────────────────────────────────────────────────────────────────
 
 export const useBridgesStore = defineStore('bridges', () => {
@@ -119,7 +182,6 @@ export const useBridgesStore = defineStore('bridges', () => {
   const yandex_clock     = ref<YandexClock>({})
   const open_bridge_id   = ref<number>(0)
   const source_bridges   = ref<Bridge[]>([])   // raw API data, persisted as cache
-  const dark_mode        = ref<boolean>(false)
   const parse_time       = ref<string | null>(null)
   const map_init_counter = ref<number>(0)       // increments after getBridges → triggers map init
 
@@ -134,6 +196,33 @@ export const useBridgesStore = defineStore('bridges', () => {
   // ── Locale (reactive, from i18n) ────────────────────────────────────────────
 
   const app_language = computed<string>(() => i18n.global.locale.value as string)
+
+  // ── Light status computed from Time ──────────────────────────────────────────
+
+  const light_status = computed<LightStatus>(() => {
+    let timestamp: number
+    const newTime = Time.value
+
+    if (typeof newTime === 'number') {
+      timestamp = newTime
+    } else if (newTime && typeof newTime.unix === 'function') {
+      timestamp = newTime.unix()
+    } else {
+      return { isLightOn: false, currentIndex: -1, nextIndex: -1, nextEventTime: 0, nextEventType: 'unknown' }
+    }
+
+    return checkLightStatus(timestamp)
+  })
+
+  const dark_mode        = ref<boolean>(false)
+
+  // ── Watch light status to update dark mode ──────────────────────────────────
+
+  watch(light_status, (newStatus) => {
+    // Нечетные индексы (свет включен) → темная тема включена (true)
+    // Четные индексы (свет выключен) → светлая тема (false)
+    dark_mode.value = newStatus.isLightOn
+  }, { immediate: true })
 
   // ── Time helper ─────────────────────────────────────────────────────────────
 
@@ -360,7 +449,7 @@ export const useBridgesStore = defineStore('bridges', () => {
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
     geoJson_features, dark_mode, parse_time,
-    map_init_counter,
+    map_init_counter, light_status,
     // computed
     mobilecheck, app_language,
     // actions

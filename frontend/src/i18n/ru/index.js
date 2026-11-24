@@ -50,5 +50,13 @@ export default {
   summary_all_open: 'Все мосты сведены',
   bridge_word_1: 'мост',
   bridge_word_2: 'моста',
-  bridge_word_5: 'мостов'
+  bridge_word_5: 'мостов',
+
+  light_on: 'Фонари включены',
+  light_off: 'Фонари выключены',
+  light_will_on: 'Включатся',
+  light_will_off: 'Выключатся',
+  no_data: 'Нет данных',
+  through: 'через',
+  at: 'в'
 }

@@ -48,5 +48,13 @@ export default {
   summary_all_open: 'All bridges are still open',
   bridge_word_1: 'bridge',
   bridge_word_2: 'bridges',
-  bridge_word_5: 'bridges'
+  bridge_word_5: 'bridges',
+
+  light_on: 'Light is on',
+  light_off: 'Light is off',
+  light_will_on: 'Light will turn on',
+  light_will_off: 'Light will turn off',
+  no_data: 'No data',
+  through: 'through',
+  at: 'at'
 }

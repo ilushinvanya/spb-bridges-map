@@ -48,5 +48,13 @@ export default {
   summary_all_open: '所有的桥梁仍然开放',
   bridge_word_1: '桥',
   bridge_word_2: '桥',
-  bridge_word_5: '桥'
+  bridge_word_5: '桥',
+
+  light_on: '灯亮了',
+  light_off: '灯灭了',
+  light_will_on: '灯将亮起',
+  light_will_off: '灯将熄灭',
+  no_data: '没有数据',
+  through: '通过',
+  at: '在'
 }

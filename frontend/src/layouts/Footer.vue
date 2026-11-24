@@ -1,5 +1,5 @@
 <template>
-  <q-footer bordered class="bg-blue-grey-8 text-white">
+  <q-footer bordered class="bg-blue-grey-8 text-white" :style="footerStyle">
     <q-toolbar>
 
       <q-avatar size="50px">
@@ -29,10 +29,18 @@
             <span v-if="time_check">{{ $t('time_footer') }} - </span>
             <span v-if="Time && typeof Time.format === 'function'">{{ Time.format("HH:mm:ss") }}</span>
         </div>
-        <div>
+        <div style="display: flex; flex-wrap: wrap; gap: 30px;">
           <div class="weather"
-               v-if="time_check">
+               v-if="time_check && weather">
+            <img v-if="weatherIconUrl"
+                 :src="weatherIconUrl"
+                 :alt="weather.icon"
+                 class="weather-icon">
             <span>{{ $t('temperature') }} {{ weather.temp }}°</span>
+          </div>
+          <div class="sun-times" v-if="time_check && yandex_clock.sunrise">
+            <span>🌅 {{ yandex_clock.sunrise }}</span>
+            <span>🌇 {{ yandex_clock.sunset }}</span>
           </div>
         </div>
       </span>
@@ -57,6 +65,96 @@ const weather = computed(() => {
   }
 })
 
+// Маппинг кодов иконок из API Яндекса (с тире) на коды для иконок (с подчеркиванием)
+const apiIconToIconCode = {
+  'skc-d': 'skc_d',
+  'skc-n': 'skc_n',
+  'fg-d': 'fg_d',
+  'fg-n': 'fg_n',
+  'bkn-d': 'bkn_d',
+  'bkn-n': 'bkn_n',
+  'bkn--ra-d': 'bkn_-ra_d',
+  'bkn--ra-n': 'bkn_-ra_n',
+  'bkn--sn-d': 'bkn_-sn_d',
+  'bkn--sn-n': 'bkn_-sn_n',
+  'bkn-ra-d': 'bkn_ra_d',
+  'bkn-ra-n': 'bkn_ra_n',
+  'bkn-sn-d': 'bkn_sn_d',
+  'bkn-sn-n': 'bkn_sn_n',
+  'bkn-+ra-d': 'bkn_+ra_d',
+  'bkn-+ra-n': 'bkn_+ra_n',
+  'bkn-+sn-d': 'bkn_+sn_d',
+  'bkn-+sn-n': 'bkn_+sn_n',
+  'ovc-ts': 'ovc_ts',
+  'ovc-ts-ra': 'ovc_ts_ra',
+  'ovc-ts-ha': 'ovc_ts_ha',
+  'ovc': 'ovc',
+  'ovc--ra': 'ovc_-ra',
+  'ovc--sn': 'ovc_-sn',
+  'ovc-ra': 'ovc_ra',
+  'ovc-sn': 'ovc_sn',
+  'ovc-+ra': 'ovc_+ra',
+  'ovc-+sn': 'ovc_+sn',
+  'ovc-ra-sn': 'ovc_ra_sn',
+  'ovc-ha': 'ovc_ha',
+  '-bl': '-bl',
+  'bl': 'bl',
+  'dst': 'dst',
+  'du-st': 'du_st',
+  'smog': 'smog',
+  'strm': 'strm',
+  'vlka': 'vlka'
+}
+
+const weatherIconMapping = {
+  'skc_d': 'https://yastatic.net/weather/i/icons/funky/dark/skc_d.svg',
+  'skc_n': 'https://yastatic.net/weather/i/icons/funky/dark/skc_n.svg',
+  'fg_d': 'https://yastatic.net/weather/i/icons/funky/dark/fg_d.svg',
+  'fg_n': 'https://yastatic.net/weather/i/icons/funky/dark/fg_n.svg',
+  'bkn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_d.svg',
+  'bkn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_n.svg',
+  'bkn_-ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-ra_d.svg',
+  'bkn_-ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-ra_n.svg',
+  'bkn_-sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-sn_d.svg',
+  'bkn_-sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_-sn_n.svg',
+  'bkn_ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_ra_d.svg',
+  'bkn_ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_ra_n.svg',
+  'bkn_sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_sn_d.svg',
+  'bkn_sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_sn_n.svg',
+  'bkn_+ra_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bra_d.svg',
+  'bkn_+ra_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bra_n.svg',
+  'bkn_+sn_d': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bsn_d.svg',
+  'bkn_+sn_n': 'https://yastatic.net/weather/i/icons/funky/dark/bkn_%2Bsn_n.svg',
+  'ovc_ts': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts.svg',
+  'ovc_ts_ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts_ra.svg',
+  'ovc_ts_ha': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ts_ha.svg',
+  'ovc': 'https://yastatic.net/weather/i/icons/funky/dark/ovc.svg',
+  'ovc_-ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_-ra.svg',
+  'ovc_-sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_-sn.svg',
+  'ovc_ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ra.svg',
+  'ovc_sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_sn.svg',
+  'ovc_+ra': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_%2Bra.svg',
+  'ovc_+sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_%2Bsn.svg',
+  'ovc_ra_sn': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ra_sn.svg',
+  'ovc_ha': 'https://yastatic.net/weather/i/icons/funky/dark/ovc_ha.svg',
+  '-bl': 'https://yastatic.net/weather/i/icons/funky/dark/-bl.svg',
+  'bl': 'https://yastatic.net/weather/i/icons/funky/dark/bl.svg',
+  'dst': 'https://yastatic.net/weather/i/icons/funky/dark/dst.svg',
+  'du_st': 'https://yastatic.net/weather/i/icons/funky/dark/du_st.svg',
+  'smog': 'https://yastatic.net/weather/i/icons/funky/dark/smog.svg',
+  'strm': 'https://yastatic.net/weather/i/icons/funky/dark/strm.svg',
+  'vlka': 'https://yastatic.net/weather/i/icons/funky/dark/vlka.svg'
+}
+
+const weatherIconUrl = computed(() => {
+  if (weather.value && weather.value.icon) {
+    // Преобразуем код из API (с тире) в код для иконок (с подчеркиванием)
+    const iconCode = apiIconToIconCode[weather.value.icon]
+    return weatherIconMapping[iconCode] || `https://yastatic.net/weather/i/icons/funky/dark/${weather.value.icon}.svg`
+  }
+  return ''
+})
+
 const time_check = computed(() => {
   return Object.prototype.hasOwnProperty.call(yandex_clock.value, 'offsetString')
 })
@@ -75,14 +173,43 @@ const updateClock = computed(() => {
     second_css: { 'transform': `rotate(${second}deg)` }
   }
 })
+
+const footerStyle = computed(() => {
+  if (yandex_clock.value.skyColor) {
+    return { 'background-color': yandex_clock.value.skyColor + ' !important'}
+  }
+  return {}
+})
 </script>
 
 <style lang="scss">
+  .q-footer {
+    text-shadow: 0 0 3px black;
+  }
+
   .weather {
     display: flex;
+    align-items: end;
+    gap: 6px;
+
+    .weather-icon {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  }
+
+  .sun-times {
+    display: flex;
     align-items: center;
-    img {
-      width: 20px;
+    gap: 12px;
+    margin-top: 4px;
+    font-size: 14px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
   }
   .hero-circle {
