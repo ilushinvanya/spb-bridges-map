@@ -70,6 +70,12 @@ const COLOR_BASE = { r: 63, g: 216, b: 32 }
 const COLOR_CLOSE = '#ff5b50'
 const COLOR_NOT_OPENING = '#808080'  // grey for bridges not opening today
 
+// Рекламные объявления для карусели в заголовке
+export const ADVERTISEMENT_LINKS = [
+  { text: 'Джаз под разводными мостами', href: 'https://experience.tripster.ru/u/66fa37fe86/' },
+  // Добавьте больше объявлений по необходимости
+]
+
 // ─── Helpers (pure, no store dependency) ──────────────────────────────────────
 
 function rgbToHex(r: number, g: number, b: number): string {
@@ -176,14 +182,15 @@ export const useBridgesStore = defineStore('bridges', () => {
   const $q = useQuasar()
 
   // State
-  const gl_support       = ref<boolean | null>(null)
-  const Time             = ref<Moment | number>(0)
-  const timing_mode      = ref<number | null>(null)
-  const yandex_clock     = ref<YandexClock>({})
-  const open_bridge_id   = ref<number>(0)
-  const source_bridges   = ref<Bridge[]>([])   // raw API data, persisted as cache
-  const parse_time       = ref<string | null>(null)
-  const map_init_counter = ref<number>(0)       // increments after getBridges → triggers map init
+  const gl_support           = ref<boolean | null>(null)
+  const Time                 = ref<Moment | number>(0)
+  const timing_mode          = ref<number | null>(null)
+  const yandex_clock         = ref<YandexClock>({})
+  const open_bridge_id       = ref<number>(0)
+  const source_bridges       = ref<Bridge[]>([])   // raw API data, persisted as cache
+  const parse_time           = ref<string | null>(null)
+  const map_init_counter     = ref<number>(0)       // increments after getBridges → triggers map init
+  const selected_ad_index    = ref<number>(0)       // индекс выбранного объявления
 
   // Cache for bridges_with_params optimization
   const lastCheckMinute = ref<number>(-1)
@@ -434,6 +441,14 @@ export const useBridgesStore = defineStore('bridges', () => {
     }
   }
 
+  // ── Advertisement initialization ───────────────────────────────────────────
+
+  function initializeAdvertisement(): void {
+    if (ADVERTISEMENT_LINKS.length > 0) {
+      selected_ad_index.value = Math.floor(Math.random() * ADVERTISEMENT_LINKS.length)
+    }
+  }
+
   // ── Simple setters ──────────────────────────────────────────────────────────
 
   const setDarkMode = (bool: boolean)             => { dark_mode.value = bool }
@@ -449,11 +464,11 @@ export const useBridgesStore = defineStore('bridges', () => {
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
     geoJson_features, dark_mode, parse_time,
-    map_init_counter, light_status,
+    map_init_counter, light_status, selected_ad_index,
     // computed
     mobilecheck, app_language,
     // actions
-    getBridges,
+    getBridges, initializeAdvertisement,
     setDarkMode, setOpen_bridge, setGLSupport,
     setTime, setTiming_mode, setYandexClock, setParseTime,
   }

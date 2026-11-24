@@ -82,15 +82,6 @@
     </q-list>
 
 
-    <q-list>
-      <q-item tag="label">
-        <q-item-section>
-          <q-item-label>man@bonusuber.ru</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
-
-
     <q-dialog v-model="prompt">
       <q-card style="min-width: 350px">
         <q-card-section>
