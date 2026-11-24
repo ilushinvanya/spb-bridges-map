@@ -4,6 +4,7 @@
     class="bridge-card relative-position"
     :class="{ hide_to_bottom: hideToBottom }"
     :style="{ 'bottom': offset + 'px' }"
+    flat bordered
   >
     <q-btn
       dense

@@ -2,6 +2,7 @@
   <q-card
     v-if="visible"
     class="summary-card"
+    flat bordered
   >
     <q-btn
       dense
@@ -106,9 +107,9 @@ const computeSummary = computed(() => {
 
   const currentHour = currentTime.hour()
 
-  if (latestEndTime && currentTime.isAfter(latestEndTime) && currentHour < 12) {
+  if (latestEndTime && currentTime.isAfter(latestEndTime) && currentHour < 9) {
     return t('summary_all_closed')
-  } else if (currentHour >= 12 && !isDataFresh) {
+  } else if (currentHour >= 9 && !isDataFresh) {
     return t('summary_no_data')
   } else if (openedBridges.length > 0) {
     const openedWord = getBridgeWord(openedBridges.length, store.app_language)

@@ -121,7 +121,6 @@ export const useBridgesStore = defineStore('bridges', () => {
   const source_bridges   = ref<Bridge[]>([])   // raw API data, persisted as cache
   const dark_mode        = ref<boolean>(false)
   const parse_time       = ref<string | null>(null)
-  const show_hint        = ref<boolean>(true)
   const map_init_counter = ref<number>(0)       // increments after getBridges → triggers map init
 
   // Cache for bridges_with_params optimization
@@ -355,19 +354,18 @@ export const useBridgesStore = defineStore('bridges', () => {
   const setTiming_mode = (payload: number | null) => { timing_mode.value = payload }
   const setYandexClock = (payload: YandexClock)   => { yandex_clock.value = payload }
   const setParseTime = (v: string | null)         => { parse_time.value = v }
-  const setShowHint = (bool: boolean)             => { show_hint.value = bool }
 
   return {
     // state
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
-    geoJson_features, dark_mode, parse_time, show_hint,
+    geoJson_features, dark_mode, parse_time,
     map_init_counter,
     // computed
     mobilecheck, app_language,
     // actions
     getBridges,
     setDarkMode, setOpen_bridge, setGLSupport,
-    setTime, setTiming_mode, setYandexClock, setParseTime, setShowHint,
+    setTime, setTiming_mode, setYandexClock, setParseTime,
   }
 })

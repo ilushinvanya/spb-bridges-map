@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal elevated class="bg-blue-grey-5 text-white">
+  <q-header reveal bordered class="bg-blue-grey-5 text-white">
     <q-toolbar class="custom_toolbar_class">
 
       <q-toolbar-title class="flex no-wrap">
@@ -80,10 +80,5 @@ const right_handle = () => {
     line-height: 50px;
     font-size: 21px;
     position: relative;
-    &:after {
-      content: "🌉";
-      position: absolute;
-      right: -35px;
-    }
   }
 </style>

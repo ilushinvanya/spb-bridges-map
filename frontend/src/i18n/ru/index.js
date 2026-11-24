@@ -33,6 +33,8 @@ export default {
 
   update_available: 'Есть обновления<br/> Нажмите "Ок", чтобы обновить приложение',
   camera: 'Камера',
+  webcam: 'Веб-камера',
+  bridge_webcam: 'Веб-камера моста',
   info: 'Информация',
   last_update: 'Последнее обновление',
   site_mostotrest: 'Сайт Мостотреста',
@@ -41,11 +43,11 @@ export default {
   first_string: 'Мост сегодня будет разведен с {firstStart} до {firstEnd}',
   second_string: 'И повторно с {secondStart} до {secondEnd}',
 
-  summary_all_closed: 'Сегодня мосты уже не разведутся. Всё сведено.',
-  summary_no_data: 'Новых данных на сегодня пока нет, пока что по расписанию.',
+  summary_all_closed: 'Все мосты сведены, сегодня больше не разведутся',
+  summary_no_data: 'Новых данных на сегодня пока нет, показано вчерашнее расписание.',
   summary_in_progress: 'Разведено {opened} {opened_word}<br/>Сведены {closed} {closed_word}<br/>Не разводятся' +
       ' {not_today}',
-  summary_all_open: 'Мосты ещё сведены',
+  summary_all_open: 'Все мосты сведены',
   bridge_word_1: 'мост',
   bridge_word_2: 'моста',
   bridge_word_5: 'мостов'

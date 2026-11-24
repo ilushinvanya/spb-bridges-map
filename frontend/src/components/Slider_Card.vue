@@ -1,6 +1,7 @@
 <template>
   <q-card
     class="slider_card"
+    flat bordered
     :style="{ 'bottom': offset + 'px' }">
     <q-card-section>
 

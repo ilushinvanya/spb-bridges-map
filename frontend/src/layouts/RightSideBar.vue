@@ -9,7 +9,14 @@
               clickable
               v-ripple>
         <q-item-section avatar>
-          <q-avatar size="30px" :style="{backgroundColor: bridge.marker_color}"/>
+          <q-avatar size="30px" :style="{backgroundColor: bridge.marker_color}">
+            <img
+                v-if="bridge.marker_symbol"
+                :src="`/map_icons/${bridge.marker_symbol}.png`"
+                :alt="bridge.marker_symbol"
+                class="bridge-icon-list"
+            />
+          </q-avatar>
         </q-item-section>
 
         <q-item-section>
@@ -85,3 +92,10 @@ function handleClickBridge(bridge) {
   }
 }
 </script>
+
+<style scoped>
+.bridge-icon-list {
+  width: 16px !important;
+  height: 16px !important;
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <q-footer elevated class="bg-blue-grey-8 text-white">
+  <q-footer bordered class="bg-blue-grey-8 text-white">
     <q-toolbar>
 
       <q-avatar size="50px">
@@ -41,50 +41,40 @@
   </q-footer>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 
-export default {
-  name: 'FooterComponent',
-  setup () {
-    const store = useBridgesStore()
-    return { store }
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    yandex_clock () {
-      return this.store.yandex_clock
-    },
-    weather () {
-      if (Object.prototype.hasOwnProperty.call(this.yandex_clock, 'weather')) {
-        return this.yandex_clock.weather
-      } else {
-        return false
-      }
-    },
-    time_check () {
-      return Object.prototype.hasOwnProperty.call(this.yandex_clock, 'offsetString')
-    },
-    Time () {
-      return this.store.Time
-    },
-    updateClock () {
-      var now = this.Time,
-        second = now.seconds() * 6,
-        minute = now.minutes() * 6 + second / 60,
-        hour = ((now.hours() % 12) / 12) * 360 + 90 + minute / 12
+const store = useBridgesStore()
 
-      return {
-        hour_css: { 'transform': 'rotate(' + hour + 'deg)' },
-        minute_css: { 'transform': 'rotate(' + minute + 'deg)' },
-        second_css: { 'transform': 'rotate(' + second + 'deg)' }
-      }
-    },
+const yandex_clock = computed(() => store.yandex_clock)
+
+const weather = computed(() => {
+  if (Object.prototype.hasOwnProperty.call(yandex_clock.value, 'weather')) {
+    return yandex_clock.value.weather
+  } else {
+    return false
   }
-}
+})
+
+const time_check = computed(() => {
+  return Object.prototype.hasOwnProperty.call(yandex_clock.value, 'offsetString')
+})
+
+const Time = computed(() => store.Time)
+
+const updateClock = computed(() => {
+  const now = Time.value
+  const second = now.seconds() * 6
+  const minute = now.minutes() * 6 + second / 60
+  const hour = ((now.hours() % 12) / 12) * 360 + 90 + minute / 12
+
+  return {
+    hour_css: { 'transform': `rotate(${hour}deg)` },
+    minute_css: { 'transform': `rotate(${minute}deg)` },
+    second_css: { 'transform': `rotate(${second}deg)` }
+  }
+})
 </script>
 
 <style lang="scss">

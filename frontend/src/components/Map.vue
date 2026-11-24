@@ -1,17 +1,20 @@
 <template>
   <div id="map"></div>
+  <WebcamDialog v-model="showWebcamDialog" />
 </template>
 
 <script setup lang="ts">
-import { computed, watch, shallowRef, onUnmounted } from 'vue'
+import { computed, watch, shallowRef, onUnmounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import mapboxgl from 'mapbox-gl'
 import { useBridgesStore } from 'src/stores/bridges'
+import WebcamDialog from './WebcamDialog.vue'
 
 const store = useBridgesStore()
 const $q = useQuasar()
-const { locale } = useI18n()
+const { t, locale } = useI18n()
+const showWebcamDialog = ref(false)
 
 
 const mapbox_access_token = import.meta.env.VITE_MAPBOX_TOKEN
@@ -19,9 +22,39 @@ const url_webcam = import.meta.env.VITE_WEBCAM_URL
 
 const map = shallowRef<any>(null)
 const bridges_map_layer = shallowRef<any>(null)
+const zoom = ref(11)
 
 const dark_mode = computed(() => store.dark_mode)
-const Features = computed(() => store.geoJson_features)
+const Features = computed(() => {
+  return store.geoJson_features
+      // TODO это для камеры которой сейчас пока нет
+  if (zoom.value < 13) {
+  }
+
+  return {
+    ...store.geoJson_features,
+    features: [
+        ...store.geoJson_features.features,
+      {
+        id: 999,
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [30.318306, 59.941057] },
+        properties: {
+          custom_active_color:       'white',
+          custom_active_stroke_size: 1,
+          custom_status_color:       'blue',
+          custom_status_text:        '📷',
+          custom_comment:            t('webcam'),
+          title:                     t('webcam'),
+          description:               t('bridge_webcam'),
+          'marker-color':            '#00bcd4',
+          'marker-symbol':           'camera',
+          'marker-size':             'large',
+        },
+      }
+    ]
+  }
+})
 
 const map_styles = computed(() =>
   dark_mode.value
@@ -53,7 +86,7 @@ function initMapboxJSMap () {
   L.mapbox.accessToken = mapbox_access_token
 
   map.value = L.mapbox.map('map')
-    .setView([59.935446, 30.328063], 12)
+    .setView([59.935446, 30.328063], zoom.value)
     .addLayer(L.mapbox.styleLayer(map_styles.value))
 
   bridges_map_layer.value = L.mapbox
@@ -84,12 +117,12 @@ function setupMapLayers () {
     }
     map.value.addImage('boat', image)
   })
-  map.value.loadImage('/map_icons/cinema.png', function (error, image) {
+  map.value.loadImage('/map_icons/camera.png', function (error, image) {
     if (error) {
-      console.error('Failed to load cinema icon:', error)
+      console.error('Failed to load camera icon:', error)
       return
     }
-    map.value.addImage('cinema', image)
+    map.value.addImage('camera', image)
   })
 
   map.value.addSource('points', { 'type': 'geojson', 'data': geoJson })
@@ -119,7 +152,7 @@ function setupMapLayers () {
         ['downcase', ['get', 'custom_comment']], { 'font-scale': 0.6 }
       ],
       'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-      'text-offset': [0, 0.8],
+      'text-offset': [0, 1],
       'text-anchor': 'top'
     },
     paint: {
@@ -133,7 +166,7 @@ function initMapboxGLMap () {
     container: 'map',
     style: map_styles.value,
     center: [30.374144114706155, 59.90882829669761],
-    zoom: 11,
+    zoom: zoom.value,
     pitch: 45,
     bearing: -17.6,
     antialias: true
@@ -171,8 +204,29 @@ function initMapboxGLMap () {
 
     setupMapLayers()
     map.value.on('click', 'circles', function (e) {
-      store.setOpen_bridge(e.features[0].id)
+      const feature = e.features[0]
+      // Проверяем, это ли маркер веб-камеры
+      if (feature.properties && feature.properties['marker-symbol'] === 'camera') {
+        showWebcamDialog.value = true
+      } else {
+        store.setOpen_bridge(feature.id)
+      }
     })
+
+    // // Меняем курсор при наведении на маркеры
+    map.value.on('mouseenter', 'circles', function () {
+      map.value.getCanvas().style.cursor = 'pointer'
+    })
+    map.value.on('mouseleave', 'circles', function () {
+      map.value.getCanvas().style.cursor = ''
+    })
+
+
+    // Обновляем видимость маркеров камеры при изменении зума
+    // map.value.on('zoom', function () {
+    // TODO это для камеры
+    //   zoom.value = map.value.getZoom()
+    // })
   })
 }
 
