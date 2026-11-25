@@ -147,7 +147,8 @@ const initMap = () => {
   // Добавляем слой OpenStreetMap
   L.tileLayer(
       map_styles.value, {
-      maxZoom: 19,
+        minZoom: 10,
+        maxZoom: 15,
     }
   ).addTo(map.value)
 
@@ -181,7 +182,8 @@ const updateTileLayer = () => {
 
   // Добавляем новый слой в зависимости от темы
   L.tileLayer( map_styles.value,  {
-      maxZoom: 19,
+      minZoom: 10,
+      maxZoom: 15,
     }
   ).addTo(map.value)
 }
@@ -269,6 +271,7 @@ onUnmounted(() => {
   }
 
   .bridge-marker-text {
+    display: flex;
     position: absolute;
     top: calc(var(--circle-size) + 4px);
     left: 50%;
@@ -281,19 +284,18 @@ onUnmounted(() => {
     pointer-events: none;
     user-select: none;
     z-index: 10;
-    display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   .bridge-marker-title {
-    display: inline;
+    display: v-bind("zoom > 12 ? 'inline' : 'none'");
     font-size: 14px;
     font-weight: 600;
-    color: #000;
-    background: rgb(255 255 255 / 0.8);
+    color: #2e2e2e;
+    background: rgb(255 255 255);
     border-radius: 5px;
-    padding: 2px 10px;
+    padding: 2px 6px;
   }
 
   .bridge-marker-comment {
@@ -301,9 +303,9 @@ onUnmounted(() => {
     font-size: 12px;
     font-weight: 500;
     color: #333;
-    margin-top: -5px;
+    margin-top: -3px;
 
-    background: rgb(255 255 255 / 0.8);
+    background: rgb(255 255 255);
     border-radius: 5px;
     padding: 0 6px;
   }
@@ -315,21 +317,17 @@ onUnmounted(() => {
   body.body--dark {
     .bridge-marker-title {
       color: #fff;
-      background: rgb(0 0 0 / 0.8);
+      background: rgb(0 0 0);
     }
 
     .bridge-marker-comment {
       color: #ccc;
-      background: rgb(0 0 0 / 0.8);
+      background: rgb(0 0 0);
     }
   }
 
   .leaflet-container {
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
   }
-
-  //.leaflet-layer {
-  //  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-  //}
 
 </style>

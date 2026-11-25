@@ -4,7 +4,7 @@ import type { Moment } from 'moment'
 import moment from 'moment'
 import axios from 'axios'
 import { Notify, useQuasar } from 'quasar'
-import { i18n } from 'src/boot/i18n.ts'
+import { i18n } from '@/boot/i18n'
 import lightsData from '../assets/lights.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────

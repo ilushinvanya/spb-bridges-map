@@ -48,7 +48,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { format } from 'date-fns'
+import moment from 'moment'
 import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
 
@@ -60,7 +60,7 @@ const open_bridge_id = computed(() => store.open_bridge_id)
 const parseTime = computed(() => {
   if (store.parse_time) {
     const currentDate = new Date(store.parse_time)
-    return format(currentDate, 'dd.MM.yyyy // HH:mm')
+    return moment(currentDate).format('dd.MM.yyyy // HH:mm')
   }
   return ''
 })

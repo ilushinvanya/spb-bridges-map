@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "quasar dev",
-    "build": "cross-env ANALYZE=true quasar build -m pwa",
+    "build": "quasar build -m pwa",
+    "build-analyze": "cross-env ANALYZE=true quasar build -m pwa",
     "postinstall": "quasar prepare",
     "server": "npx http-server ./dist/pwa"
   },
@@ -16,7 +17,6 @@
     "@hawk.so/javascript": "^3.3.5",
     "@quasar/extras": "^2.1.0",
     "axios": "1.21.1",
-    "date-fns": "^4.4.0",
     "leaflet": "^1.9.4",
     "moment": "^2.31.0",
     "pinia": "^4.1.0",
