@@ -72,7 +72,7 @@ const COLOR_NOT_OPENING = '#808080'  // grey for bridges not opening today
 
 // Рекламные объявления для карусели в заголовке
 export const ADVERTISEMENT_LINKS = [
-  { text: 'Джаз под разводными мостами', href: 'https://experience.tripster.ru/u/66fa37fe86/' },
+  { text: 'advertisement_jazz_bridges', href: 'https://experience.tripster.ru/u/66fa37fe86/' },
   // Добавьте больше объявлений по необходимости
 ]
 
@@ -223,10 +223,13 @@ export const useBridgesStore = defineStore('bridges', () => {
   })
 
   const dark_mode        = ref<boolean>(false)
+  const dark_mode_manual = ref<boolean>(localStorage.getItem('spb_bridges_dark_mode_manual') === 'true')  // флаг ручного переключения
 
   // ── Watch light status to update dark mode ──────────────────────────────────
 
   watch(light_status, (newStatus) => {
+    // Если пользователь вручную переключил тему, не переписываем
+    if (dark_mode_manual.value) return
     // Нечетные индексы (свет включен) → темная тема включена (true)
     // Четные индексы (свет выключен) → светлая тема (false)
     dark_mode.value = newStatus.isLightOn
@@ -452,7 +455,10 @@ export const useBridgesStore = defineStore('bridges', () => {
 
   // ── Simple setters ──────────────────────────────────────────────────────────
 
-  const setDarkMode = (bool: boolean)             => { dark_mode.value = bool }
+  const setDarkMode = (bool: boolean) => {
+    dark_mode.value = bool
+    dark_mode_manual.value = true  // отмечаем, что это ручное переключение
+  }
   const setOpen_bridge = (id: number)             => { open_bridge_id.value = id }
   const setGLSupport = (bool: boolean)            => { gl_support.value = bool }
   const setTime = (payload: Moment | number)      => { Time.value = payload }
@@ -465,7 +471,7 @@ export const useBridgesStore = defineStore('bridges', () => {
     // state
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
-    geoJson_features, dark_mode, parse_time,
+    geoJson_features, dark_mode, dark_mode_manual, parse_time,
     map_init_counter, light_status, selected_ad_index, summary_visible,
     // computed
     mobilecheck, app_language,

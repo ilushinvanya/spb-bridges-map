@@ -1,5 +1,5 @@
 <template>
-  <q-footer bordered class="bg-blue-grey-8 text-white" :style="footerStyle">
+  <q-footer bordered class="bg-blue-grey-8 text-white">
     <q-toolbar>
 
       <q-avatar size="50px">
@@ -130,13 +130,6 @@ const updateClock = computed(() => {
     minute_css: { 'transform': `rotate(${minute}deg)` },
     second_css: { 'transform': `rotate(${second}deg)` }
   }
-})
-
-const footerStyle = computed(() => {
-  if (yandex_clock.value.skyColor) {
-    return { 'background-color': yandex_clock.value.skyColor + ' !important'}
-  }
-  return {}
 })
 </script>
 

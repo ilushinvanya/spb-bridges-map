@@ -2,6 +2,7 @@ export default {
   header_title: 'Карта разводных мостов',
   header_toolbar_tab_list: 'Список мостов',
   header_toolbar_tab_menu: 'Меню',
+  advertisement_jazz_bridges: 'Джаз под разводными мостами',
 
   temperature: 'Температура',
   open: "Сведён",

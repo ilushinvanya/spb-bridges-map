@@ -4,9 +4,11 @@
     <Map ref="main_map" />
 
     <div class="bottom_block_w_cards">
-      <BridgeCard v-if="open_bridge"/>
-      <SliderCard v-if="timing_mode"/>
-      <Summary v-if="summary_visible"/>
+      <TransitionGroup tag="div" name="fade" class="container">
+        <BridgeCard v-if="open_bridge"/>
+        <SliderCard v-if="timing_mode"/>
+        <Summary v-if="summary_visible"/>
+      </TransitionGroup>
     </div>
 
   </q-page>
@@ -22,16 +24,15 @@ import { useBridgesStore } from 'src/stores/bridges'
 
 const store = useBridgesStore()
 const main_map = ref<InstanceType<typeof Map> | null>(null)
-const transition_class = ref('up')
 
 const open_bridge = computed(() => store.open_bridge_id)
 const timing_mode = computed(() => store.timing_mode)
 const summary_visible = computed(() => store.summary_visible)
 
-watch(() => store.map_init_counter, (val) => {
-  // console.log(val)
-  if (val > 0) main_map.value?.checkSupportGLBrowser()
-})
+// watch(() => store.map_init_counter, (val) => {
+//   // console.log(val)
+//   if (val > 0) main_map.value?.checkSupportGLBrowser()
+// })
 
 function page_height(offset: number) {
   document.documentElement.style.setProperty(
@@ -63,5 +64,30 @@ function page_height(offset: number) {
       left: 50%;
       transform: translateX(-50%);
     }
+  }
+
+  .container {
+    position: relative;
+    padding: 0;
+    list-style-type: none;
+  }
+  /* 1. объявление transition */
+  .fade-move,
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  }
+
+  /* 2. объявление enter from и leave to состояний */
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  /* 3. убедитесь, что элементы удалены из потока layout,
+        чтобы можно было правильно рассчитать анимацию перемещения */
+  .fade-leave-active {
+    position: absolute;
   }
 </style>

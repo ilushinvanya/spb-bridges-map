@@ -18,11 +18,7 @@
     />
 
     <q-slide-transition>
-      <q-video v-if="camera"
-               class="height_300"
-               :src="openBridgeObj.custom_youtube_url" />
-      <div v-else
-           v-show="!collapse">
+      <div v-show="!collapse">
         <q-img
           class="responsive"
           :src="openBridgeObj.poster_image"/>
@@ -30,6 +26,7 @@
     </q-slide-transition>
 
     <q-card-section @click="collapse = !collapse">
+      <div class="touch-stick"></div>
       <div class="text-h6 ellipsis">
         {{ openBridgeObj.title }}
         <q-badge
@@ -168,9 +165,9 @@ function handleSwipe({ evt, ...info }: any) {
       if (info.isFinal) {
         if (offset.value < SWIPE_CLOSE_THRESHOLD) {
           hideToBottom.value = true
-          setTimeout(() => {
             openBridgeId.value = 0
-          }, ANIMATION_DURATION_MS)
+          // setTimeout(() => {
+          // }, ANIMATION_DURATION_MS)
         } else {
           offset.value = 0
         }
@@ -194,6 +191,17 @@ onMounted(() => {
   .bridge-card {
     width: 100%;
     margin: 0 auto 10px;
+
+    .touch-stick {
+      background: #c7c7c7;
+      position: absolute;
+      width: 45px;
+      height: 6px;
+      top: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+    }
 
     & * {
       user-select: none;

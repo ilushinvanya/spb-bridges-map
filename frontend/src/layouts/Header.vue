@@ -1,5 +1,5 @@
 <template>
-  <q-header reveal bordered class="bg-blue-grey-5 text-white" :style="headerStyle">
+  <q-header reveal bordered class="bg-blue-grey-5 text-white">
     <q-toolbar class="custom_toolbar_class">
 
       <q-toolbar-title class="flex no-wrap items-center justify-center">
@@ -67,12 +67,8 @@ const emit = defineEmits(['left', 'right'])
 const store = useBridgesStore()
 
 const nameOfSlide = ref('name-museum')
-const yandex_clock = computed(() => store.yandex_clock)
 
 const currentAdvertisement = computed(() => {
-  if (ADVERTISEMENT_LINKS.length === 0) {
-    return { text: 'header_excursion', href: 'https://mostotrest-spb.ru' }
-  }
   return ADVERTISEMENT_LINKS[store.selected_ad_index]
 })
 
@@ -83,13 +79,6 @@ const left_handle = () => {
 const right_handle = () => {
   emit('right', !props.right)
 }
-
-const headerStyle = computed(() => {
-  if (yandex_clock.value.skyColor) {
-    return { 'background-color': yandex_clock.value.skyColor + ' !important' }
-  }
-  return {}
-})
 
 onMounted(() => {
   store.initializeAdvertisement()

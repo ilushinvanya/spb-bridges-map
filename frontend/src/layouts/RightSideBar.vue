@@ -25,8 +25,8 @@
         </q-item-section>
 
         <q-item-section side>
-          <q-item-label caption>
-            <div class="text-right"
+          <q-item-label>
+            <div class="text-right text-caption"
                  style="width:92px"
                  v-html="bridge.time_html"></div>
           </q-item-label>

@@ -2,6 +2,7 @@ export default {
   header_title: 'Map of drawbridges in St. Petersburg',
   header_toolbar_tab_list: 'List of bridges',
   header_toolbar_tab_menu: 'Menu',
+  advertisement_jazz_bridges: 'Jazz under the drawbridges',
 
   temperature: 'Temperature',
   open: "The bridge is open",
