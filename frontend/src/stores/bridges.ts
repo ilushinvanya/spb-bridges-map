@@ -189,7 +189,6 @@ export const useBridgesStore = defineStore('bridges', () => {
   const open_bridge_id       = ref<number>(0)
   const source_bridges       = ref<Bridge[]>([])   // raw API data, persisted as cache
   const parse_time           = ref<string | null>(null)
-  const map_init_counter     = ref<number>(0)       // increments after getBridges → triggers map init
   const selected_ad_index    = ref<number>(0)       // индекс выбранного объявления
   const summary_visible      = ref<boolean>(true)   // контролирует видимость Summary
 
@@ -310,6 +309,7 @@ export const useBridgesStore = defineStore('bridges', () => {
       }
     }
 
+    // console.log(result)
     return result
   }
 
@@ -317,7 +317,6 @@ export const useBridgesStore = defineStore('bridges', () => {
 
   const bridges_with_params = computed<Bridge[]>(() => {
     const currentMinute = getMomentNowTime().minute()
-
     // Мемоизация: пересчёт только при изменении минуты
     if (currentMinute === lastCheckMinute.value && cachedBridges.value.length > 0) {
       return cachedBridges.value
@@ -440,8 +439,6 @@ export const useBridgesStore = defineStore('bridges', () => {
       Notify.create({ type: 'negative', message: t('load_error') })
       const ymId = parseInt(import.meta.env.VITE_YM_ID)
       ym(ymId, 'reachGoal', 'load_error')
-    } finally {
-      map_init_counter.value++
     }
   }
 
@@ -472,7 +469,7 @@ export const useBridgesStore = defineStore('bridges', () => {
     gl_support, Time, timing_mode, yandex_clock,
     open_bridge_id, source_bridges, bridges_with_params,
     geoJson_features, dark_mode, dark_mode_manual, parse_time,
-    map_init_counter, light_status, selected_ad_index, summary_visible,
+    light_status, selected_ad_index, summary_visible,
     // computed
     mobilecheck, app_language,
     // actions

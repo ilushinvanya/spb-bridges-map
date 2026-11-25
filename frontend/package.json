@@ -1,6 +1,6 @@
 {
   "name": "spbbridgesmap",
-  "version": "1.2.0",
+  "version": "2.2.0",
   "description": "Актуальная онлайн-карта, расписание и график разводных мостов в Санкт-Петербурге через Неву.",
   "productName": "Карта разводных мостов Петербурга",
   "author": "man@bonusuber.ru",
@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "quasar dev",
-    "build": "quasar build -m pwa",
+    "build": "cross-env ANALYZE=true quasar build -m pwa",
     "postinstall": "quasar prepare",
     "server": "npx http-server ./dist/pwa"
   },
@@ -17,7 +17,7 @@
     "@quasar/extras": "^2.1.0",
     "axios": "1.21.1",
     "date-fns": "^4.4.0",
-    "mapbox-gl": "^3.35.2",
+    "leaflet": "^1.9.4",
     "moment": "^2.31.0",
     "pinia": "^4.1.0",
     "pinia-plugin-persistedstate": "^4.7.1",
@@ -29,9 +29,11 @@
   },
   "devDependencies": {
     "@quasar/app-vite": "^3.10.4",
-    "@types/mapbox-gl": "^3.5.0",
+    "@types/leaflet": "^1.9.14",
     "@types/node": "^26.6.6",
     "autoprefixer": "^10.7.0",
+    "cross-env": "^10.1.0",
+    "rollup-plugin-visualizer": "^7.3.0",
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "workbox-build": "^7.0.0"

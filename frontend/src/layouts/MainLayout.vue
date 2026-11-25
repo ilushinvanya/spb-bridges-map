@@ -31,14 +31,14 @@ import RightSideBar from './RightSideBar.vue'
 import LeftSideBar from './LeftSideBar.vue'
 import HeaderComponent from './Header.vue'
 import FooterComponent from './Footer.vue'
-import { onMounted } from 'vue'
-import { useBridgesStore } from 'src/stores/bridges'
+// import { onMounted } from 'vue'
+// import { useBridgesStore } from 'src/stores/bridges'
 
-const store = useBridgesStore()
+// const store = useBridgesStore()
 
-onMounted(() => {
-  store.getBridges()
-})
+// onMounted(() => {
+//   store.getBridges()
+// })
 
 const left = ref(true)
 const right = ref(true)

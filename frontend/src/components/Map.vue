@@ -4,292 +4,227 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, shallowRef, onUnmounted, ref } from 'vue'
+import { computed, watch, shallowRef, onUnmounted, ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import mapboxgl from 'mapbox-gl'
-import { useBridgesStore } from 'src/stores/bridges'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import { useBridgesStore } from '@/stores/bridges'
 import WebcamDialog from './WebcamDialog.vue'
 
 const store = useBridgesStore()
 const $q = useQuasar()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const showWebcamDialog = ref(false)
 
-
-const mapbox_access_token = import.meta.env.VITE_MAPBOX_TOKEN
-const url_webcam = import.meta.env.VITE_WEBCAM_URL
-
-const map = shallowRef<any>(null)
-const bridges_map_layer = shallowRef<any>(null)
-const zoom = ref(11)
+const map = shallowRef<L.Map | null>(null)
+const geoJsonLayer = shallowRef<L.GeoJSON | null>(null)
+const zoom = ref(12)
 
 const dark_mode = computed(() => store.dark_mode)
-const Features = computed(() => {
-  return store.geoJson_features
-      // TODO это для камеры которой сейчас пока нет
-  if (zoom.value < 13) {
-  }
 
+const Features = computed(() => {
+  const bridgesFeatures = store.geoJson_features.features
+
+  return store.geoJson_features
   return {
     ...store.geoJson_features,
     features: [
-        ...store.geoJson_features.features,
+      ...bridgesFeatures,
       {
         id: 999,
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [30.318306, 59.941057] },
         properties: {
-          custom_active_color:       'white',
+          custom_active_color: 'white',
           custom_active_stroke_size: 1,
-          custom_status_color:       'blue',
-          custom_status_text:        '📷',
-          custom_comment:            t('webcam'),
-          title:                     t('webcam'),
-          description:               t('bridge_webcam'),
-          'marker-color':            '#00bcd4',
-          'marker-symbol':           'camera',
-          'marker-size':             'large',
+          custom_status_color: 'blue',
+          custom_status_text: '📷',
+          custom_comment: t('webcam'),
+          title: t('webcam'),
+          description: t('bridge_webcam'),
+          'marker-color': '#00bcd4',
+          'marker-symbol': 'camera',
+          'marker-size': 'large',
         },
       }
     ]
   }
 })
 
-const map_styles = computed(() =>
-  dark_mode.value
-    ? 'mapbox://styles/mapbox/dark-v10'
-    : 'mapbox://styles/mapbox/streets-v11'
-)
+// Определяем иконки для маркеров с кружком
+const getIcon = (markerSymbol: string, markerColor: string, strokeColor: string = 'white', strokeWidth: number = 1, title: string = '', comment: string = '') => {
+  const circleSize = 30 + (strokeWidth * 2)
 
-function checkSupportGLBrowser () {
-  if (!mapbox_access_token) {
-    console.error('Mapbox access token is not defined!')
-    return
-  }
+  // Создаем HTML для маркера с кружком и иконкой
+  const html = `
+    <div class="bridge-marker-container" style="--circle-size: ${circleSize}px; --marker-color: ${markerColor}; --stroke-color: ${strokeColor}; --stroke-width: ${strokeWidth}px;">
+      <div class="bridge-marker-circle">
+        <img src="/map_icons/${markerSymbol}.png" alt="${markerSymbol}" class="bridge-marker-icon" />
+      </div>
+      <div class="bridge-marker-text">
+        <div class="bridge-marker-title">${title}</div>
+        <div class="bridge-marker-comment">${comment}</div>
+      </div>
+    </div>
+  `
 
-  mapboxgl.accessToken = mapbox_access_token
-
-  if (!mapboxgl.supported()) {
-    initMapboxJSMap()
-    store.setGLSupport(false)
-    console.log('Your browser does not support Mapbox GL')
-    ym(66456622, 'reachGoal', 'gl_not_supported')
-  } else {
-    store.setGLSupport(true)
-    initMapboxGLMap()
-  }
-  $q.dark.set(dark_mode.value)
+  return L.divIcon({
+    html,
+    iconSize: [circleSize, circleSize],
+    iconAnchor: [circleSize / 2, circleSize],
+    popupAnchor: [0, -(circleSize / 2)],
+    className: 'bridge-marker-wrapper'
+  })
 }
 
-function initMapboxJSMap () {
-  L.mapbox.accessToken = mapbox_access_token
+// Обновляем слой GeoJSON данными
+const updateGeoJsonLayer = () => {
+  if (!map.value) return
 
-  map.value = L.mapbox.map('map')
-    .setView([59.935446, 30.328063], zoom.value)
-    .addLayer(L.mapbox.styleLayer(map_styles.value))
-
-  bridges_map_layer.value = L.mapbox
-    .featureLayer()
-    .addTo(map.value)
-
-  // Делаем карту и слой глобальными для доступа из других компонентов
-  window.map = map.value
-  window.bridges_map_layer = bridges_map_layer.value
-
-  setGeoJSON()
-}
-
-function setupMapLayers () {
   const geoJson = Features.value
 
-  map.value.loadImage('/map_icons/car.png', function (error, image) {
-    if (error) {
-      console.error('Failed to load car icon:', error)
-      return
-    }
-    map.value.addImage('car', image)
-  })
-  map.value.loadImage('/map_icons/boat.png', function (error, image) {
-    if (error) {
-      console.error('Failed to load boat icon:', error)
-      return
-    }
-    map.value.addImage('boat', image)
-  })
-  map.value.loadImage('/map_icons/camera.png', function (error, image) {
-    if (error) {
-      console.error('Failed to load camera icon:', error)
-      return
-    }
-    map.value.addImage('camera', image)
-  })
+  // Удаляем старый слой если он есть
+  if (geoJsonLayer.value) {
+    map.value.removeLayer(geoJsonLayer.value)
+  }
 
-  map.value.addSource('points', { 'type': 'geojson', 'data': geoJson })
+  // Создаем новый GeoJSON слой
+  geoJsonLayer.value = L.geoJSON(geoJson, {
+    pointToLayer: (feature, latlng) => {
+      const props = feature.properties
 
-  map.value.addLayer({
-    'id': 'circles',
-    'type': 'circle',
-    'source': 'points',
-    'paint': {
-      'circle-stroke-color': ['get', 'custom_active_color'],
-      'circle-stroke-width': ['get', 'custom_active_stroke_size'],
-      'circle-color': ['get', 'marker-color'],
-      'circle-radius': 16
-    }
-  })
+      const strokeColor = props['custom_active_color'] || 'white'
+      const strokeWidth = props['custom_active_stroke_size'] || 1
+      const icon = getIcon(
+        props['marker-symbol'],
+        props['marker-color'],
+        strokeColor,
+        strokeWidth,
+        props.title,
+        props['custom_comment']
+      )
 
-  map.value.addLayer({
-    'id': 'symbols',
-    'type': 'symbol',
-    'source': 'points',
-    'layout': {
-      'icon-image': ['get', 'marker-symbol'],
-      'text-field': [
-        'format',
-        ['upcase', ['get', 'title']], { 'font-scale': 0.8 },
-        '\n', {},
-        ['downcase', ['get', 'custom_comment']], { 'font-scale': 0.6 }
-      ],
-      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-      'text-offset': [0, 1],
-      'text-anchor': 'top'
-    },
-    paint: {
-      'text-color': dark_mode.value ? '#fff' : '#000'
+      const marker = L.marker(latlng, { icon })
+
+      // Обработчик клика - выбираем мост в карточке
+      marker.on('click', () => {
+        if (props['marker-symbol'] === 'camera') {
+          showWebcamDialog.value = true
+        } else {
+          store.setOpen_bridge(feature.id)
+        }
+      })
+
+      return marker
     }
-  })
+  }).addTo(map.value)
 }
 
-function initMapboxGLMap () {
-  map.value = new mapboxgl.Map({
-    container: 'map',
-    style: map_styles.value,
-    center: [30.374144114706155, 59.90882829669761],
-    zoom: zoom.value,
-    pitch: 45,
-    bearing: -17.6,
-    antialias: true
-  })
+
+const mapbox_access_token = import.meta.env.VITE_MAPBOX_TOKEN
+
+const map_styles = computed(() =>
+    dark_mode.value
+        ? 'https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/256/{z}/{x}/{y}?access_token=' + mapbox_access_token
+        : 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{z}/{x}/{y}?access_token=' + mapbox_access_token
+)
+
+// Инициализация карты с OpenStreetMap
+const initMap = () => {
+  // Удаляем старую карту если она есть
+  if (map.value) {
+    map.value.remove()
+    map.value = null
+  }
+
+  // Инициализируем карту с центром на Санкт-Петербурге
+  map.value = L.map('map').setView(
+    [59.935446, 30.328063],
+    zoom.value
+  )
+
+  // Добавляем слой OpenStreetMap
+  L.tileLayer(
+      map_styles.value, {
+      maxZoom: 19,
+    }
+  ).addTo(map.value)
 
   // Делаем карту глобальной для доступа из других компонентов
   window.map = map.value
 
-  const setLanguage = (lang: string) => {
-    const layers = map.value.getStyle()?.layers;
-    if (!layers) {
-      return;
-    }
-
-    const layerIds: string[] = [];
-
-    layers.forEach((layer) => {
-      const textField = layer.layout && 'text-field' in layer.layout;
-      if (textField) {
-        layerIds.push(layer.id);
-      }
-    });
-
-    layerIds.forEach((layerId) => {
-      map.value.setLayoutProperty(layerId, 'text-field', [
-        'get',
-        'name_' + lang,
-      ]);
-    });
-  };
-
-  map.value.on('load', function () {
-    const mapLocale = locale.value === 'ch' ? 'en' : locale.value
-    setLanguage(mapLocale);
-
-    setupMapLayers()
-    map.value.on('click', 'circles', function (e) {
-      const feature = e.features[0]
-      // Проверяем, это ли маркер веб-камеры
-      if (feature.properties && feature.properties['marker-symbol'] === 'camera') {
-        showWebcamDialog.value = true
-      } else {
-        store.setOpen_bridge(feature.id)
-      }
-    })
-
-    // // Меняем курсор при наведении на маркеры
-    map.value.on('mouseenter', 'circles', function () {
-      map.value.getCanvas().style.cursor = 'pointer'
-    })
-    map.value.on('mouseleave', 'circles', function () {
-      map.value.getCanvas().style.cursor = ''
-    })
-
-
-    // Обновляем видимость маркеров камеры при изменении зума
-    // map.value.on('zoom', function () {
-    // TODO это для камеры
-    //   zoom.value = map.value.getZoom()
-    // })
+  // Слушаем события зума
+  map.value.on('zoomend', () => {
+    zoom.value = map.value!.getZoom()
   })
-}
 
-function setGeoJSON () {
-  const geoJson = Features.value
-  if (!bridges_map_layer.value) return
-  bridges_map_layer.value.setGeoJSON(geoJson)
-}
-
-function setMarkerData () {
-  const geoJson = Features.value
-  if (!map.value || typeof map.value.getSource !== 'function') return
-  if (!map.value.getSource('points')) return
-  map.value.getSource('points').setData(geoJson)
-}
-
-watch(dark_mode, () => {
-  if (map.value && store.gl_support) {
-    map.value.setStyle(map_styles.value)
-    // После setStyle все источники и слои уничтожаются — восстанавливаем их
-    map.value.once('style.load', () => {
-      setupMapLayers()
-    })
-  } else {
-    checkSupportGLBrowser()
-  }
+  store.setGLSupport(true)
   $q.dark.set(dark_mode.value)
+
+  // Обновляем GeoJSON слой
+  setTimeout(() => {
+    updateGeoJsonLayer()
+  }, 100)
+}
+
+// Смена темы оформления
+const updateTileLayer = () => {
+  if (!map.value) return
+
+  // Удаляем все слои тайлов
+  map.value.eachLayer((layer) => {
+    if (layer instanceof L.TileLayer) {
+      map.value!.removeLayer(layer)
+    }
+  })
+
+  // Добавляем новый слой в зависимости от темы
+  L.tileLayer( map_styles.value,  {
+      maxZoom: 19,
+    }
+  ).addTo(map.value)
+}
+
+// Смотрим изменения Features и обновляем GeoJSON слой
+watch(
+  Features,
+  () => {
+    updateGeoJsonLayer()
+  },
+  { debounce: 50 }
+)
+
+// Смотрим изменения темы и обновляем стили карты
+watch(dark_mode, () => {
+  $q.dark.set(dark_mode.value)
+  if (map.value) {
+    updateTileLayer()
+  }
 })
 
-watch(Features, () => {
-  if (store.gl_support) {
-    setMarkerData()
-  } else {
-    setGeoJSON()
-  }
+onMounted(() => {
+  document.querySelector('#load')?.remove()
+  // Загружаем данные мостов перед инициализацией карты
+  store.getBridges().then(() => {
+    initMap()
+  }).catch((error) => {
+    console.error('Failed to load bridges:', error)
+    initMap()
+  })
 })
 
 onUnmounted(() => {
-  if (map.value && typeof map.value.remove === 'function') {
+  if (map.value) {
     map.value.remove()
   }
   // Очищаем глобальные ссылки
   window.map = null
-  window.bridges_map_layer = null
 })
 
-defineExpose({ checkSupportGLBrowser })
 </script>
 
 <style lang="scss">
-  body.mobile {
-    .mapboxgl-popup {
-      bottom: 50px;
-      top: auto;
-      left: 50%;
-      transform: translateX(-50%) !important;
-
-      .mapboxgl-popup-tip {
-        display: none;
-      }
-    }
-  }
-
   #map {
     position: absolute;
     top: 0;
@@ -300,53 +235,101 @@ defineExpose({ checkSupportGLBrowser })
     h6 { margin: 0; }
   }
 
-  body.body--dark {
-    .leaflet-popup-content {
-      background: var(--q-dark);
-      color: #fff;
-    }
-    .mapboxgl-popup .q-card {
-      background: #78909c;
-      color: white;
-    }
+  .bridge-marker-wrapper {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
   }
 
-  .marker-title { font-size: 20px; }
-
-  .marker-description {
-    font-size: 16px;
-
-    .bridge_comment {
-      color: #a7a7a7;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    b { color: #792ec0; }
+  .bridge-marker-container {
+    position: relative;
+    width: var(--circle-size);
+    height: var(--circle-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .mapboxgl-popup {
+  .bridge-marker-circle {
     position: absolute;
-    min-width: 300px;
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-
-    .mapboxgl-popup-content {
-      background: transparent;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 0;
-      width: 100%;
-
-      .q-card { width: 100%; }
-    }
-
-    .mapboxgl-popup-close-button {
-      right: 6px;
-      top: 13px;
-      z-index: 99;
-      font-size: 40px;
-    }
-
-    iframe { width: 100%; }
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--marker-color);
+    border: var(--stroke-width) solid var(--stroke-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  .bridge-marker-icon {
+    width: 32px;
+    height: 17px;
+    display: block;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .bridge-marker-text {
+    position: absolute;
+    top: calc(var(--circle-size) + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 600;
+    color: #000;
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .bridge-marker-title {
+    display: inline;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+    background: rgb(255 255 255 / 0.8);
+    border-radius: 5px;
+    padding: 2px 10px;
+  }
+
+  .bridge-marker-comment {
+    display: inline;
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    margin-top: -5px;
+
+    background: rgb(255 255 255 / 0.8);
+    border-radius: 5px;
+    padding: 0 6px;
+  }
+
+  body.mobile {
+    // Убрали стили popups - инфо показывается в карточках внизу
+  }
+
+  body.body--dark {
+    .bridge-marker-title {
+      color: #fff;
+      background: rgb(0 0 0 / 0.8);
+    }
+
+    .bridge-marker-comment {
+      color: #ccc;
+      background: rgb(0 0 0 / 0.8);
+    }
+  }
+
+  .leaflet-container {
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }
+
+  //.leaflet-layer {
+  //  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  //}
+
 </style>

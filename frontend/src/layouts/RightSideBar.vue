@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { format } from 'date-fns'
 import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
@@ -65,31 +65,12 @@ const parseTime = computed(() => {
   return ''
 })
 
-onMounted(() => {
-  // Component mounted
-})
-
 function handleClickBridge(bridge) {
-  if (store.gl_support) {
-    store.setOpen_bridge(bridge.id)
-  } else {
-    window.bridges_map_layer.eachLayer((layer) => {
-      if (bridge.title[app_language.value] === layer.feature.properties.title) {
-        layer.openPopup()
-      }
-    })
-  }
-
+  store.setOpen_bridge(bridge.id)
   ym(66456622, 'reachGoal', 'list_' + bridge.link)
-
   const coords = bridge.coordinates
-  if (store.gl_support) {
-    // Для Mapbox GL используем panTo с [lng, lat]
-    window.map.panTo([coords[0] + 0.003, coords[1] - 0.004])
-  } else {
-    // Для Leaflet используем L.latLng с [lat, lng]
-    window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
-  }
+  // Для Leaflet используем L.latLng с [lat, lng]
+  window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
 }
 </script>
 

@@ -15,12 +15,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import Map from '../components/Map.vue'
 import SliderCard from '../components/Slider_Card.vue'
 import BridgeCard from '../components/Bridge_Card.vue'
 import Summary from '../components/Summary.vue'
-import { useBridgesStore } from 'src/stores/bridges'
+import { useBridgesStore } from '@/stores/bridges'
 
 const store = useBridgesStore()
 const main_map = ref<InstanceType<typeof Map> | null>(null)
@@ -28,11 +28,6 @@ const main_map = ref<InstanceType<typeof Map> | null>(null)
 const open_bridge = computed(() => store.open_bridge_id)
 const timing_mode = computed(() => store.timing_mode)
 const summary_visible = computed(() => store.summary_visible)
-
-// watch(() => store.map_init_counter, (val) => {
-//   // console.log(val)
-//   if (val > 0) main_map.value?.checkSupportGLBrowser()
-// })
 
 function page_height(offset: number) {
   document.documentElement.style.setProperty(
@@ -49,7 +44,7 @@ function page_height(offset: number) {
     position: absolute;
     width: 420px;
     bottom: 0;
-    z-index: 3;
+    z-index: 401;
   }
 
   .full-dvh-height-w-main-page-offset {
