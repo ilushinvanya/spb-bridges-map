@@ -44,7 +44,7 @@ export default {
   second_string: 'И повторно с {secondStart} до {secondEnd}',
 
   summary_all_closed: 'Все мосты сведены, сегодня больше не разведутся',
-  summary_no_data: 'Новых данных на сегодня пока нет, показано вчерашнее расписание.',
+  summary_no_data: 'Новых данных на сегодня пока нет, показано расписание за вчера',
   summary_in_progress: 'Разведено {opened} {opened_word}<br/>Сведены {closed} {closed_word}<br/>Не разводятся' +
       ' {not_today}',
   summary_all_open: 'Все мосты сведены',

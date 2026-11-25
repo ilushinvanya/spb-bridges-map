@@ -23,13 +23,12 @@
           </div>
         </div>
       </q-avatar>
-
-      <span>
+      <div>
         <div>
             <span v-if="time_check">{{ $t('time_footer') }} - </span>
             <span v-if="Time && typeof Time.format === 'function'">{{ Time.format("HH:mm:ss") }}</span>
         </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+        <div class="second-row">
           <div class="weather"
                v-if="time_check && weather">
             <img v-if="weatherIconUrl"
@@ -43,8 +42,7 @@
             <span>🌇 {{ yandex_clock.sunset }}</span>
           </div>
         </div>
-      </span>
-
+      </div>
     </q-toolbar>
   </q-footer>
 </template>
@@ -147,10 +145,16 @@ const footerStyle = computed(() => {
     text-shadow: 0 0 3px black;
   }
 
+  .second-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .weather {
     display: flex;
     align-items: end;
     gap: 6px;
+    margin-right: 20px;
 
     .weather-icon {
       width: 24px;
@@ -172,6 +176,7 @@ const footerStyle = computed(() => {
       gap: 4px;
     }
   }
+
   .hero-circle {
     width: 40px;
     height: 40px;

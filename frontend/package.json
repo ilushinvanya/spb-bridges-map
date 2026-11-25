@@ -13,6 +13,7 @@
     "server": "npx http-server ./dist/pwa"
   },
   "dependencies": {
+    "@hawk.so/javascript": "^3.3.5",
     "@quasar/extras": "^2.1.0",
     "axios": "1.21.1",
     "date-fns": "^4.4.0",
