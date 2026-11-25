@@ -119,6 +119,8 @@ const updateGeoJsonLayer = () => {
       return marker
     }
   }).addTo(map.value)
+
+  document.querySelector('.leaflet-control-attribution.leaflet-control')?.remove()
 }
 
 
