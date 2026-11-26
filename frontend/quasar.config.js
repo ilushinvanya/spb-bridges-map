@@ -13,6 +13,7 @@ export default defineConfig(function (/* ctx */) {
       'i18n',
       'axios',
       'hawk',
+      'matomo',
     ],
 
     css: [
