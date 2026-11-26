@@ -177,10 +177,6 @@ function handleSwipe({ evt, touch, mouse, position, direction, isFirst, isFinal,
 </script>
 
 <style lang="scss">
-  .height_300 {
-    height: 300px;
-  }
-
   .transition {
     transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
   }

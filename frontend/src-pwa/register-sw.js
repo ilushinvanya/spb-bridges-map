@@ -2,7 +2,9 @@ import { register } from 'register-service-worker'
 import { Notify } from 'quasar'
 import { i18n } from '../src/boot/i18n.ts'
 
-register(import.meta.env.SERVICE_WORKER_FILE, {
+register('/service-worker.js', {
+  registrationOptions: { scope: './' },
+
   ready (/* registration */) {
   },
 
@@ -27,7 +29,7 @@ register(import.meta.env.SERVICE_WORKER_FILE, {
       actions: [
         {
           label: 'Ok',
-          color: 'yellow',
+          color: 'white',
           handler: () => {
             window.location.reload(true)
           }
