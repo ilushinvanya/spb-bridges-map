@@ -131,6 +131,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
+import { useYandexMetrika } from 'src/composables/useYandexMetrika'
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 import moment from 'moment'
@@ -141,6 +142,7 @@ import flag_en from '../assets/icon_flag_en.svg'
 const store = useBridgesStore()
 const $q = useQuasar()
 const { t, locale } = useI18n()
+const { reachGoal } = useYandexMetrika()
 
 const language_list = ref([
   { id: 'ch', label: 'Chinese', src: flag_ch },
@@ -158,7 +160,7 @@ const light_status = computed(() => store.light_status)
 const dark_mode = computed({
   get: () => store.dark_mode,
   set: (value) => {
-    ym(66456622, 'reachGoal', 'dark_mode')
+    reachGoal('dark_mode')
     store.setDarkMode(value)
   }
 })
@@ -174,11 +176,11 @@ function setLanguage(lang) {
 
 function show_send_dialog() {
   prompt.value = true
-  ym(66456622, 'reachGoal', 'show_send_dialog')
+  reachGoal('show_send_dialog')
 }
 
 function sendMessage() {
-  ym(66456622, 'reachGoal', 'send_msg')
+  reachGoal('send_msg')
 
   if (contact.value.length === 0) {
     $q.notify({ type: 'warning', message: 'Заполните поле с контактом' })
@@ -214,7 +216,7 @@ function sendMessage() {
 }
 
 function timing_mode_toggle() {
-  ym(66456622, 'reachGoal', 'timing_mode_toggle')
+  reachGoal('timing_mode_toggle')
   if (store.timing_mode === null) {
     store.setTiming_mode(+new Date())
   } else {

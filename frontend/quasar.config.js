@@ -129,7 +129,7 @@ export default defineConfig(function (/* ctx */) {
       plugins: ['Notify'],
     },
 
-    animations: [],
+    animations: 'all',
 
     pwa: {
       workboxMode: 'GenerateSW',

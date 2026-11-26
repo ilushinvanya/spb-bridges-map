@@ -5,6 +5,7 @@ import moment from 'moment'
 import axios from 'axios'
 import { Notify, useQuasar } from 'quasar'
 import { i18n } from '@/boot/i18n'
+import { useYandexMetrika } from '@/composables/useYandexMetrika'
 import lightsData from '../assets/lights.json'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -437,8 +438,8 @@ export const useBridgesStore = defineStore('bridges', () => {
       }
     } catch (error) {
       Notify.create({ type: 'negative', message: t('load_error') })
-      const ymId = parseInt(import.meta.env.VITE_YM_ID)
-      ym(ymId, 'reachGoal', 'load_error')
+      const { reachGoal } = useYandexMetrika()
+      reachGoal('load_error')
     }
   }
 

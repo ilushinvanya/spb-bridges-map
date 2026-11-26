@@ -1,9 +1,9 @@
 <template>
   <q-card
     v-touch-pan.vertical.prevent.mouse="handleSwipe"
-    class="bridge-card relative-position"
-    :class="{ hide_to_bottom: hideToBottom }"
-    :style="{ 'bottom': offset + 'px' }"
+    class="bridge-card"
+    :class="{ transition: transition }"
+    :style="{ 'transform': `translateY(${-1 * translate}px` }"
     flat bordered
   >
     <q-btn
@@ -30,13 +30,11 @@
       <div class="text-h6 ellipsis">
         {{ openBridgeObj.title }}
         <q-badge
-          v-if="!camera"
           align="top"
           :color="openBridgeObj.custom_status_color"
           v-html="openBridgeObj.custom_status_text"></q-badge>
       </div>
-      <div v-if="!camera"
-           class="text-body2">
+      <div class="text-body2">
         {{ openBridgeObj.custom_comment }}
       </div>
     </q-card-section>
@@ -48,7 +46,7 @@
 
     <q-separator/>
 
-    <q-card-section v-if="!camera">
+    <q-card-section>
       <div style="margin-left: -4px">
         <q-chip
           v-for="(time, index) in timesChip"
@@ -66,7 +64,6 @@
 
     <q-slide-transition>
       <q-card-actions
-        v-if="!camera"
         class="q-pa-none"
         v-show="!collapse">
         <div class="q-pa-md">
@@ -88,13 +85,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useBridgesStore } from 'src/stores/bridges'
+import { ref, computed } from 'vue'
+import { useBridgesStore } from '@/stores/bridges'
 import { useI18n } from 'vue-i18n'
 import moment from 'moment'
 
-const SWIPE_CLOSE_THRESHOLD = -100
-const ANIMATION_DURATION_MS = 400
+const SWIPE_CLOSE_THRESHOLD = -80
 
 const store = useBridgesStore()
 const { t } = useI18n()
@@ -108,12 +104,9 @@ function formatTime(value: string | number): string {
   return value as string
 }
 
-const offset = ref(0)
+const translate = ref(0)
 const collapse = ref(true)
-const hideToBottom = ref(true)
-const isFinalAfterCollapse = ref(true)
 
-const camera = computed(() => openBridgeId.value === 14)
 
 const Features = computed(() => store.geoJson_features)
 
@@ -147,12 +140,15 @@ const commentString = computed(() => {
   return resultString
 })
 
-function handleSwipe({ evt, ...info }: any) {
-  if (info.direction === 'up') {
+const isFinalAfterCollapse = ref(true)
+const transition = ref(false)
+
+function handleSwipe({ evt, touch, mouse, position, direction, isFirst, isFinal, distance, offset, delta }) {
+  if (direction === 'up') {
     collapse.value = false
     isFinalAfterCollapse.value = false
-  } else if (info.direction === 'down') {
-    if (info.isFinal) {
+  } else if (direction === 'down') {
+    if (isFinal) {
       isFinalAfterCollapse.value = true
     }
 
@@ -161,33 +157,34 @@ function handleSwipe({ evt, ...info }: any) {
     }
 
     if (collapse.value && isFinalAfterCollapse.value) {
-      offset.value -= info.delta.y
-      if (info.isFinal) {
-        if (offset.value < SWIPE_CLOSE_THRESHOLD) {
-          hideToBottom.value = true
+      translate.value -= delta.y
+      if (isFinal) {
+        if (translate.value < SWIPE_CLOSE_THRESHOLD) {
             openBridgeId.value = 0
-          // setTimeout(() => {
-          // }, ANIMATION_DURATION_MS)
         } else {
-          offset.value = 0
+          transition.value = true
+          translate.value = 0
+          setTimeout(() => {
+            transition.value = false
+          }, 500)
         }
       }
     }
   }
 }
 
-onMounted(() => {
-  if (camera.value) {
-    collapse.value = false
-  }
-  hideToBottom.value = false
-})
+
 </script>
 
 <style lang="scss">
   .height_300 {
     height: 300px;
   }
+
+  .transition {
+    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  }
+
   .bridge-card {
     width: 100%;
     margin: 0 auto 10px;

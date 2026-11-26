@@ -6,16 +6,17 @@
 import { ref, onUnmounted } from 'vue'
 import { useBridgesStore } from 'src/stores/bridges'
 import { useI18n } from 'vue-i18n'
+import { useYandexMetrika } from 'src/composables/useYandexMetrika'
 import axios from 'axios'
 import moment from 'moment'
 
 const store = useBridgesStore()
 const { locale } = useI18n()
+const { reachGoal } = useYandexMetrika()
 
 const serverOffset = ref(0)
 let intervalId = null
 
-const ymId = parseInt(import.meta.env.VITE_YM_ID)
 const apiDomain = import.meta.env.VITE_API_DOMAIN || 'https://map-bridges-spb.ru'
 
 const now = moment()
@@ -25,7 +26,7 @@ if (now.utcOffset() !== 180) {
 store.setTime(now)
 
 window.addEventListener('appinstalled', () => {
-  ym(ymId, 'reachGoal', 'appinstalled')
+  reachGoal('appinstalled')
 })
 
 function getNow () {
@@ -52,7 +53,7 @@ function getYandexTime () {
     })
     .catch(e => {
       console.log(e)
-      ym(ymId, 'reachGoal', 'error_time')
+      reachGoal('error_time')
     })
     .finally(() => {
       intervalId = setInterval(getNow, 1000)

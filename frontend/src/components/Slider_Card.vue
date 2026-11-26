@@ -1,8 +1,7 @@
 <template>
   <q-card
     class="slider_card"
-    flat bordered
-    :style="{ 'bottom': offset + 'px' }">
+    flat bordered>
     <q-card-section>
 
       <q-btn
@@ -33,7 +32,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
-import { useBridgesStore } from 'src/stores/bridges'
+import { useBridgesStore } from '@/stores/bridges'
 import moment from 'moment'
 
 const SLIDER_MIN_HOUR = 1
@@ -43,7 +42,6 @@ const SLIDER_STEP = 60
 const store = useBridgesStore()
 
 const sliderValue = ref<number | null>(null)
-const offset = ref(0)
 
 const sliderMin = computed(() => {
   return +moment().hour(SLIDER_MIN_HOUR).minute(0)

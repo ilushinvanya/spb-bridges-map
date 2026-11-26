@@ -17,16 +17,18 @@ const $q = useQuasar()
 const { t } = useI18n()
 const showWebcamDialog = ref(false)
 
+const isMobile = computed(() => store.mobilecheck)
+
 const map = shallowRef<L.Map | null>(null)
 const geoJsonLayer = shallowRef<L.GeoJSON | null>(null)
-const zoom = ref(12)
+const zoom = ref(isMobile.value ? 11 : 12)
 
 const dark_mode = computed(() => store.dark_mode)
 
 const Features = computed(() => {
-  const bridgesFeatures = store.geoJson_features.features
-
   return store.geoJson_features
+
+  const bridgesFeatures = store.geoJson_features.features
   return {
     ...store.geoJson_features,
     features: [
@@ -330,6 +332,10 @@ onUnmounted(() => {
 
   .leaflet-container {
     font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  }
+
+  .leaflet-control-attribution.leaflet-control {
+    display: none;
   }
 
 </style>

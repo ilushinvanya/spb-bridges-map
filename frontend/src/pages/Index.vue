@@ -5,9 +5,17 @@
 
     <div class="bottom_block_w_cards">
       <TransitionGroup tag="div" name="fade" class="container">
-        <BridgeCard v-if="open_bridge"/>
-        <SliderCard v-if="timing_mode"/>
-        <Summary v-if="summary_visible"/>
+        <div v-if="open_bridge" key="bridge-card">
+          <BridgeCard/>
+        </div>
+
+        <div v-if="timing_mode" key="slider-card">
+          <SliderCard />
+        </div>
+
+        <div v-if="summary_visible" key="summary-card">
+          <Summary/>
+        </div>
       </TransitionGroup>
     </div>
 
@@ -65,24 +73,20 @@ function page_height(offset: number) {
     position: relative;
     padding: 0;
     list-style-type: none;
-  }
-  /* 1. объявление transition */
-  .fade-move,
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+
+    & > * {
+      transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+      width: 100%;
+    }
   }
 
-  /* 2. объявление enter from и leave to состояний */
   .fade-enter-from,
   .fade-leave-to {
     opacity: 0;
-    transform: translateY(12px);
+    margin-bottom: -20px;
   }
 
-  /* 3. убедитесь, что элементы удалены из потока layout,
-        чтобы можно было правильно рассчитать анимацию перемещения */
   .fade-leave-active {
-    position: absolute;
+    position: absolute !important;
   }
 </style>

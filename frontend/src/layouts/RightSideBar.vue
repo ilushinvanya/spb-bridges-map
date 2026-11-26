@@ -51,23 +51,25 @@ import { computed } from 'vue'
 import moment from 'moment'
 import { useI18n } from 'vue-i18n'
 import { useBridgesStore } from 'src/stores/bridges'
+import { useYandexMetrika } from 'src/composables/useYandexMetrika'
 
 const store = useBridgesStore()
 const { locale: app_language, t } = useI18n()
+const { reachGoal } = useYandexMetrika()
 
 const bridges_with_params = computed(() => store.bridges_with_params)
 const open_bridge_id = computed(() => store.open_bridge_id)
 const parseTime = computed(() => {
   if (store.parse_time) {
     const currentDate = new Date(store.parse_time)
-    return moment(currentDate).format('dd.MM.yyyy // HH:mm')
+    return moment(currentDate).format('DD.MM.yyyy // HH:mm')
   }
   return ''
 })
 
 function handleClickBridge(bridge) {
   store.setOpen_bridge(bridge.id)
-  ym(66456622, 'reachGoal', 'list_' + bridge.link)
+  reachGoal('list_' + bridge.link)
   const coords = bridge.coordinates
   // Для Leaflet используем L.latLng с [lat, lng]
   window.map.panTo(L.latLng(coords[1] - 0.004, coords[0] + 0.003))
