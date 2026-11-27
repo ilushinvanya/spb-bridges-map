@@ -38,6 +38,9 @@ export const initMatomo = () => {
 	script.async = true;
 	script.src = MATOMO_URL + 'matomo.js';
 	first?.parentNode?.insertBefore(script, first);
+
+	// Отправляем первый трекинг при загрузке
+	trackPageView(window.location.href);
 };
 
 // Предыдущий URL, чтобы у переходов внутри SPA был корректный referrer.
