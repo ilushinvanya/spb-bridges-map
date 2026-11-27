@@ -137,7 +137,7 @@ import axios from 'axios'
 import moment from 'moment'
 import flag_ru from '../assets/icon_flag_ru.svg'
 import flag_ch from '../assets/icon_flag_ch.svg'
-import flag_en from '../assets/icon_flag_en.svg'
+import flag_en from '../assets/icon_flag_brit.svg'
 
 const store = useBridgesStore()
 const $q = useQuasar()

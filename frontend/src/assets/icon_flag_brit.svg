@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_1" data-name="Слой_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 600.33 600">
+  <!-- Generator: Adobe Illustrator 29.8.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 2)  -->
+  <defs>
+    <style>
+      .st0 {
+        stroke: #bd4f45;
+        stroke-width: 80px;
+      }
+
+      .st0, .st1, .st2 {
+        stroke-miterlimit: 80;
+      }
+
+      .st3 {
+        fill: #012169;
+      }
+
+      .st1 {
+        stroke-width: 120px;
+      }
+
+      .st1, .st2 {
+        stroke: #fff;
+      }
+
+      .st2 {
+        fill: #bd4f45;
+        stroke-width: 40px;
+      }
+    </style>
+  </defs>
+  <path class="st3" d="M-199.67,0v600h1000V0H-199.67Z"/>
+  <path class="st1" d="M-199.67,0l1000,600M800.33,0L-199.67,600"/>
+  <path class="st0" d="M-199.67,0l1000,600M800.33,0L-199.67,600"/>
+  <path class="st2" d="M-219.67,220H220.33V-20h160v240h440v160h-440v240h-160v-240H-219.67v-160Z"/>
+</svg>

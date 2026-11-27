@@ -27,7 +27,7 @@ const push = (args: unknown[]) => {
 
 export const initMatomo = () => {
 	if (!isEnabled()) return;
-
+	console.log(MATOMO_SITE_ID)
 	push(['setTrackerUrl', MATOMO_URL + 'matomo.php']);
 	push(['setSiteId', MATOMO_SITE_ID]);
 	// Карта — это один экран надолго, без heartbeat время на странице = 0.
